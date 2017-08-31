@@ -1,0 +1,6 @@
+*dist/*
+*.cabal-sandbox*
+*.stack-work*
+*~
+lib/gi-gdkx11/GI/*
+lib/gi-xlib/GI/*
