@@ -1,5 +1,5 @@
 name:                 movie-monad
-version:              0.0.0.0
+version:              0.0.1.0
 synopsis:             Plays videos using GStreamer and GTK+.
 description:          Desktop video player that uses GStreamer and GTK+.
 homepage:             https://github.com/lettier/movie-monad
@@ -38,6 +38,7 @@ executable            movie-monad
                       , gi-glib == 2.0.*
                       , gi-xlib == 0.1.6.*
                       , gi-gstvideo == 1.0.*
+                      , gi-gdk == 3.0.*
                       , gi-gdkx11 == 0.3.*
   ghc-options:        -threaded -with-rtsopts=-N -Wall
   other-modules:      Paths_movie_monad
