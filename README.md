@@ -26,15 +26,9 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 git clone https://github.com/lettier/movie-monad.git
 cd movie-monad/
 stack setup
-stack install haskell-gi
-haskell-gi -o lib/gi-gdkx11/GdkX11.overrides -O lib/gi-gdkx11 GdkX11-3.0
-haskell-gi -o lib/gi-xlib/xlib.overrides     -O lib/gi-xlib xlib
-git checkout -- lib/gi-xlib/gi-xlib.cabal
-git checkout -- lib/gi-gdkx11/gi-gdkx11.cabal
-stack install --dependencies-only
-stack build
 stack install
 stack exec -- movie-monad
+# Or just `movie-monad` if `stack path | grep local-bin-path` is in your `echo $PATH`
 ```
 
 ## License

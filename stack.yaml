@@ -1,13 +1,13 @@
 resolver: lts-9.1
 packages:
 - '.'
-- lib/gi-xlib
-- lib/gi-gdkx11
 extra-deps: [
-  gi-gst-1.0.14,
-  gi-gstvideo-1.0.14,
+  gi-xlib-2.0.1,
   haskell-gi-overloading-1.0,
-  gi-gstbase-1.0.15
+  gi-gdkx11-3.0.1,
+  gi-gstbase-1.0.15,
+  gi-gst-1.0.14,
+  gi-gstvideo-1.0.14
 ]
 flags: {}
 extra-package-dbs: []
