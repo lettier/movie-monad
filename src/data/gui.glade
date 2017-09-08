@@ -54,151 +54,192 @@
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea" id="drawing-area">
+              <object class="GtkEventBox" id="drawing-area-event-box">
                 <property name="visible">True</property>
-                <property name="sensitive">False</property>
                 <property name="app_paintable">True</property>
-                <property name="can_focus">False</property>
+                <property name="can_focus">True</property>
+                <property name="has_focus">True</property>
+                <property name="is_focus">True</property>
+                <property name="receives_default">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <property name="above_child">True</property>
+                <child>
+                  <object class="GtkDrawingArea" id="drawing-area">
+                    <property name="visible">True</property>
+                    <property name="sensitive">False</property>
+                    <property name="app_paintable">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkScale" id="seek-scale">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="valign">end</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="hexpand">True</property>
-                <property name="adjustment">adjustment1</property>
-                <property name="show_fill_level">True</property>
-                <property name="fill_level">100</property>
-                <property name="round_digits">0</property>
-                <property name="digits">-1</property>
-                <property name="draw_value">False</property>
-                <property name="value_pos">left</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
                 <property name="position">2</property>
               </packing>
             </child>
-          </object>
-          <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkBox">
-            <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="valign">end</property>
-            <property name="margin_bottom">5</property>
-            <property name="hexpand">True</property>
             <child>
-              <object class="GtkSwitch" id="on-off-switch">
+              <object class="GtkBox" id="bottom-controls-gtk-box">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="tooltip_text" translatable="yes">Toggle on to play. Toggle off to pause.</property>
-                <property name="margin_left">5</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">0</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkVolumeButton" id="volume-button">
-                <property name="visible">True</property>
-                <property name="app_paintable">True</property>
-                <property name="can_focus">True</property>
-                <property name="focus_on_click">False</property>
-                <property name="receives_default">True</property>
-                <property name="double_buffered">False</property>
-                <property name="margin_left">5</property>
-                <property name="margin_right">5</property>
-                <property name="relief">none</property>
-                <property name="value">0.5</property>
-                <property name="size">button</property>
-                <property name="icons">audio-volume-muted-symbolic
+                <property name="can_focus">False</property>
+                <property name="valign">end</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkScale" id="seek-scale">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
+                    <property name="valign">end</property>
+                    <property name="margin_left">5</property>
+                    <property name="margin_right">5</property>
+                    <property name="hexpand">True</property>
+                    <property name="adjustment">adjustment1</property>
+                    <property name="show_fill_level">True</property>
+                    <property name="fill_level">100</property>
+                    <property name="round_digits">0</property>
+                    <property name="digits">-1</property>
+                    <property name="draw_value">False</property>
+                    <property name="value_pos">left</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="valign">end</property>
+                    <property name="margin_bottom">5</property>
+                    <property name="hexpand">True</property>
+                    <child>
+                      <object class="GtkSwitch" id="on-off-switch">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="tooltip_text" translatable="yes">Toggle on to play. Toggle off to pause.</property>
+                        <property name="margin_left">5</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkVolumeButton" id="volume-button">
+                        <property name="visible">True</property>
+                        <property name="app_paintable">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="focus_on_click">False</property>
+                        <property name="receives_default">True</property>
+                        <property name="double_buffered">False</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="relief">none</property>
+                        <property name="value">0.5</property>
+                        <property name="size">button</property>
+                        <property name="icons">audio-volume-muted-symbolic
 audio-volume-high-symbolic
 audio-volume-low-symbolic
 audio-volume-medium-symbolic</property>
-                <child internal-child="plus_button">
-                  <object class="GtkButton">
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="relief">none</property>
+                        <child internal-child="plus_button">
+                          <object class="GtkButton">
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="relief">none</property>
+                          </object>
+                        </child>
+                        <child internal-child="minus_button">
+                          <object class="GtkButton">
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">True</property>
+                            <property name="halign">center</property>
+                            <property name="valign">center</property>
+                            <property name="relief">none</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="desired-video-width-combo-box">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Set the max width.</property>
+                        <property name="active">1</property>
+                        <property name="has_frame">False</property>
+                        <property name="active_id">800</property>
+                        <items>
+                          <item id="320" translatable="yes">320</item>
+                          <item id="800" translatable="yes">800</item>
+                          <item id="1024" translatable="yes">1024</item>
+                          <item id="1152" translatable="yes">1152</item>
+                          <item id="1280" translatable="yes">1280</item>
+                          <item id="1360" translatable="yes">1360</item>
+                          <item id="1366" translatable="yes">1366</item>
+                          <item id="1440" translatable="yes">1440</item>
+                          <item id="1536" translatable="yes">1536</item>
+                          <item id="1600" translatable="yes">1600</item>
+                          <item id="1680" translatable="yes">1680</item>
+                          <item id="1920" translatable="yes">1920</item>
+                          <item id="2560" translatable="yes">2560</item>
+                          <item id="3440" translatable="yes">3440</item>
+                          <item id="3840" translatable="yes">3840</item>
+                        </items>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="about-button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="margin_right">5</property>
+                        <property name="image">about-image</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="fullscreen-button">
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Toggle on or off fullscreen.</property>
+                        <property name="image">fullscreen-image</property>
+                        <property name="always_show_image">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">4</property>
+                      </packing>
+                    </child>
                   </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">False</property>
+                    <property name="position">1</property>
+                  </packing>
                 </child>
-                <child internal-child="minus_button">
-                  <object class="GtkButton">
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="halign">center</property>
-                    <property name="valign">center</property>
-                    <property name="relief">none</property>
-                  </object>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkComboBoxText" id="desired-video-width-combo-box">
-                <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="tooltip_text" translatable="yes">Set the max width.</property>
-                <property name="active">1</property>
-                <property name="has_frame">False</property>
-                <property name="active_id">800</property>
-                <items>
-                  <item id="320" translatable="yes">320</item>
-                  <item id="800" translatable="yes">800</item>
-                  <item id="1024" translatable="yes">1024</item>
-                  <item id="1152" translatable="yes">1152</item>
-                  <item id="1280" translatable="yes">1280</item>
-                  <item id="1360" translatable="yes">1360</item>
-                  <item id="1366" translatable="yes">1366</item>
-                  <item id="1440" translatable="yes">1440</item>
-                  <item id="1536" translatable="yes">1536</item>
-                  <item id="1600" translatable="yes">1600</item>
-                  <item id="1680" translatable="yes">1680</item>
-                  <item id="1920" translatable="yes">1920</item>
-                  <item id="2560" translatable="yes">2560</item>
-                  <item id="3440" translatable="yes">3440</item>
-                  <item id="3840" translatable="yes">3840</item>
-                </items>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">False</property>
-                <property name="position">2</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="about-button">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="margin_right">5</property>
-                <property name="image">about-image</property>
-                <property name="always_show_image">True</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -207,25 +248,11 @@ audio-volume-medium-symbolic</property>
                 <property name="position">3</property>
               </packing>
             </child>
-            <child>
-              <object class="GtkButton" id="fullscreen-button">
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Toggle on or off fullscreen.</property>
-                <property name="image">fullscreen-image</property>
-                <property name="always_show_image">True</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">4</property>
-              </packing>
-            </child>
           </object>
           <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
+            <property name="expand">True</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
           </packing>
         </child>
       </object>
@@ -244,7 +271,7 @@ audio-volume-medium-symbolic</property>
     <property name="transient_for">window</property>
     <property name="attached_to">window</property>
     <property name="program_name">Movie Monad</property>
-    <property name="version">0.0.1.0</property>
+    <property name="version">0.0.2.0</property>
     <property name="copyright" translatable="yes">(C) 2017 David Lettier</property>
     <property name="website">https://github.com/lettier/movie-monad</property>
     <property name="website_label" translatable="yes">Update</property>

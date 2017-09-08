@@ -19,6 +19,7 @@ import Text.Read
 import Data.IORef
 import Data.Maybe
 import Data.Int
+import Data.Time.Clock.POSIX
 import Data.Text
 import Data.GI.Base
 import Data.GI.Base.Signals
@@ -29,6 +30,7 @@ import qualified GI.Gtk
 import GI.Gst
 import GI.GstVideo
 import GI.Gdk
+import GI.GdkPixbuf
 import GI.GdkX11
 import Paths_movie_monad
 
@@ -49,6 +51,7 @@ main = do
   window <- builderGetObject GI.Gtk.Window builder "window"
   fileChooserButton <- builderGetObject GI.Gtk.FileChooserButton builder "file-chooser-button"
   drawingArea <- builderGetObject GI.Gtk.Widget builder "drawing-area"
+  bottomControlsGtkBox <- builderGetObject GI.Gtk.Box builder "bottom-controls-gtk-box"
   seekScale <- builderGetObject GI.Gtk.Scale builder "seek-scale"
   onOffSwitch <- builderGetObject GI.Gtk.Switch builder "on-off-switch"
   volumeButton <- builderGetObject GI.Gtk.VolumeButton builder "volume-button"
@@ -58,11 +61,22 @@ main = do
   aboutButton <- builderGetObject GI.Gtk.Button builder "about-button"
   aboutDialog <- builderGetObject GI.Gtk.AboutDialog builder "about-dialog"
 
+  logoFile <- getDataFileName "data/movie-monad-logo.svg"
+  logo <- GI.GdkPixbuf.pixbufNewFromFile (pack logoFile)
+  GI.Gtk.aboutDialogSetLogo aboutDialog (Just logo)
+
   playbin <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayer")
 
   isWindowFullScreenRef <- newIORef False
+  mouseMovedLastRef <- newIORef 0
 
-  _ <- GI.Gtk.onWidgetRealize drawingArea $ onDrawingAreaRealize drawingArea playbin fullscreenButton
+  _ <- GI.Gtk.onWidgetRealize drawingArea (
+      onDrawingAreaRealize
+      drawingArea
+      playbin
+      fullscreenButton
+      seekScale
+    )
 
   _ <- GI.Gtk.onFileChooserButtonFileSet fileChooserButton $
     onFileChooserButtonFileSet
@@ -83,13 +97,39 @@ main = do
 
   seekScaleHandlerId <- GI.Gtk.onRangeValueChanged seekScale (onRangeValueChanged playbin seekScale)
 
-  _ <- GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 (updateSeekScale playbin seekScale seekScaleHandlerId)
+  _ <- GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 (
+      updateSeekScale
+        playbin
+        seekScale
+        seekScaleHandlerId
+    )
 
-  _ <- GI.Gtk.onComboBoxChanged desiredVideoWidthComboBox $
-      onComboBoxChanged fileChooserButton desiredVideoWidthComboBox drawingArea window
+  _ <- GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 (
+      hideBottomControlsAndCursorIfFullscreenAndIdle
+        isWindowFullScreenRef
+        mouseMovedLastRef
+        bottomControlsGtkBox
+        window
+    )
 
-  _ <- GI.Gtk.onWidgetButtonReleaseEvent fullscreenButton
-      (onFullscreenButtonRelease isWindowFullScreenRef desiredVideoWidthComboBox fileChooserButton window)
+  _ <- GI.Gtk.onComboBoxChanged desiredVideoWidthComboBox (
+      onComboBoxChanged
+        fileChooserButton
+        desiredVideoWidthComboBox
+        drawingArea
+        window
+    )
+
+  _ <- GI.Gtk.onWidgetButtonReleaseEvent fullscreenButton (
+      onFullscreenButtonRelease
+        isWindowFullScreenRef
+        window
+        fileChooserButton
+        desiredVideoWidthComboBox
+    )
+
+  _ <- GI.Gtk.onWidgetMotionNotifyEvent window    (onWindowMouseMove bottomControlsGtkBox mouseMovedLastRef window)
+  _ <- GI.Gtk.onWidgetMotionNotifyEvent seekScale (onWindowMouseMove bottomControlsGtkBox mouseMovedLastRef window)
 
   _ <- GI.Gtk.onWidgetWindowStateEvent window (onWidgetWindowStateEvent isWindowFullScreenRef)
 
@@ -99,6 +139,9 @@ main = do
 
   GI.Gtk.widgetShowAll window
   GI.Gtk.main
+
+hideBottomControlsInterval :: Integral a => a
+hideBottomControlsInterval = 5
 
 builderGetObject ::
   (GI.GObject.GObject b, GI.Gtk.IsBuilder a) =>
@@ -114,8 +157,9 @@ onDrawingAreaRealize ::
   GI.Gtk.Widget ->
   GI.Gst.Element ->
   GI.Gtk.Button ->
+  GI.Gtk.Scale ->
   GI.Gtk.WidgetRealizeCallback
-onDrawingAreaRealize drawingArea playbin fullscreenButton = do
+onDrawingAreaRealize drawingArea playbin fullscreenButton seekScale = do
   gdkWindow <- fromJust <$> GI.Gtk.widgetGetWindow drawingArea
   x11Window <- GI.Gtk.unsafeCastTo GI.GdkX11.X11Window gdkWindow
 
@@ -123,6 +167,11 @@ onDrawingAreaRealize drawingArea playbin fullscreenButton = do
   let xid' = fromIntegral xid :: CUIntPtr
 
   GI.GstVideo.videoOverlaySetWindowHandle (GstElement playbin) xid'
+
+  let eventMask = fromIntegral (fromEnum GI.Gdk.EventMaskAllEventsMask) :: Int32
+
+  GI.Gtk.widgetAddEvents drawingArea eventMask
+  GI.Gtk.widgetAddEvents seekScale eventMask
 
   GI.Gtk.widgetHide fullscreenButton
 
@@ -212,7 +261,11 @@ updateSeekScale ::
   GI.Gtk.Scale ->
   Data.GI.Base.Signals.SignalHandlerId ->
   IO Bool
-updateSeekScale playbin seekScale seekScaleHandlerId = do
+updateSeekScale
+  playbin
+  seekScale
+  seekScaleHandlerId
+  = do
   (couldQueryDuration, duration) <- GI.Gst.elementQueryDuration playbin GI.Gst.FormatTime
   (couldQueryPosition, position) <- GI.Gst.elementQueryPosition playbin GI.Gst.FormatTime
 
@@ -224,6 +277,44 @@ updateSeekScale playbin seekScale seekScaleHandlerId = do
   GI.GObject.signalHandlerBlock seekScale seekScaleHandlerId
   GI.Gtk.rangeSetValue seekScale percentage
   GI.GObject.signalHandlerUnblock seekScale seekScaleHandlerId
+
+  return True
+
+onWindowMouseMove ::
+  GI.Gtk.Box ->
+  IORef Integer ->
+  GI.Gtk.Window ->
+  GI.Gdk.EventMotion ->
+  IO Bool
+onWindowMouseMove bottomControlsGtkBox mouseMovedLastRef window _ =
+  GI.Gtk.widgetShow bottomControlsGtkBox >>
+  getPOSIXTime >>=
+  atomicWriteIORef mouseMovedLastRef . round >>
+  setCursor window Nothing >>
+  return False
+
+hideBottomControlsAndCursorIfFullscreenAndIdle ::
+  IORef Bool ->
+  IORef Integer ->
+  GI.Gtk.Box ->
+  GI.Gtk.Window ->
+  IO Bool
+hideBottomControlsAndCursorIfFullscreenAndIdle
+  isWindowFullScreenRef
+  mouseMovedLastRef
+  bottomControlsGtkBox
+  window
+  = do
+  isWindowFullScreen <- readIORef isWindowFullScreenRef
+  mouseMovedLast <- readIORef mouseMovedLastRef
+
+  timeNow <- fmap round getPOSIXTime
+  let delta = timeNow - mouseMovedLast
+
+  when (isWindowFullScreen && delta >= hideBottomControlsInterval) $ do
+    GI.Gtk.widgetHide bottomControlsGtkBox
+    setCursor window (Just "none")
+  when (delta >= hideBottomControlsInterval) $ atomicWriteIORef mouseMovedLastRef timeNow
 
   return True
 
@@ -251,16 +342,16 @@ onComboBoxChanged
 
 onFullscreenButtonRelease ::
   IORef Bool ->
-  GI.Gtk.ComboBoxText ->
-  GI.Gtk.FileChooserButton ->
   GI.Gtk.Window ->
+  GI.Gtk.FileChooserButton ->
+  GI.Gtk.ComboBoxText ->
   GI.Gdk.EventButton ->
   IO Bool
 onFullscreenButtonRelease
   isWindowFullScreenRef
-  desiredVideoWidthComboBox
-  fileChooserButton
   window
+  fileChooserButton
+  desiredVideoWidthComboBox
   _
   = do
   isWindowFullScreen <- readIORef isWindowFullScreenRef
@@ -282,7 +373,7 @@ onWidgetWindowStateEvent ::
 onWidgetWindowStateEvent isWindowFullScreenRef eventWindowState = do
   windowStates <- GI.Gdk.getEventWindowStateNewWindowState eventWindowState
   let isWindowFullScreen = Prelude.foldl (\ acc x -> acc || GI.Gdk.WindowStateFullscreen == x) False windowStates
-  writeIORef isWindowFullScreenRef isWindowFullScreen
+  atomicWriteIORef isWindowFullScreenRef isWindowFullScreen
   return True
 
 onAboutButtonRelease ::
@@ -390,3 +481,17 @@ resetWindowSize width' fileChooserButton drawingArea window = do
   let width = fromIntegral width' :: Int32
   GI.Gtk.widgetQueueDraw drawingArea
   setWindowSize width 0 fileChooserButton drawingArea window
+
+setCursor :: GI.Gtk.Window -> Maybe Text -> IO ()
+setCursor window Nothing =
+  fromJust <$> GI.Gtk.widgetGetWindow window >>=
+  flip GI.Gdk.windowSetCursor (Nothing :: Maybe GI.Gdk.Cursor)
+setCursor window (Just cursorType) = do
+  gdkWindow <- fromJust <$> GI.Gtk.widgetGetWindow window
+  maybeCursor <- makeCursor gdkWindow cursorType
+  GI.Gdk.windowSetCursor gdkWindow maybeCursor
+
+makeCursor :: GI.Gdk.Window -> Text -> IO (Maybe GI.Gdk.Cursor)
+makeCursor window cursorType =
+  GI.Gdk.windowGetDisplay window >>=
+  flip GI.Gdk.cursorNewFromName cursorType
