@@ -169,10 +169,11 @@
                     <property name="margin_bottom">5</property>
                     <property name="hexpand">True</property>
                     <child>
-                      <object class="GtkSwitch" id="on-off-switch">
+                      <object class="GtkSwitch" id="play-pause-switch">
                         <property name="visible">True</property>
                         <property name="app_paintable">True</property>
                         <property name="can_focus">True</property>
+                        <property name="has_focus">True</property>
                         <property name="tooltip_text" translatable="yes">Toggle on to play, toggle off to pause</property>
                         <property name="margin_left">5</property>
                       </object>
@@ -418,7 +419,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="message_type">error</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">There was an error.</property>
-    <property name="secondary_text" translatable="yes">Did you open a video file?</property>
+    <property name="secondary_text" translatable="yes">Did you open a video file?
+
+If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report. Make sure to describe what happened.
+
+Thank you.</property>
+    <property name="secondary_use_markup">True</property>
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can_focus">False</property>

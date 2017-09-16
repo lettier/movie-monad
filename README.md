@@ -19,6 +19,21 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * Seek
 * Play and pause
 * Volume
+* Keyboard shortcuts
+    * Mute toggle
+        * `m`
+        * `AudioMute`
+    * Fullscreen toggle
+        * `f`
+    * Volume up
+        * `Ctrl+ArrowUp` or `Command+ArrowUp` if using a Mac
+        * `AudioRaiseVolume`
+    * Volume down
+        * `Ctrl+ArrowDown` or `Command+ArrowDown` if using a Mac
+        * `AudioLowerVolume`
+    * Play/pause toggle
+        * `Space`
+        * `AudioPlay`
 
 ## Documentation
 

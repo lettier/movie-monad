@@ -21,6 +21,7 @@ import Data.IORef
 import Data.Maybe
 import Data.Int
 import Data.Time.Clock.POSIX
+import Data.List
 import Data.Text
 import Data.GI.Base
 import Data.GI.Base.Signals
@@ -64,7 +65,7 @@ main = do
   drawingArea <- builderGetObject GI.Gtk.Widget builder "drawing-area"
   bottomControlsGtkBox <- builderGetObject GI.Gtk.Box builder "bottom-controls-gtk-box"
   seekScale <- builderGetObject GI.Gtk.Scale builder "seek-scale"
-  onOffSwitch <- builderGetObject GI.Gtk.Switch builder "on-off-switch"
+  playPauseSwitch <- builderGetObject GI.Gtk.Switch builder "play-pause-switch"
   volumeButton <- builderGetObject GI.Gtk.VolumeButton builder "volume-button"
   desiredVideoWidthComboBox <- builderGetObject GI.Gtk.ComboBoxText builder "desired-video-width-combo-box"
   fullscreenButton <- builderGetObject GI.Gtk.Button builder "fullscreen-button"
@@ -98,7 +99,7 @@ main = do
         drawingArea
         playbin
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
     )
@@ -113,7 +114,7 @@ main = do
         drawingArea
         playbin
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
         fileChooserEntry
@@ -138,7 +139,7 @@ main = do
         drawingArea
         playbin
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
         fileChooserEntry
@@ -160,7 +161,7 @@ main = do
 
   _ <- GI.Gtk.onEntryIconRelease fileChooserEntry $ \ _ _ -> GI.Gtk.entrySetText fileChooserEntry ""
 
-  _ <- GI.Gtk.onSwitchStateSet onOffSwitch (onSwitchStateSet playbin)
+  _ <- GI.Gtk.onSwitchStateSet playPauseSwitch (onSwitchStateSet playbin)
 
   _ <- GI.Gtk.onScaleButtonValueChanged volumeButton (onScaleButtonValueChanged playbin)
 
@@ -193,7 +194,7 @@ main = do
         drawingAreaEventBox
         drawingArea
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
         fileChooserEntry
@@ -214,6 +215,19 @@ main = do
   _ <- GI.Gtk.onWidgetWindowStateEvent window (onWidgetWindowStateEvent isWindowFullScreenRef)
 
   _ <- GI.Gtk.onWidgetButtonReleaseEvent aboutButton (onAboutButtonRelease aboutDialog)
+
+  _ <- GI.Gtk.onWidgetKeyPressEvent window (
+      onKeyRelease
+        window
+        volumeButton
+        playPauseSwitch
+        fileChooserButton
+        desiredVideoWidthComboBox
+        bottomControlsGtkBox
+        videoInfoRef
+        isWindowFullScreenRef
+        mouseMovedLastRef
+    )
 
   _ <- GI.Gtk.onWidgetDestroy window (onWindowDestroy playbin)
 
@@ -251,7 +265,7 @@ onDrawingAreaRealize
   drawingArea
   playbin
   seekScale
-  onOffSwitch
+  playPauseSwitch
   desiredVideoWidthComboBox
   fullscreenButton
   = do
@@ -263,13 +277,14 @@ onDrawingAreaRealize
   let eventMask = enumToInt32 GI.Gdk.EventMaskAllEventsMask
   GI.Gtk.widgetAddEvents drawingArea eventMask
   GI.Gtk.widgetAddEvents seekScale eventMask
+  GI.Gtk.switchSetActive playPauseSwitch False
   resetWindow
     window
     fileChooserButton
     drawingAreaEventBox
     drawingArea
     seekScale
-    onOffSwitch
+    playPauseSwitch
     desiredVideoWidthComboBox
     fullscreenButton
 
@@ -298,7 +313,7 @@ handlePlaybinBustMessage
   drawingArea
   playbin
   seekScale
-  onOffSwitch
+  playPauseSwitch
   desiredVideoWidthComboBox
   fullscreenButton
   fileChooserEntry
@@ -336,13 +351,13 @@ handlePlaybinBustMessage
         drawingAreaEventBox
         drawingArea
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
       void $ GI.Gtk.dialogRun errorMessageDialog
   when (messageType == GI.Gst.MessageTypeBuffering) $ do
     percent <- GI.Gst.messageParseBuffering message
-    isPlaying <- GI.Gtk.getSwitchActive onOffSwitch
+    isPlaying <- GI.Gtk.switchGetActive playPauseSwitch
     if percent >= 100
       then do
         GI.Gtk.setSpinnerActive bufferingSpinner False
@@ -382,7 +397,7 @@ fileChooserDialogResponseHandler
   drawingArea
   playbin
   seekScale
-  onOffSwitch
+  playPauseSwitch
   desiredVideoWidthComboBox
   fullscreenButton
   fileChooserEntry
@@ -430,7 +445,7 @@ fileChooserDialogResponseHandler
         drawingAreaEventBox
         drawingArea
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
     handleFileName
@@ -453,16 +468,16 @@ fileChooserDialogResponseHandler
             drawingAreaEventBox
             drawingArea
             seekScale
-            onOffSwitch
+            playPauseSwitch
             desiredVideoWidthComboBox
             fullscreenButton
           void $ GI.Gtk.dialogRun errorMessageDialog
         Just (width, height) -> do
-          GI.Gtk.widgetShow onOffSwitch
+          GI.Gtk.widgetShow playPauseSwitch
           GI.Gtk.widgetShow drawingAreaEventBox
           GI.Gtk.widgetShow drawingArea
           GI.Gtk.widgetShow fullscreenButton
-          GI.Gtk.switchSetActive onOffSwitch True
+          GI.Gtk.switchSetActive playPauseSwitch True
           unless isWindowFullScreen $
             setWindowSize width height fileChooserButton drawingArea window
           void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
@@ -507,11 +522,11 @@ onSwitchStateSet ::
   GI.Gst.Element ->
   Bool ->
   IO Bool
-onSwitchStateSet playbin switchOn = do
-  if switchOn
+onSwitchStateSet playbin isPlaying = do
+  if isPlaying
     then void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
     else void $ GI.Gst.elementSetState playbin GI.Gst.StatePaused
-  return switchOn
+  return isPlaying
 
 onScaleButtonValueChanged ::
   GI.Gst.Element ->
@@ -620,7 +635,7 @@ onComboBoxChanged
   drawingAreaEventBox
   drawingArea
   seekScale
-  onOffSwitch
+  playPauseSwitch
   desiredVideoWidthComboBox
   fullscreenButton
   fileChooserEntry
@@ -638,7 +653,7 @@ onComboBoxChanged
         drawingAreaEventBox
         drawingArea
         seekScale
-        onOffSwitch
+        playPauseSwitch
         desiredVideoWidthComboBox
         fullscreenButton
     Just (width, height) -> setWindowSize width height fileChooserButton drawingArea window
@@ -688,6 +703,72 @@ onAboutButtonRelease ::
 onAboutButtonRelease aboutDialog _ = do
   _ <- GI.Gtk.onDialogResponse aboutDialog (\ _ -> GI.Gtk.widgetHide aboutDialog)
   _ <- GI.Gtk.dialogRun aboutDialog
+  return True
+
+
+onKeyRelease ::
+  GI.Gtk.Window ->
+  GI.Gtk.VolumeButton ->
+  GI.Gtk.Switch ->
+  GI.Gtk.Button ->
+  GI.Gtk.ComboBoxText ->
+  GI.Gtk.Box ->
+  IORef MML.VideoInfo ->
+  IORef Bool ->
+  IORef Integer ->
+  GI.Gdk.EventKey ->
+  IO Bool
+onKeyRelease
+  window
+  volumeButton
+  playPauseSwitch
+  fileChooserButton
+  desiredVideoWidthComboBox
+  bottomControlsGtkBox
+  videoInfoRef
+  isWindowFullScreenRef
+  mouseMovedLastRef
+  eventKey
+  = do
+  videoInfoGathered <- readIORef videoInfoRef
+  let isVideo = MML.isVideo videoInfoGathered
+  let volumeDelta = 0.05
+  oldVolume <- GI.Gtk.scaleButtonGetValue volumeButton
+  isControl <- Data.List.isInfixOf [GI.Gdk.ModifierTypeControlMask] <$> GI.Gdk.getEventKeyState eventKey
+  keyValue <- GI.Gdk.getEventKeyKeyval eventKey
+  -- Mute Toggle
+  when (keyValue == GI.Gdk.KEY_m || keyValue == GI.Gdk.KEY_AudioMute) $ do
+    let newVolume = if oldVolume <= 0.0 then 0.5 else 0.0
+    GI.Gtk.scaleButtonSetValue volumeButton newVolume
+  -- Play/Pause Toggle
+  when ((keyValue == GI.Gdk.KEY_space || keyValue == GI.Gdk.KEY_AudioPlay) && isVideo) $ do
+    isPlaying <- GI.Gtk.switchGetActive playPauseSwitch
+    GI.Gtk.switchSetActive playPauseSwitch (not isPlaying)
+  -- Volume Up
+  when ((isControl && keyValue == GI.Gdk.KEY_Up) || keyValue == GI.Gdk.KEY_AudioRaiseVolume) $ do
+    let newVolume = if oldVolume >= 1.0 then 1.0 else oldVolume + volumeDelta
+    GI.Gtk.scaleButtonSetValue volumeButton newVolume
+  -- Volume Down
+  when ((isControl && keyValue == GI.Gdk.KEY_Down) || keyValue == GI.Gdk.KEY_AudioLowerVolume) $ do
+    let newVolume = if oldVolume <= 0.0 then 0.0 else oldVolume - volumeDelta
+    GI.Gtk.scaleButtonSetValue volumeButton newVolume
+  -- Fullscreen Toggle
+  when (keyValue == GI.Gdk.KEY_f && isVideo) $ do
+    eventButton <- GI.Gdk.newZeroEventButton
+    eventMotion <- GI.Gdk.newZeroEventMotion
+    void $
+      onFullscreenButtonRelease
+        isWindowFullScreenRef
+        window
+        fileChooserButton
+        desiredVideoWidthComboBox
+        eventButton
+    void $
+      onWindowMouseMove
+        bottomControlsGtkBox
+        mouseMovedLastRef
+        window
+        eventMotion
   return True
 
 onWindowDestroy ::
@@ -828,18 +909,18 @@ resetWindow
   drawingAreaEventBox
   drawingArea
   seekScale
-  onOffSwitch
+  playPauseSwitch
   desiredVideoWidthComboBox
   fullscreenButton
   = do
   desiredVideoWidth <- getDesiredVideoWidth desiredVideoWidthComboBox
   let width = fromIntegral desiredVideoWidth :: Int32
   GI.Gtk.windowUnfullscreen window
-  GI.Gtk.switchSetActive onOffSwitch False
+  GI.Gtk.switchSetActive playPauseSwitch False
   GI.Gtk.widgetHide drawingAreaEventBox
   GI.Gtk.widgetHide drawingArea
   GI.Gtk.widgetHide seekScale
-  GI.Gtk.widgetHide onOffSwitch
+  GI.Gtk.widgetHide playPauseSwitch
   GI.Gtk.widgetShow desiredVideoWidthComboBox
   GI.Gtk.widgetHide fullscreenButton
   setWindowSize width 0 fileChooserButton drawingArea window
