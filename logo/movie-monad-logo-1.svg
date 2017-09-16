@@ -588,8 +588,8 @@
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
      inkscape:zoom="1"
-     inkscape:cx="329.54363"
-     inkscape:cy="253.12784"
+     inkscape:cx="329.91612"
+     inkscape:cy="299.37266"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -752,5 +752,17 @@
        style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-size:57.54236603px;line-height:125%;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Ultra-Bold';text-align:start;letter-spacing:-1.70070565px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;fill:none;fill-opacity:1;fill-rule:nonzero;stroke:url(#linearGradient10134);stroke-width:2.00000003;stroke-linecap:butt;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;paint-order:markers fill stroke"
        transform="matrix(0.26458333,0,0,0.26458333,0,197)"
        inkscape:connector-curvature="0" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666656px;line-height:125%;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans';text-align:start;letter-spacing:0px;word-spacing:-0.26458333px;writing-mode:lr-tb;text-anchor:start;fill:#b2b2b2;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="247.48691"
+       y="151.86511"
+       id="text4786"
+       transform="rotate(23.112766)"><tspan
+         sodipodi:role="line"
+         id="tspan4784"
+         x="247.48691"
+         y="151.86511"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666656px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans';word-spacing:-0.26458333px;stroke-width:0.26458332px;fill:#b2b2b2;fill-opacity:1;">(C) DAVID LETTIER</tspan></text>
   </g>
 </svg>

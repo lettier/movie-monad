@@ -1,4 +1,4 @@
-![Movie Monad](https://i.imgur.com/d7Hz6Cv.png)
+![Movie Monad](https://i.imgur.com/gdsyIMv.png)
 
 # Movie Monad
 
@@ -8,21 +8,42 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ![GUI showing Sintel from the Blender Foundation](https://i.imgur.com/SLse3s9.jpg)
 
+## Features
+
+* Local or remote video file playback
+    * `file://`
+    * `http://`
+    * `https://`
+* Window size selection
+* Fullscreen mode
+* Seek
+* Play and pause
+* Volume
+
 ## Documentation
 
 [Let's make a GTK Video Player with Haskell](https://lettier.github.io/posts/2017-08-30-haskell-gtk-video-player.html)
 
-## Install
+## Dependencies
+
+* [Haskell](https://www.haskell.org/platform/)
+* X11
+    * [Windows](https://sourceforge.net/projects/xming/)
+    * [Mac](https://www.xquartz.org/)
+    * Linux
+* [GTK+](https://www.gtk.org/download/index.php)
+* [GStreamer](https://gstreamer.freedesktop.org/download/)
+
+## Install & Run
 
 ### Hackage
 
-```
+```bash
 # Install Cabal (https://www.haskell.org/platform/)
 # Install Cabal Install (https://www.haskell.org/platform/)
 # Install XQuartz (https://www.xquartz.org/) if using Mac OSX or macOS
 # Install Xming X Server (https://sourceforge.net/projects/xming/) if using Microsoft Windows
 # Install GTK+ 3.* (https://www.gtk.org/download/index.php)
-# Install ExifTool (https://www.sno.phy.queensu.ca/~phil/exiftool/)
 cabal install movie-monad
 movie-monad
 ```
@@ -36,7 +57,6 @@ movie-monad
 # Install GTK+ 3.* (https://www.gtk.org/download/index.php)
 # Install Haskell (https://www.haskell.org/platform/)
 # Install Haksell Stack (https://www.haskell.org/platform/)
-# Install ExifTool (https://www.sno.phy.queensu.ca/~phil/exiftool/)
 git clone https://github.com/lettier/movie-monad.git
 cd movie-monad/
 stack setup

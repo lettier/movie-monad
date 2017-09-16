@@ -1,34 +1,8 @@
-# Movie Monad
+# [Movie Monad](https://github.com/lettier/movie-monad)
 
 ## Changelog
 
-### Version
-
-0.0.2.1
-
-#### Downstreams
-
--
-
-#### Added
-
--
-
-#### Changed
-
-- Cabal file
-  - Corrected source-repository
-- CHANGELOG
-
-#### Removed
-
--
-
--------------------------------------------------------------------------------
-
-### Version
-
-0.0.2.0
+### 0.0.2.0
 
 #### Downstreams
 
@@ -38,24 +12,24 @@
 
 - Hides the cursor and bottom controls when in fullscreen mode and the mouse is idle
 - New Logo
-- CHANGELOG
+- URL support
 
 #### Changed
 
+- Cabal file
+    - Corrected source-repository
 - Logo
 - README
-- Version number
 - Dependencies
 
 #### Removed
 
+- ExifTool requirement
 - Old logo PNG file
 
 -------------------------------------------------------------------------------
 
-### Version
-
-0.0.1.0
+### 0.0.1.0
 
 #### Downstreams
 
@@ -70,7 +44,6 @@
 - Screenshot
 - Main function
     - Extracted callback functions into their own functions
-- Version number
 - Dependencies to match Hackage
 
 #### Removed
@@ -79,9 +52,7 @@
 
 -------------------------------------------------------------------------------
 
-### Version
-
-0.0.0.0
+### 0.0.0.0
 
 #### Downstreams
 

@@ -144,9 +144,9 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="1.0687095"
-     inkscape:cx="149.32549"
-     inkscape:cy="271.88329"
+     inkscape:zoom="1.5113835"
+     inkscape:cx="377.20184"
+     inkscape:cy="242.67181"
      inkscape:document-units="mm"
      inkscape:current-layer="layer1"
      showgrid="false"
@@ -249,5 +249,17 @@
          style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans Bold';letter-spacing:-2.850003px;writing-mode:lr-tb;fill:#373737;fill-opacity:1"
          d="m -79.622582,38.72474 c -8.320001,0 -13.312001,5.845333 -13.312001,15.488 0,9.856001 4.992,15.530667 13.312001,15.530667 8.362667,0 13.354667,-5.845333 13.354667,-15.530667 0,-9.856 -4.992,-15.488 -13.354667,-15.488 z m 0,5.12 c 3.968,0 6.016,2.901333 6.016,10.368 0,7.509334 -2.005333,10.410667 -6.016,10.410667 -3.84,0 -5.973334,-2.901333 -5.973334,-10.410667 0,-7.466667 2.048,-10.368 5.973334,-10.368 z m -13.158664,25.173334 -2.218667,-29.568001 h -8.874667 l -4.13867,20.053334 -4.43733,-20.053334 h -8.832 l -2.21867,29.568001 h 6.82667 l 0.512,-11.477334 c 0.17067,-4.138666 0.17067,-7.808 -0.128,-12.16 l 4.864,20.522667 h 6.61333 l 4.56534,-20.522667 c -0.21334,3.669333 -0.128,7.936 0.0853,12.074667 l 0.512,11.562667 z m 27.985643,-28.744782 v 28.746044 h 8.92261 l 6.135995,-16.006921 4.856948,-12.739123 h -5.8272 L -59.458794,62.5899 c 0.384229,-2.322922 0.939107,-6.097335 0.939107,-10.701688 v -11.61492 z m 21.797712,0 -5.065735,13.279953 c -0.09937,1.480079 -0.167118,3.111304 -0.167118,4.930199 v 10.535892 h 6.232927 V 40.273292 Z m 20.986749,4.182048 0.72533,-4.992 h -18.13333 v 29.568001 h 18.13333 v -5.034667 h -11.136 v -7.552 h 9.088 v -4.906667 h -9.088 V 44.45534 Z" />
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666656px;line-height:125%;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans';text-align:start;letter-spacing:0px;word-spacing:-0.26458333px;writing-mode:lr-tb;text-anchor:start;fill:#d1d1d1;fill-opacity:1;stroke:none;stroke-width:0.26458332px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1;"
+       x="45.932545"
+       y="284.89606"
+       id="text4526"
+       transform="rotate(-23.282213)"><tspan
+         sodipodi:role="line"
+         id="tspan4524"
+         x="45.932545"
+         y="284.89606"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.11666656px;font-family:'Fira Sans';-inkscape-font-specification:'Fira Sans';word-spacing:-0.26458333px;fill:#d1d1d1;fill-opacity:1;stroke-width:0.26458332px;">(C) DAVID  LETTIER</tspan></text>
   </g>
 </svg>

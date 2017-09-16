@@ -1,5 +1,5 @@
 name:                 movie-monad
-version:              0.0.2.1
+version:              0.0.2.0
 synopsis:             Plays videos using GStreamer and GTK+.
 description:          Desktop video player that uses GStreamer and GTK+.
 homepage:             https://github.com/lettier/movie-monad
@@ -13,10 +13,11 @@ category:               Application
                       , Multimedia Player
                       , Video
 build-type:           Simple
-cabal-version:        >=1.10
+cabal-version:        >= 1.10
 extra-source-files:     README.md
                       , LICENSE
                       , CHANGELOG.md
+                      , ./src/MovieMonadLib.hs
                       , ./src/dev/Paths_movie_monad.hs
                       , ./src/data/gui.glade
                       , ./src/data/movie-monad-logo.svg
@@ -32,6 +33,9 @@ executable            movie-monad
   main-is:              Main.hs
   default-language:     Haskell2010
   build-depends:        base >= 4.7 && < 5
+                      , filepath == 1.4.*
+                      , system-fileio == 0.3.*
+                      , system-filepath == 0.4.*
                       , text == 1.2.*
                       , time == 1.6.*
                       , process == 1.4.*
@@ -46,6 +50,6 @@ executable            movie-monad
                       , gi-gdkpixbuf == 2.0.*
                       , gi-gst == 1.0.*
                       , gi-gtk == 3.0.*
-  ghc-options:        -threaded -with-rtsopts=-N -Wall
-  other-modules:      Paths_movie_monad
+  ghc-options:        -threaded -with-rtsopts=-N -Wall -freverse-errors
+  other-modules:      Paths_movie_monad, MovieMonadLib
   hs-source-dirs:     ./src/
