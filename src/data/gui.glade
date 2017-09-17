@@ -1,7 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 -->
+<!-- Generated with glade 3.20.0 
+
+Copyright (c) 2017 David Lettier
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+    * Neither the name of the <organization> nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL <COPYRIGHT HOLDER> BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+Author: David Lettier
+
+-->
 <interface>
-  <requires lib="gtk+" version="3.20"/>
+  <requires lib="gtk+" version="3.10"/>
+  <!-- interface-license-type bsd3c -->
+  <!-- interface-name Movie Monad -->
+  <!-- interface-description A desktop video player built with Haskell that uses GStreamer and GTK+. -->
+  <!-- interface-copyright 2017 David Lettier -->
+  <!-- interface-authors David Lettier -->
   <object class="GtkImage" id="about-image">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -37,7 +71,7 @@
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Movie Monad</property>
     <property name="window_position">center</property>
-    <property name="icon_name">applications-multimedia</property>
+    <property name="icon">movie-monad-icon.ico</property>
     <property name="gravity">center</property>
     <child>
       <object class="GtkBox">
@@ -277,7 +311,6 @@ audio-volume-medium-symbolic</property>
                     </child>
                     <child>
                       <object class="GtkSpinner" id="buffering-spinner">
-                        <property name="visible">True</property>
                         <property name="sensitive">False</property>
                         <property name="app_paintable">True</property>
                         <property name="can_focus">False</property>
@@ -381,7 +414,7 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="authors">David Lettier</property>
-    <property name="logo_icon_name">applications-multimedia</property>
+    <property name="logo">movie-monad-logo.svg</property>
     <property name="license_type">custom</property>
     <child internal-child="vbox">
       <object class="GtkBox">
@@ -420,6 +453,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">There was an error.</property>
     <property name="secondary_text" translatable="yes">Did you open a video file?
+Did you install GStreamer and all the plugins?
 
 If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report. Make sure to describe what happened.
 

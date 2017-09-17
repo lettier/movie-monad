@@ -360,10 +360,12 @@ handlePlaybinBustMessage
     isPlaying <- GI.Gtk.switchGetActive playPauseSwitch
     if percent >= 100
       then do
+        GI.Gtk.widgetHide bufferingSpinner
         GI.Gtk.setSpinnerActive bufferingSpinner False
         GI.Gtk.widgetSetSensitive seekScale True
         when isPlaying $ void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
       else do
+        GI.Gtk.widgetShow bufferingSpinner
         GI.Gtk.setSpinnerActive bufferingSpinner True
         GI.Gtk.widgetSetSensitive seekScale False
         void $ GI.Gst.elementSetState playbin GI.Gst.StatePaused
@@ -705,7 +707,6 @@ onAboutButtonRelease aboutDialog _ = do
   _ <- GI.Gtk.dialogRun aboutDialog
   return True
 
-
 onKeyRelease ::
   GI.Gtk.Window ->
   GI.Gtk.VolumeButton ->
@@ -797,7 +798,7 @@ getVideoInfoRaw uri = do
         "gst-discoverer-1.0"
         [uri, "-v"]
         ""
-    ) (\ (_ :: Control.Exception.IOException) -> return (ExitFailure 1, "", ""))
+    ) (\ (e :: Control.Exception.IOException) -> print e >> return (ExitFailure 1, "", ""))
   if code == System.Exit.ExitSuccess
     then return (Just out)
     else return Nothing

@@ -14,6 +14,8 @@
 - New Logo
 - URL support
 - Keyboard shortcuts
+- makefile
+- Icon
 
 #### Changed
 
@@ -22,6 +24,7 @@
 - Logo
 - README
 - Dependencies
+- Icon
 
 #### Removed
 

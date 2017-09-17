@@ -21,8 +21,10 @@ extra-source-files:     README.md
                       , ./src/dev/Paths_movie_monad.hs
                       , ./src/data/gui.glade
                       , ./src/data/movie-monad-logo.svg
+                      , ./src/data/movie-monad-icon.ico
 data-files:             data/gui.glade
                       , data/movie-monad-logo.svg
+                      , data/movie-monad-icon.ico
 data-dir:             ./src/
 
 source-repository     head
