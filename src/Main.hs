@@ -180,11 +180,12 @@ main = do
     )
 
   _ <- GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 (
-      hideBottomControlsAndCursorIfFullscreenAndIdle
-        isWindowFullScreenRef
-        mouseMovedLastRef
-        bottomControlsGtkBox
+      hideOnScreenControls
         window
+        fileChooserButton
+        bottomControlsGtkBox
+        videoInfoRef
+        mouseMovedLastRef
     )
 
   _ <- GI.Gtk.onComboBoxChanged desiredVideoWidthComboBox (
@@ -209,8 +210,22 @@ main = do
         desiredVideoWidthComboBox
     )
 
-  _ <- GI.Gtk.onWidgetMotionNotifyEvent window    (onWindowMouseMove bottomControlsGtkBox mouseMovedLastRef window)
-  _ <- GI.Gtk.onWidgetMotionNotifyEvent seekScale (onWindowMouseMove bottomControlsGtkBox mouseMovedLastRef window)
+  _ <- GI.Gtk.onWidgetMotionNotifyEvent window    (
+      onWindowMouseMove
+        window
+        fileChooserButton
+        bottomControlsGtkBox
+        isWindowFullScreenRef
+        mouseMovedLastRef
+    )
+  _ <- GI.Gtk.onWidgetMotionNotifyEvent seekScale (
+      onWindowMouseMove
+        window
+        fileChooserButton
+        bottomControlsGtkBox
+        isWindowFullScreenRef
+        mouseMovedLastRef
+    )
 
   _ <- GI.Gtk.onWidgetWindowStateEvent window (onWidgetWindowStateEvent isWindowFullScreenRef)
 
@@ -234,8 +249,8 @@ main = do
   GI.Gtk.widgetShowAll window
   GI.Gtk.main
 
-hideBottomControlsInterval :: Integral a => a
-hideBottomControlsInterval = 5
+hideOnScreenControlsInterval :: Integral a => a
+hideOnScreenControlsInterval = 5
 
 builderGetObject ::
   (GI.GObject.GObject b, GI.Gtk.IsBuilder a) =>
@@ -440,7 +455,8 @@ fileChooserDialogResponseHandler
       Bool ->
       Int ->
       IO ()
-    handleFileName True _ _ _ =
+    handleFileName True _ _ _ = do
+      atomicWriteIORef videoInfoRef MML.defaultVideoInfo
       resetWindow
         window
         fileChooserButton
@@ -585,38 +601,52 @@ updateSeekScale
   return True
 
 onWindowMouseMove ::
-  GI.Gtk.Box ->
-  IORef Integer ->
   GI.Gtk.Window ->
-  GI.Gdk.EventMotion ->
-  IO Bool
-onWindowMouseMove bottomControlsGtkBox mouseMovedLastRef window _ =
-  GI.Gtk.widgetShow bottomControlsGtkBox >>
-  getPOSIXTime >>=
-  atomicWriteIORef mouseMovedLastRef . round >>
-  setCursor window Nothing >>
-  return False
-
-hideBottomControlsAndCursorIfFullscreenAndIdle ::
+  GI.Gtk.Button ->
+  GI.Gtk.Box ->
   IORef Bool ->
   IORef Integer ->
-  GI.Gtk.Box ->
-  GI.Gtk.Window ->
+  GI.Gdk.EventMotion ->
   IO Bool
-hideBottomControlsAndCursorIfFullscreenAndIdle
+onWindowMouseMove
+  window
+  fileChooserButton
+  bottomControlsGtkBox
   isWindowFullScreenRef
   mouseMovedLastRef
-  bottomControlsGtkBox
-  window
+  _
   = do
   isWindowFullScreen <- readIORef isWindowFullScreenRef
+  unless isWindowFullScreen $ GI.Gtk.widgetShow fileChooserButton
+  GI.Gtk.widgetShow bottomControlsGtkBox
+  timeNow <- getPOSIXTime
+  atomicWriteIORef mouseMovedLastRef (round timeNow)
+  setCursor window Nothing
+  return False
+
+hideOnScreenControls ::
+  GI.Gtk.Window ->
+  GI.Gtk.Button ->
+  GI.Gtk.Box ->
+  IORef MML.VideoInfo ->
+  IORef Integer ->
+  IO Bool
+hideOnScreenControls
+  window
+  fileChooserButton
+  bottomControlsGtkBox
+  videoInfoRef
+  mouseMovedLastRef
+  = do
+  isVideo <- MML.isVideo <$> readIORef videoInfoRef
   mouseMovedLast <- readIORef mouseMovedLastRef
   timeNow <- fmap round getPOSIXTime
   let delta = timeNow - mouseMovedLast
-  when (isWindowFullScreen && delta >= hideBottomControlsInterval) $ do
+  when (isVideo && delta >= hideOnScreenControlsInterval) $ do
+    GI.Gtk.widgetHide fileChooserButton
     GI.Gtk.widgetHide bottomControlsGtkBox
+    atomicWriteIORef mouseMovedLastRef timeNow
     setCursor window (Just "none")
-  when (delta >= hideBottomControlsInterval) $ atomicWriteIORef mouseMovedLastRef timeNow
   return True
 
 onComboBoxChanged ::
@@ -758,18 +788,20 @@ onKeyRelease
     eventButton <- GI.Gdk.newZeroEventButton
     eventMotion <- GI.Gdk.newZeroEventMotion
     void $
+      onWindowMouseMove
+        window
+        fileChooserButton
+        bottomControlsGtkBox
+        isWindowFullScreenRef
+        mouseMovedLastRef
+        eventMotion
+    void $
       onFullscreenButtonRelease
         isWindowFullScreenRef
         window
         fileChooserButton
         desiredVideoWidthComboBox
         eventButton
-    void $
-      onWindowMouseMove
-        bottomControlsGtkBox
-        mouseMovedLastRef
-        window
-        eventMotion
   return True
 
 onWindowDestroy ::

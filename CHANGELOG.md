@@ -10,7 +10,7 @@
 
 #### Added
 
-- Hides the cursor and bottom controls when in fullscreen mode and the mouse is idle
+- Hides the cursor and the on-screen controls when the mouse is idle
 - New Logo
 - URL support
 - Keyboard shortcuts
