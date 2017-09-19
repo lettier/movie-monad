@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Movie Monad
+Comment=A desktop video player built with Haskell that uses GStreamer and GTK+.
+Icon=movie-monad
+Categories=AudioVideo;Audio;Video;
+Terminal=false

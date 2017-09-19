@@ -61,10 +61,15 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 # Install all of the GStreamer Plugins (https://en.wikipedia.org/wiki/GStreamer#Plug-ins)
 # Visit https://github.com/lettier/movie-monad/releases
 # * equals the current version
-# Download the latest AppImage movie-monad-linux-app-image-*
-wget https://github.com/lettier/movie-monad/releases/download/*/movie-monad-linux-app-image-*
-chmod a+x movie-monad-linux-app-image-*
-./movie-monad-linux-app-image-*
+# Download the latest AppImage movie-monad-*-x86_64.AppImage
+wget https://github.com/lettier/movie-monad/releases/download/*/movie-monad-*-x86_64.AppImage
+chmod a+x movie-monad-*-x86_64.AppImage
+./movie-monad-*-x86_64.AppImage
+# If you would like to install the AppImage, you can run the following
+cd
+wget "https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/movie-monad-install.sh" -O "movie-monad-install.sh"
+chmod +x "movie-monad-install.sh"
+./movie-monad-install.sh
 ```
 
 ### Hackage

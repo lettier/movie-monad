@@ -16,6 +16,8 @@
 - Keyboard shortcuts
 - makefile
 - Icon
+- AppImage
+- AppImage installation script
 
 #### Changed
 
