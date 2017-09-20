@@ -25,6 +25,10 @@ run: install
 build_dist:
   stack sdist
 
+clean_cabal_sandbox: setup
+  $(CABAL) sandbox delete && \
+  $(CABAL) sandbox init
+
 build_linux_binaries:
   $(CABAL) sandbox init && \
   $(CABAL) --require-sandbox install --dependencies-only && \

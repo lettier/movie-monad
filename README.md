@@ -6,7 +6,7 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ## Screenshots
 
-![GUI showing Sintel from the Blender Foundation](https://i.imgur.com/SLse3s9.jpg)
+![GUI showing Sintel from the Blender Foundation](https://i.imgur.com/UBNYbER.jpg)
 
 ## Features
 

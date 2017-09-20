@@ -62,24 +62,34 @@ Author: David Lettier
     <property name="can_focus">False</property>
     <property name="stock">gtk-fullscreen</property>
   </object>
+  <object class="GtkImage" id="pause-image">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-media-pause</property>
+  </object>
+  <object class="GtkImage" id="play-image">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="stock">gtk-media-play</property>
+  </object>
   <object class="GtkAdjustment" id="seek-scale-adjustment">
     <property name="upper">100</property>
     <property name="step_increment">1</property>
     <property name="page_increment">10</property>
   </object>
   <object class="GtkWindow" id="window">
-    <property name="can_focus">False</property>
+    <property name="can_focus">True</property>
     <property name="title" translatable="yes">Movie Monad</property>
     <property name="window_position">center</property>
-    <property name="icon">movie-monad-icon.ico</property>
+    <property name="icon">movie-monad-icon.png</property>
     <property name="gravity">center</property>
     <child>
-      <object class="GtkBox">
+      <object class="GtkBox" id="box-1">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkBox">
+          <object class="GtkBox" id="box-2">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="hexpand">True</property>
@@ -99,7 +109,7 @@ Author: David Lettier
                 <property name="image_position">right</property>
                 <property name="always_show_image">True</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="box-3">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <child>
@@ -118,7 +128,7 @@ Author: David Lettier
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkImage">
+                      <object class="GtkImage" id="open-image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="stock">gtk-open</property>
@@ -141,7 +151,7 @@ Author: David Lettier
             </child>
             <child>
               <object class="GtkEventBox" id="drawing-area-event-box">
-                <property name="app_paintable">True</property>
+                <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="is_focus">True</property>
                 <property name="hexpand">True</property>
@@ -149,8 +159,8 @@ Author: David Lettier
                 <property name="above_child">True</property>
                 <child>
                   <object class="GtkDrawingArea" id="drawing-area">
-                    <property name="app_paintable">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
                     <property name="double_buffered">False</property>
                     <property name="hexpand">True</property>
                     <property name="vexpand">True</property>
@@ -194,7 +204,7 @@ Author: David Lettier
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="box-4">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="valign">end</property>
@@ -202,17 +212,18 @@ Author: David Lettier
                     <property name="margin_bottom">5</property>
                     <property name="hexpand">True</property>
                     <child>
-                      <object class="GtkSwitch" id="play-pause-switch">
+                      <object class="GtkButton" id="play-pause-button">
                         <property name="visible">True</property>
-                        <property name="app_paintable">True</property>
                         <property name="can_focus">True</property>
-                        <property name="has_focus">True</property>
-                        <property name="tooltip_text" translatable="yes">Toggle on to play, toggle off to pause</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Click to play</property>
                         <property name="margin_left">5</property>
+                        <property name="image">play-image</property>
+                        <property name="always_show_image">True</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">False</property>
+                        <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
                     </child>
@@ -235,7 +246,7 @@ audio-volume-high-symbolic
 audio-volume-low-symbolic
 audio-volume-medium-symbolic</property>
                         <child internal-child="plus_button">
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="volume-up-button">
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="halign">center</property>
@@ -244,7 +255,7 @@ audio-volume-medium-symbolic</property>
                           </object>
                         </child>
                         <child internal-child="minus_button">
-                          <object class="GtkButton">
+                          <object class="GtkButton" id="volume-down-button">
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="halign">center</property>
@@ -298,6 +309,7 @@ audio-volume-medium-symbolic</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
                         <property name="tooltip_text" translatable="yes">Toggle on or off fullscreen</property>
+                        <property name="margin_left">5</property>
                         <property name="image">fullscreen-image</property>
                         <property name="relief">half</property>
                         <property name="always_show_image">True</property>
@@ -364,7 +376,7 @@ audio-volume-medium-symbolic</property>
         </child>
       </object>
     </child>
-    <child type="titlebar">
+    <child>
       <placeholder/>
     </child>
   </object>
@@ -416,12 +428,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="logo">movie-monad-logo.svg</property>
     <property name="license_type">custom</property>
     <child internal-child="vbox">
-      <object class="GtkBox">
+      <object class="GtkBox" id="box-5">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox">
+          <object class="GtkButtonBox" id="about-dialog-button-box">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
           </object>
@@ -459,12 +471,12 @@ If you feel like this is a bug, please visit &lt;a href="https://github.com/lett
 Thank you.</property>
     <property name="secondary_use_markup">True</property>
     <child internal-child="vbox">
-      <object class="GtkBox">
+      <object class="GtkBox" id="box-6">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox">
+          <object class="GtkButtonBox" id="error-message-dialog-action-area">
             <property name="can_focus">False</property>
             <property name="homogeneous">True</property>
             <property name="layout_style">expand</property>
@@ -487,13 +499,13 @@ Thank you.</property>
     <property name="type_hint">dialog</property>
     <property name="transient_for">window</property>
     <child internal-child="vbox">
-      <object class="GtkBox">
+      <object class="GtkBox" id="box-7">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <property name="baseline_position">top</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox">
+          <object class="GtkButtonBox" id="file-chooser-dialog-action-area">
             <property name="can_focus">False</property>
             <property name="baseline_position">bottom</property>
             <property name="layout_style">end</property>

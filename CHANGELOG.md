@@ -18,6 +18,7 @@
 - Icon
 - AppImage
 - AppImage installation script
+- Support for GTK 3.10
 
 #### Changed
 
@@ -27,6 +28,8 @@
 - README
 - Dependencies
 - Icon
+- Play/Pause toggle to button
+- ICO file to PNG
 
 #### Removed
 
