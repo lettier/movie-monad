@@ -28,6 +28,7 @@ import Data.GI.Base.Signals
 import Data.GI.Base.Properties
 import Filesystem
 import Filesystem.Path.CurrentOS
+import qualified Network.URI
 import GI.GLib
 import GI.GObject
 import qualified GI.Gtk
@@ -61,7 +62,6 @@ main = do
   fileChooserWidget <- builderGetObject GI.Gtk.FileChooserWidget builder "file-chooser-widget"
   fileChooserCancelButton <- builderGetObject GI.Gtk.Button builder "file-chooser-cancel-button"
   fileChooserOpenButton <- builderGetObject GI.Gtk.Button builder "file-chooser-open-button"
-  drawingAreaEventBox <- builderGetObject GI.Gtk.EventBox builder "drawing-area-event-box"
   drawingArea <- builderGetObject GI.Gtk.Widget builder "drawing-area"
   bottomControlsGtkBox <- builderGetObject GI.Gtk.Box builder "bottom-controls-gtk-box"
   seekScale <- builderGetObject GI.Gtk.Scale builder "seek-scale"
@@ -85,7 +85,6 @@ main = do
       , MML.fileChooserWidget = fileChooserWidget
       , MML.fileChooserCancelButton = fileChooserCancelButton
       , MML.fileChooserOpenButton = fileChooserOpenButton
-      , MML.drawingAreaEventBox = drawingAreaEventBox
       , MML.drawingArea = drawingArea
       , MML.bottomControlsGtkBox = bottomControlsGtkBox
       , MML.seekScale = seekScale
@@ -209,23 +208,7 @@ main = do
         desiredVideoWidthComboBox
     )
 
-  _ <- GI.Gtk.onWidgetMotionNotifyEvent window (
-      onWindowMouseMove
-        window
-        fileChooserButton
-        bottomControlsGtkBox
-        isWindowFullScreenRef
-        mouseMovedLastRef
-    )
   _ <- GI.Gtk.onWidgetMotionNotifyEvent drawingArea (
-      onWindowMouseMove
-        window
-        fileChooserButton
-        bottomControlsGtkBox
-        isWindowFullScreenRef
-        mouseMovedLastRef
-    )
-  _ <- GI.Gtk.onWidgetMotionNotifyEvent drawingAreaEventBox (
       onWindowMouseMove
         window
         fileChooserButton
@@ -258,8 +241,6 @@ main = do
   GI.Gtk.widgetShowAll window
   GI.Gtk.main
 
-hideOnScreenControlsInterval :: Integral a => a
-hideOnScreenControlsInterval = 5
 
 builderGetObject ::
   (GI.GObject.GObject b, GI.Gtk.IsBuilder a) =>
@@ -278,7 +259,6 @@ onDrawingAreaRealize ::
 onDrawingAreaRealize
   guiObjects@MML.GuiObjects {
         MML.drawingArea = drawingArea
-      , MML.drawingAreaEventBox = drawingAreaEventBox
       , MML.seekScale = seekScale
     }
   playbin
@@ -290,7 +270,6 @@ onDrawingAreaRealize
   GI.GstVideo.videoOverlaySetWindowHandle (GstElement playbin) xid'
   let eventMask = enumToInt32 GI.Gdk.EventMaskAllEventsMask
   GI.Gtk.widgetAddEvents drawingArea eventMask
-  GI.Gtk.widgetAddEvents drawingAreaEventBox eventMask
   GI.Gtk.widgetAddEvents seekScale eventMask
   resetWindow guiObjects
 
@@ -364,7 +343,6 @@ fileChooserDialogResponseHandler
   guiObjects@MML.GuiObjects {
         MML.window = window
       , MML.fileChooserButton = fileChooserButton
-      , MML.drawingAreaEventBox = drawingAreaEventBox
       , MML.drawingArea = drawingArea
       , MML.seekScale = seekScale
       , MML.playPauseButton = playPauseButton
@@ -434,7 +412,6 @@ fileChooserDialogResponseHandler
           resetWindow guiObjects
           void $ GI.Gtk.dialogRun errorMessageDialog
         Just (width, height) -> do
-          GI.Gtk.widgetShow drawingAreaEventBox
           GI.Gtk.widgetShow drawingArea
           GI.Gtk.widgetShow playPauseButton
           GI.Gtk.widgetShow fullscreenButton
@@ -473,11 +450,11 @@ fileChooserSelectionChangedHandler
   maybeUri <- GI.Gtk.fileChooserGetUri fileChooserWidget
   case maybeUri of
     Nothing -> return ()
-    Just uri -> do
-      let uriStr = Data.Text.unpack uri
-      local <- isLocalFile uriStr
-      video <- MML.isVideo <$> getVideoInfo videoInfoRef uriStr
-      GI.Gtk.entrySetText fileChooserEntry (if local && video then uri else "")
+    Just uri' -> do
+      let uri = Network.URI.unEscapeString $ Data.Text.unpack uri'
+      local <- isLocalFile uri
+      video <- MML.isVideo <$> getVideoInfo videoInfoRef uri
+      GI.Gtk.entrySetText fileChooserEntry (if local && video then Data.Text.pack uri else "")
 
 playPauseButtonClickHandler ::
   GI.Gst.Element ->
@@ -593,6 +570,9 @@ onWindowMouseMove
   atomicWriteIORef mouseMovedLastRef (round timeNow)
   setCursor window Nothing
   return False
+
+hideOnScreenControlsInterval :: Integral a => a
+hideOnScreenControlsInterval = 5
 
 hideOnScreenControls ::
   GI.Gtk.Window ->
@@ -737,6 +717,17 @@ onKeyRelease
   when ((isControl && keyValue == GI.Gdk.KEY_Down) || keyValue == GI.Gdk.KEY_AudioLowerVolume) $ do
     let newVolume = if oldVolume <= 0.0 then 0.0 else oldVolume - volumeDelta
     GI.Gtk.scaleButtonSetValue volumeButton newVolume
+  -- Controls Show
+  when (keyValue == GI.Gdk.KEY_c) $ do
+    eventMotion <- GI.Gdk.newZeroEventMotion
+    void $
+      onWindowMouseMove
+        window
+        fileChooserButton
+        bottomControlsGtkBox
+        isWindowFullScreenRef
+        mouseMovedLastRef
+        eventMotion
   -- Fullscreen Toggle
   when (keyValue == GI.Gdk.KEY_f && isVideo) $ do
     eventMotion <- GI.Gdk.newZeroEventMotion
@@ -886,7 +877,6 @@ resetWindow
   MML.GuiObjects {
         MML.window = window
       , MML.fileChooserButton = fileChooserButton
-      , MML.drawingAreaEventBox = drawingAreaEventBox
       , MML.drawingArea = drawingArea
       , MML.seekScale = seekScale
       , MML.playPauseButton = playPauseButton
@@ -900,7 +890,6 @@ resetWindow
   let width = fromIntegral desiredVideoWidth :: Int32
   GI.Gtk.windowUnfullscreen window
   setPlayPauseButton playPauseButton playImage pauseImage False
-  GI.Gtk.widgetHide drawingAreaEventBox
   GI.Gtk.widgetHide drawingArea
   GI.Gtk.widgetHide seekScale
   GI.Gtk.widgetHide playPauseButton

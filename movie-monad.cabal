@@ -42,6 +42,7 @@ executable            movie-monad
                       , time == 1.6.*
                       , process == 1.4.*
                       , MissingH == 1.4.*
+                      , network-uri == 2.6.*
                       , haskell-gi-base == 0.20.*
                       , gi-xlib == 2.0.*
                       , gi-gobject == 2.0.*

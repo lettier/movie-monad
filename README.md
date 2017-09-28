@@ -25,6 +25,8 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
         * `AudioMute`
     * Fullscreen toggle
         * `f`
+    * Show on-screen controls
+        * `c`
     * Volume up
         * `Ctrl+ArrowUp` or `Command+ArrowUp` if using a Mac
         * `AudioRaiseVolume`
@@ -41,12 +43,17 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ## Dependencies
 
+### Runtime
+
 * X11
     * [Windows](https://sourceforge.net/projects/xming/)
     * [Mac](https://www.xquartz.org/)
     * Linux
 * [GTK+ >= 3.10](https://www.gtk.org/download/index.php)
 * [GStreamer == 1.0](https://gstreamer.freedesktop.org/download/)
+
+### Build
+
 * [Haskell](https://www.haskell.org/platform/)
 
 ## Install & Run

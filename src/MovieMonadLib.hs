@@ -38,7 +38,6 @@ data GuiObjects = GuiObjects {
     , fileChooserWidget :: GI.Gtk.FileChooserWidget
     , fileChooserCancelButton :: GI.Gtk.Button
     , fileChooserOpenButton :: GI.Gtk.Button
-    , drawingAreaEventBox :: GI.Gtk.EventBox
     , drawingArea :: GI.Gtk.Widget
     , bottomControlsGtkBox :: GI.Gtk.Box
     , seekScale :: GI.Gtk.Scale

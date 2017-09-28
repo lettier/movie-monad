@@ -150,27 +150,17 @@ Author: David Lettier
               </packing>
             </child>
             <child>
-              <object class="GtkEventBox" id="drawing-area-event-box">
+              <object class="GtkDrawingArea" id="drawing-area">
                 <property name="visible">True</property>
+                <property name="app_paintable">True</property>
                 <property name="can_focus">True</property>
-                <property name="is_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
-                <property name="above_child">True</property>
-                <child>
-                  <object class="GtkDrawingArea" id="drawing-area">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="double_buffered">False</property>
-                    <property name="hexpand">True</property>
-                    <property name="vexpand">True</property>
-                  </object>
-                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
                 <property name="fill">True</property>
-                <property name="position">2</property>
+                <property name="position">1</property>
               </packing>
             </child>
             <child>
@@ -364,7 +354,7 @@ audio-volume-medium-symbolic</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="pack_type">end</property>
-                <property name="position">3</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -463,8 +453,8 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="message_type">error</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">There was an error.</property>
-    <property name="secondary_text" translatable="yes">Did you open a video file?
-Did you install GStreamer and all the plugins?
+    <property name="secondary_text">Did you open a video file?
+Did you install GStreamer1.0 and all the plugins (good, bad, and ugly)?
 
 If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report. Make sure to describe what happened.
 
