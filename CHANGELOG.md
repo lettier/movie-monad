@@ -30,11 +30,13 @@
 - Icon
 - Play/Pause toggle to button
 - ICO file to PNG
+- Switched from GstVideoOverlay to GtkSink
 
 #### Removed
 
 - ExifTool requirement
 - Old logo PNG file
+- X11 dependency
 
 -------------------------------------------------------------------------------
 

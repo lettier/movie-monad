@@ -44,10 +44,8 @@ executable            movie-monad
                       , MissingH == 1.4.*
                       , network-uri == 2.6.*
                       , haskell-gi-base == 0.20.*
-                      , gi-xlib == 2.0.*
                       , gi-gobject == 2.0.*
                       , gi-glib == 2.0.*
-                      , gi-gdkx11 == 3.0.*
                       , gi-gstvideo == 1.0.*
                       , gi-gdk == 3.0.*
                       , gi-gdkpixbuf == 2.0.*

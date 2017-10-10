@@ -150,12 +150,16 @@ Author: David Lettier
               </packing>
             </child>
             <child>
-              <object class="GtkDrawingArea" id="drawing-area">
+              <object class="GtkBox" id="video-widget-box">
                 <property name="visible">True</property>
                 <property name="app_paintable">True</property>
                 <property name="can_focus">True</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
+                <property name="orientation">vertical</property>
+                <child>
+                  <placeholder/>
+                </child>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -354,7 +358,7 @@ audio-volume-medium-symbolic</property>
                 <property name="expand">False</property>
                 <property name="fill">False</property>
                 <property name="pack_type">end</property>
-                <property name="position">2</property>
+                <property name="position">3</property>
               </packing>
             </child>
           </object>
@@ -366,7 +370,7 @@ audio-volume-medium-symbolic</property>
         </child>
       </object>
     </child>
-    <child>
+    <child type="titlebar">
       <placeholder/>
     </child>
   </object>
@@ -453,10 +457,7 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="message_type">error</property>
     <property name="buttons">close</property>
     <property name="text" translatable="yes">There was an error.</property>
-    <property name="secondary_text">Did you open a video file?
-Did you install GStreamer1.0 and all the plugins (good, bad, and ugly)?
-
-If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report. Make sure to describe what happened.
+    <property name="secondary_text">If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report.
 
 Thank you.</property>
     <property name="secondary_use_markup">True</property>

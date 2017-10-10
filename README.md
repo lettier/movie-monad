@@ -45,12 +45,10 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ### Runtime
 
-* X11
-    * [Windows](https://sourceforge.net/projects/xming/)
-    * [Mac](https://www.xquartz.org/)
-    * Linux
 * [GTK+ >= 3.10](https://www.gtk.org/download/index.php)
-* [GStreamer == 1.0](https://gstreamer.freedesktop.org/download/)
+* [GStreamer >= 1.0](https://gstreamer.freedesktop.org/download/)
+    * [GStreamer Good Plug-ins](https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
+    * [GStreamer Bad Plug-ins](https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 
 ### Build
 
@@ -65,7 +63,8 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
 # Install GStreamer == 1.0 (https://gstreamer.freedesktop.org/download/)
-# Install all of the GStreamer Plugins (https://en.wikipedia.org/wiki/GStreamer#Plug-ins)
+# Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
+# Install GStreamer Bad Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Visit https://github.com/lettier/movie-monad/releases
 # * equals the current version
 # Download the latest AppImage movie-monad-*-x86_64.AppImage
@@ -82,11 +81,10 @@ chmod +x "movie-monad-install.sh"
 ### Hackage
 
 ```bash
-# Install XQuartz (https://www.xquartz.org/) if using Mac OSX or macOS
-# Install Xming X Server (https://sourceforge.net/projects/xming/) if using Microsoft Windows
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
 # Install GStreamer == 1.0 (https://gstreamer.freedesktop.org/download/)
-# Install all of the GStreamer Plugins (https://en.wikipedia.org/wiki/GStreamer#Plug-ins)
+# Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
+# Install GStreamer Bad Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Cabal (https://www.haskell.org/platform/)
 # Install Cabal Install (https://www.haskell.org/platform/)
 cabal install movie-monad
@@ -96,11 +94,10 @@ movie-monad
 ### GitHub
 
 ```bash
-# Install XQuartz (https://www.xquartz.org/) if using Mac OSX or macOS
-# Install Xming X Server (https://sourceforge.net/projects/xming/) if using Microsoft Windows
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
 # Install GStreamer == 1.0 (https://gstreamer.freedesktop.org/download/)
-# Install all of the GStreamer Plugins (https://en.wikipedia.org/wiki/GStreamer#Plug-ins)
+# Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
+# Install GStreamer Bad Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Git (https://git-scm.com/downloads)
 # Install GNU Make (https://www.gnu.org/software/make/)
 # Install Haskell (https://www.haskell.org/platform/)

@@ -9,8 +9,8 @@
 
 module Main where
 
+import GHC.Word
 import Prelude
-import Foreign.C.Types
 import System.Process
 import System.Exit
 import System.FilePath
@@ -36,7 +36,6 @@ import GI.Gst
 import GI.GstVideo
 import GI.Gdk
 import GI.GdkPixbuf
-import GI.GdkX11
 import qualified MovieMonadLib as MML
 import Paths_movie_monad
 
@@ -62,7 +61,7 @@ main = do
   fileChooserWidget <- builderGetObject GI.Gtk.FileChooserWidget builder "file-chooser-widget"
   fileChooserCancelButton <- builderGetObject GI.Gtk.Button builder "file-chooser-cancel-button"
   fileChooserOpenButton <- builderGetObject GI.Gtk.Button builder "file-chooser-open-button"
-  drawingArea <- builderGetObject GI.Gtk.Widget builder "drawing-area"
+  videoWidgetBox <- builderGetObject GI.Gtk.Box builder "video-widget-box"
   bottomControlsGtkBox <- builderGetObject GI.Gtk.Box builder "bottom-controls-gtk-box"
   seekScale <- builderGetObject GI.Gtk.Scale builder "seek-scale"
   playPauseButton <- builderGetObject GI.Gtk.Button builder "play-pause-button"
@@ -75,30 +74,6 @@ main = do
   errorMessageDialog <- builderGetObject GI.Gtk.MessageDialog builder "error-message-dialog"
   aboutButton <- builderGetObject GI.Gtk.Button builder "about-button"
   aboutDialog <- builderGetObject GI.Gtk.AboutDialog builder "about-dialog"
-
-  let guiObjects = MML.GuiObjects {
-        MML.window = window
-      , MML.fileChooserButton = fileChooserButton
-      , MML.fileChooserButtonLabel = fileChooserButtonLabel
-      , MML.fileChooserDialog = fileChooserDialog
-      , MML.fileChooserEntry = fileChooserEntry
-      , MML.fileChooserWidget = fileChooserWidget
-      , MML.fileChooserCancelButton = fileChooserCancelButton
-      , MML.fileChooserOpenButton = fileChooserOpenButton
-      , MML.drawingArea = drawingArea
-      , MML.bottomControlsGtkBox = bottomControlsGtkBox
-      , MML.seekScale = seekScale
-      , MML.playPauseButton = playPauseButton
-      , MML.playImage = playImage
-      , MML.pauseImage = pauseImage
-      , MML.volumeButton = volumeButton
-      , MML.desiredVideoWidthComboBox = desiredVideoWidthComboBox
-      , MML.fullscreenButton = fullscreenButton
-      , MML.bufferingSpinner = bufferingSpinner
-      , MML.errorMessageDialog = errorMessageDialog
-      , MML.aboutButton = aboutButton
-      , MML.aboutDialog = aboutDialog
-    }
 
   logoFile <- getDataFileName "data/movie-monad-logo.svg"
   logo <- GI.GdkPixbuf.pixbufNewFromFile (pack logoFile)
@@ -120,20 +95,58 @@ main = do
       , MML.videoInfoRef = videoInfoRef
     }
 
-  playbin <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayer")
+  playbin <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayerPlaybin")
+  maybeGtkSink <- GI.Gst.elementFactoryMake "gtksink" (Just "MultimediaPlayerGtkSink")
+  videoWidget <-
+    case maybeGtkSink of
+      Nothing -> do
+        putStrLn "Could not create a GtkSink. Please install the bad plugins, version 1.8 or higher, for GStreamer 1."
+        drawingArea <- GI.Gtk.drawingAreaNew
+        GI.Gtk.widgetSetName drawingArea invalidVideoWidgetName
+        GI.Gtk.unsafeCastTo GI.Gtk.Widget drawingArea
+      Just gtkSink ->
+        fromJust <$> Data.GI.Base.Properties.getObjectPropertyObject gtkSink "widget" GI.Gtk.Widget
+
+  Data.GI.Base.Properties.setObjectPropertyObject playbin "video-sink" maybeGtkSink
+  Data.GI.Base.Properties.setObjectPropertyBool   playbin "force-aspect-ratio" True
+  GI.Gtk.boxPackStart videoWidgetBox videoWidget True True 0
+  GI.Gtk.widgetSetHexpand videoWidget True
+  GI.Gtk.widgetSetVexpand videoWidget True
+  GI.Gtk.widgetSetSensitive videoWidget True
 
   bus <- GI.Gst.elementGetBus playbin
 
-  _ <- GI.Gtk.onWidgetRealize drawingArea (
-      onDrawingAreaRealize
+  let guiObjects = MML.GuiObjects {
+        MML.window = window
+      , MML.fileChooserButton = fileChooserButton
+      , MML.fileChooserButtonLabel = fileChooserButtonLabel
+      , MML.fileChooserDialog = fileChooserDialog
+      , MML.fileChooserEntry = fileChooserEntry
+      , MML.fileChooserWidget = fileChooserWidget
+      , MML.fileChooserCancelButton = fileChooserCancelButton
+      , MML.fileChooserOpenButton = fileChooserOpenButton
+      , MML.videoWidget = videoWidget
+      , MML.bottomControlsGtkBox = bottomControlsGtkBox
+      , MML.seekScale = seekScale
+      , MML.playPauseButton = playPauseButton
+      , MML.playImage = playImage
+      , MML.pauseImage = pauseImage
+      , MML.volumeButton = volumeButton
+      , MML.desiredVideoWidthComboBox = desiredVideoWidthComboBox
+      , MML.fullscreenButton = fullscreenButton
+      , MML.bufferingSpinner = bufferingSpinner
+      , MML.errorMessageDialog = errorMessageDialog
+      , MML.aboutButton = aboutButton
+      , MML.aboutDialog = aboutDialog
+    }
+
+  _ <- GI.Gtk.onWidgetRealize videoWidget (
+      windowRealizedHandler
         guiObjects
-        playbin
     )
 
-  _ <- GI.Gtk.onDialogResponse errorMessageDialog (\ _ -> GI.Gtk.widgetHide errorMessageDialog)
-
   _ <- GI.Gst.busAddWatch bus GI.GLib.PRIORITY_DEFAULT (
-      handlePlaybinBustMessage
+      pipelineBusMessageHandler
         guiObjects
         playbin
     )
@@ -159,7 +172,7 @@ main = do
         fileChooserEntry
     )
 
-  _ <- GI.Gtk.onEntryIconRelease fileChooserEntry $ \ _ _ -> GI.Gtk.entrySetText fileChooserEntry ""
+  _ <- GI.Gtk.onEntryIconRelease fileChooserEntry (\ _ _ -> GI.Gtk.entrySetText fileChooserEntry "")
 
   _ <- GI.Gtk.onWidgetButtonReleaseEvent playPauseButton (
       playPauseButtonClickHandler
@@ -192,6 +205,7 @@ main = do
         bottomControlsGtkBox
         videoInfoRef
         mouseMovedLastRef
+        playbin
     )
 
   _ <- GI.Gtk.onComboBoxChanged desiredVideoWidthComboBox (
@@ -208,7 +222,7 @@ main = do
         desiredVideoWidthComboBox
     )
 
-  _ <- GI.Gtk.onWidgetMotionNotifyEvent drawingArea (
+  _ <- GI.Gtk.onWidgetMotionNotifyEvent videoWidget (
       onWindowMouseMove
         window
         fileChooserButton
@@ -236,11 +250,15 @@ main = do
         playbin
     )
 
+  _ <- GI.Gtk.onDialogResponse errorMessageDialog (
+      errorMessageDialogResponseHandler
+        errorMessageDialog
+    )
+
   _ <- GI.Gtk.onWidgetDestroy window (onWindowDestroy playbin)
 
   GI.Gtk.widgetShowAll window
   GI.Gtk.main
-
 
 builderGetObject ::
   (GI.GObject.GObject b, GI.Gtk.IsBuilder a) =>
@@ -252,34 +270,27 @@ builderGetObject objectTypeClass builder objectId =
   fromJust <$> GI.Gtk.builderGetObject builder (pack objectId) >>=
     GI.Gtk.unsafeCastTo objectTypeClass
 
-onDrawingAreaRealize ::
+windowRealizedHandler ::
   MML.GuiObjects ->
-  GI.Gst.Element ->
   GI.Gtk.WidgetRealizeCallback
-onDrawingAreaRealize
+windowRealizedHandler
   guiObjects@MML.GuiObjects {
-        MML.drawingArea = drawingArea
+        MML.videoWidget = videoWidget
       , MML.seekScale = seekScale
     }
-  playbin
   = do
-  gdkWindow <- fromJust <$> GI.Gtk.widgetGetWindow drawingArea
-  x11Window <- GI.Gtk.unsafeCastTo GI.GdkX11.X11Window gdkWindow
-  xid <- GI.GdkX11.x11WindowGetXid x11Window
-  let xid' = fromIntegral xid :: CUIntPtr
-  GI.GstVideo.videoOverlaySetWindowHandle (GstElement playbin) xid'
   let eventMask = enumToInt32 GI.Gdk.EventMaskAllEventsMask
-  GI.Gtk.widgetAddEvents drawingArea eventMask
+  GI.Gtk.widgetAddEvents videoWidget eventMask
   GI.Gtk.widgetAddEvents seekScale eventMask
   resetWindow guiObjects
 
-handlePlaybinBustMessage ::
+pipelineBusMessageHandler ::
   MML.GuiObjects ->
   GI.Gst.Element ->
   GI.Gst.Bus ->
   GI.Gst.Message ->
   IO Bool
-handlePlaybinBustMessage
+pipelineBusMessageHandler
   guiObjects@MML.GuiObjects {
         MML.seekScale = seekScale
       , MML.fileChooserEntry = fileChooserEntry
@@ -308,14 +319,15 @@ handlePlaybinBustMessage
     ) $ do
       (gError, text) <- GI.Gst.messageParseError message
       gErrorText <- GI.Gst.gerrorMessage gError
-      print text
-      print gErrorText
+      Prelude.mapM_ print [text, "\n", gErrorText]
       GI.Gtk.entrySetText fileChooserEntry ""
       GI.Gtk.labelSetText fileChooserButtonLabel "Open"
       _ <- GI.Gst.elementSetState playbin GI.Gst.StateNull
       setPlaybinUriAndVolume playbin "" volumeButton
       resetWindow guiObjects
-      void $ GI.Gtk.dialogRun errorMessageDialog
+      runErrorMessageDialog
+        errorMessageDialog
+        (Data.Text.concat ["There was a problem trying to play the video \"", entryText, "\""])
   when (messageType == GI.Gst.MessageTypeBuffering) $ do
     percent <- GI.Gst.messageParseBuffering message
     isPlaying <- isPlayPauseButtonPlaying playPauseButton
@@ -343,7 +355,7 @@ fileChooserDialogResponseHandler
   guiObjects@MML.GuiObjects {
         MML.window = window
       , MML.fileChooserButton = fileChooserButton
-      , MML.drawingArea = drawingArea
+      , MML.videoWidget = videoWidget
       , MML.seekScale = seekScale
       , MML.playPauseButton = playPauseButton
       , MML.desiredVideoWidthComboBox = desiredVideoWidthComboBox
@@ -392,9 +404,7 @@ fileChooserDialogResponseHandler
       Bool ->
       Int ->
       IO ()
-    handleFileName True _ _ _ = do
-      atomicWriteIORef videoInfoRef MML.defaultVideoInfo
-      resetWindow guiObjects
+    handleFileName True _ _ _ = atomicWriteIORef videoInfoRef MML.defaultVideoInfo >> resetWindow guiObjects
     handleFileName
       _
       filePathNameStr
@@ -410,15 +420,25 @@ fileChooserDialogResponseHandler
       case maybeWindowSize of
         Nothing -> do
           resetWindow guiObjects
-          void $ GI.Gtk.dialogRun errorMessageDialog
+          runErrorMessageDialog
+            errorMessageDialog
+            (Data.Text.pack $ Prelude.concat ["\"", filePathNameStr, "\" is not a video."])
         Just (width, height) -> do
-          GI.Gtk.widgetShow drawingArea
-          GI.Gtk.widgetShow playPauseButton
-          GI.Gtk.widgetShow fullscreenButton
-          setPlayPauseButton playPauseButton playImage pauseImage True
-          unless isWindowFullScreen $
-            setWindowSize width height fileChooserButton drawingArea window
-          void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
+          videoWidgetName <- GI.Gtk.widgetGetName videoWidget
+          if videoWidgetName == invalidVideoWidgetName
+            then do
+              resetWindow guiObjects
+              runErrorMessageDialog
+                errorMessageDialog
+                "Cannot play the video. Please install the bad plugins, version 1.8 or higher, for GStreamer version 1."
+            else do
+              GI.Gtk.widgetShow videoWidget
+              GI.Gtk.widgetShow playPauseButton
+              GI.Gtk.widgetShow fullscreenButton
+              setPlayPauseButton playPauseButton playImage pauseImage True
+              unless isWindowFullScreen $
+                setWindowSize width height fileChooserButton videoWidget window
+              void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
 
 onFileChooserButtonClick ::
   GI.Gtk.Entry ->
@@ -566,13 +586,16 @@ onWindowMouseMove
   isWindowFullScreen <- readIORef isWindowFullScreenRef
   unless isWindowFullScreen $ GI.Gtk.widgetShow fileChooserButton
   GI.Gtk.widgetShow bottomControlsGtkBox
+  setCursor window Nothing
   timeNow <- getPOSIXTime
   atomicWriteIORef mouseMovedLastRef (round timeNow)
-  setCursor window Nothing
   return False
 
 hideOnScreenControlsInterval :: Integral a => a
 hideOnScreenControlsInterval = 5
+
+invalidVideoWidgetName :: Text
+invalidVideoWidgetName = "invalid-video-widget"
 
 hideOnScreenControls ::
   GI.Gtk.Window ->
@@ -580,6 +603,7 @@ hideOnScreenControls ::
   GI.Gtk.Box ->
   IORef MML.VideoInfo ->
   IORef Integer ->
+  GI.Gst.Element ->
   IO Bool
 hideOnScreenControls
   window
@@ -587,16 +611,19 @@ hideOnScreenControls
   bottomControlsGtkBox
   videoInfoRef
   mouseMovedLastRef
+  playbin
   = do
   isVideo <- MML.isVideo <$> readIORef videoInfoRef
   mouseMovedLast <- readIORef mouseMovedLastRef
   timeNow <- fmap round getPOSIXTime
+  (_, playBinState, _) <- GI.Gst.elementGetState playbin (fromIntegral GI.Gst.MSECOND :: GHC.Word.Word64)
+  let isPlaying = GI.Gst.StatePlaying == playBinState
   let delta = timeNow - mouseMovedLast
-  when (isVideo && delta >= hideOnScreenControlsInterval) $ do
+  when (isPlaying && isVideo && delta >= hideOnScreenControlsInterval) $ do
     GI.Gtk.widgetHide fileChooserButton
     GI.Gtk.widgetHide bottomControlsGtkBox
-    atomicWriteIORef mouseMovedLastRef timeNow
     setCursor window (Just "none")
+    atomicWriteIORef mouseMovedLastRef timeNow
   return True
 
 onComboBoxChanged ::
@@ -607,7 +634,7 @@ onComboBoxChanged
   guiObjects@MML.GuiObjects {
         MML.window = window
       , MML.fileChooserButton = fileChooserButton
-      , MML.drawingArea = drawingArea
+      , MML.videoWidget = videoWidget
       , MML.desiredVideoWidthComboBox = desiredVideoWidthComboBox
       , MML.fileChooserEntry = fileChooserEntry
     }
@@ -621,7 +648,7 @@ onComboBoxChanged
   maybeWindowSize <- getWindowSize desiredVideoWidth retrievedVideoInfo
   case maybeWindowSize of
     Nothing -> resetWindow guiObjects
-    Just (width, height) -> setWindowSize width height fileChooserButton drawingArea window
+    Just (width, height) -> setWindowSize width height fileChooserButton videoWidget window
 
 onFullscreenButtonRelease ::
   IORef Bool ->
@@ -748,6 +775,14 @@ onKeyRelease
         eventButton
   return True
 
+errorMessageDialogResponseHandler ::
+  GI.Gtk.MessageDialog ->
+  Int32 ->
+  IO ()
+errorMessageDialogResponseHandler errorMessageDialog _ =
+  GI.Gtk.widgetHide errorMessageDialog >>
+  GI.Gtk.setMessageDialogText errorMessageDialog "There was an error."
+
 onWindowDestroy ::
   GI.Gst.Element ->
   IO ()
@@ -862,10 +897,10 @@ setWindowSize ::
   GI.Gtk.Widget ->
   GI.Gtk.Window ->
   IO ()
-setWindowSize width height fileChooserButton drawingArea window = do
+setWindowSize width height fileChooserButton videoWidget window = do
   GI.Gtk.setWidgetWidthRequest fileChooserButton width
-  GI.Gtk.setWidgetWidthRequest drawingArea width
-  GI.Gtk.setWidgetHeightRequest drawingArea height
+  GI.Gtk.setWidgetWidthRequest videoWidget width
+  GI.Gtk.setWidgetHeightRequest videoWidget height
   GI.Gtk.setWidgetWidthRequest window width
   GI.Gtk.setWidgetHeightRequest window height
   GI.Gtk.windowResize window width (if height <= 0 then 1 else height)
@@ -877,25 +912,37 @@ resetWindow
   MML.GuiObjects {
         MML.window = window
       , MML.fileChooserButton = fileChooserButton
-      , MML.drawingArea = drawingArea
+      , MML.videoWidget = videoWidget
       , MML.seekScale = seekScale
       , MML.playPauseButton = playPauseButton
       , MML.desiredVideoWidthComboBox = desiredVideoWidthComboBox
       , MML.fullscreenButton = fullscreenButton
       , MML.playImage = playImage
       , MML.pauseImage = pauseImage
+      , MML.bottomControlsGtkBox = bottomControlsGtkBox
     }
   = do
   desiredVideoWidth <- getDesiredVideoWidth desiredVideoWidthComboBox
   let width = fromIntegral desiredVideoWidth :: Int32
   GI.Gtk.windowUnfullscreen window
-  setPlayPauseButton playPauseButton playImage pauseImage False
-  GI.Gtk.widgetHide drawingArea
+  GI.Gtk.widgetHide videoWidget
   GI.Gtk.widgetHide seekScale
   GI.Gtk.widgetHide playPauseButton
-  GI.Gtk.widgetShow desiredVideoWidthComboBox
   GI.Gtk.widgetHide fullscreenButton
-  setWindowSize width 0 fileChooserButton drawingArea window
+  GI.Gtk.widgetShow fileChooserButton
+  GI.Gtk.widgetShow bottomControlsGtkBox
+  GI.Gtk.widgetShow desiredVideoWidthComboBox
+  setCursor window Nothing
+  setPlayPauseButton playPauseButton playImage pauseImage False
+  setWindowSize width 0 fileChooserButton videoWidget window
+
+runErrorMessageDialog ::
+  GI.Gtk.MessageDialog ->
+  Text ->
+  IO ()
+runErrorMessageDialog errorMessageDialog text =
+  GI.Gtk.setMessageDialogText errorMessageDialog text >>
+  void (GI.Gtk.dialogRun errorMessageDialog)
 
 isPlayPauseButtonPlaying ::
   GI.Gtk.Button ->
