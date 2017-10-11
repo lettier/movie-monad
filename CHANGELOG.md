@@ -19,6 +19,8 @@
 - AppImage
 - AppImage installation script
 - Support for GTK 3.10
+- macOS screenshots
+- macOS build instructions
 
 #### Changed
 

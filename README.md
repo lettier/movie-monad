@@ -8,6 +8,10 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ![GUI showing Sintel from the Blender Foundation](https://i.imgur.com/UBNYbER.jpg)
 
+![GUI showing Big Buck Bunny from the Blender Foundation](https://i.imgur.com/Tgmk7SW.png)
+
+![GUI showing the About window as seen on the Mac](https://i.imgur.com/hiix2Wm.png)
+
 ## Features
 
 * Local or remote video file playback
@@ -19,31 +23,43 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * Seek
 * Play and pause
 * Volume
-* Keyboard shortcuts
-    * Mute toggle
-        * `m`
-        * `AudioMute`
-    * Fullscreen toggle
-        * `f`
-    * Show on-screen controls
-        * `c`
-    * Volume up
-        * `Ctrl+ArrowUp` or `Command+ArrowUp` if using a Mac
-        * `AudioRaiseVolume`
-    * Volume down
-        * `Ctrl+ArrowDown` or `Command+ArrowDown` if using a Mac
-        * `AudioLowerVolume`
-    * Play/pause toggle
-        * `Space`
-        * `AudioPlay`
 
-## Documentation
+## Keyboard Shortcuts
 
-[Let's make a GTK Video Player with Haskell](https://lettier.github.io/posts/2017-08-30-haskell-gtk-video-player.html)
+* Mute/Unmute
+    * `m`
+    * `AudioMute`
+* Fullscreen/Windowed
+    * `f`
+* Show Controls
+    * `c`
+* Volume Up
+    * `Ctrl+ArrowUp`
+    * `AudioRaiseVolume`
+* Volume Down
+    * `Ctrl+ArrowDown`
+    * `AudioLowerVolume`
+* Play/Pause
+    * `Space`
+    * `AudioPlay`
+
+## Tested On
+
+### Linux
+
+* [Ubuntu 16.04](https://www.ubuntu.com/desktop)
+* [Ubuntu 14.04](https://www.ubuntu.com/desktop)
+* [Linux Mint 18.2](https://linuxmint.com/)
+* [Manjaro 17.04](https://manjaro.org/)
+* [Deepin 15.4.1](https://www.deepin.org/en/dde/)
+
+### Mac
+
+* [macOS Sierra 10.12.6](https://en.wikipedia.org/wiki/MacOS_Sierra)
 
 ## Dependencies
 
-### Runtime
+### Run
 
 * [GTK+ >= 3.10](https://www.gtk.org/download/index.php)
 * [GStreamer >= 1.0](https://gstreamer.freedesktop.org/download/)
@@ -62,9 +78,9 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
-# Install GStreamer == 1.0 (https://gstreamer.freedesktop.org/download/)
+# Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
 # Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
-# Install GStreamer Bad Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
+# Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Visit https://github.com/lettier/movie-monad/releases
 # * equals the current version
 # Download the latest AppImage movie-monad-*-x86_64.AppImage
@@ -78,13 +94,34 @@ chmod +x "movie-monad-install.sh"
 ./movie-monad-install.sh
 ```
 
+### Mac
+
+```bash
+# Install Homebrew (https://brew.sh/#install)
+cd ~/Downloads
+brew update && brew upgrade
+brew install git
+git clone https://github.com/lettier/movie-monad.git
+cd movie-monad
+brew cask install haskell-platform
+brew install pkg-config libffi libav libsvg librsvg libogg libvorbis openh264 theora \
+  gobject-introspection cairo gdk-pixbuf gsettings-desktop-schemas gtk+3 gtk-mac-integration \
+  gstreamer gst-libav gst-plugins-base gst-plugins-good
+brew install --with-gtk+3 gst-plugins-bad
+stack setup
+stack install hsc2hs
+stack install
+export PATH=$PATH:"$HOME/.local/bin/"
+movie-monad
+```
+
 ### Hackage
 
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
-# Install GStreamer == 1.0 (https://gstreamer.freedesktop.org/download/)
+# Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
 # Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
-# Install GStreamer Bad Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
+# Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Cabal (https://www.haskell.org/platform/)
 # Install Cabal Install (https://www.haskell.org/platform/)
 cabal install movie-monad
@@ -95,9 +132,9 @@ movie-monad
 
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
-# Install GStreamer == 1.0 (https://gstreamer.freedesktop.org/download/)
+# Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
 # Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
-# Install GStreamer Bad Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
+# Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Git (https://git-scm.com/downloads)
 # Install GNU Make (https://www.gnu.org/software/make/)
 # Install Haskell (https://www.haskell.org/platform/)
@@ -108,6 +145,10 @@ make
 make install
 make run
 ```
+
+## Developer Documentation
+
+[Let's make a GTK Video Player with Haskell](https://lettier.github.io/posts/2017-08-30-haskell-gtk-video-player.html)
 
 ## License
 
