@@ -34,10 +34,10 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * Show Controls
     * `c`
 * Volume Up
-    * `Ctrl+ArrowUp`
+    * `ArrowUp`
     * `AudioRaiseVolume`
 * Volume Down
-    * `Ctrl+ArrowDown`
+    * `ArrowDown`
     * `AudioLowerVolume`
 * Play/Pause
     * `Space`

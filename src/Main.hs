@@ -21,7 +21,6 @@ import Data.IORef
 import Data.Maybe
 import Data.Int
 import Data.Time.Clock.POSIX
-import Data.List
 import Data.Text
 import Data.GI.Base
 import Data.GI.Base.Signals
@@ -726,7 +725,6 @@ onKeyRelease
   let isVideo = MML.isVideo videoInfoGathered
   let volumeDelta = 0.05
   oldVolume <- GI.Gtk.scaleButtonGetValue volumeButton
-  isControl <- Data.List.isInfixOf [GI.Gdk.ModifierTypeControlMask] <$> GI.Gdk.getEventKeyState eventKey
   keyValue <- GI.Gdk.getEventKeyKeyval eventKey
   eventButton <- GI.Gdk.newZeroEventButton
   -- Mute Toggle
@@ -737,11 +735,11 @@ onKeyRelease
   when ((keyValue == GI.Gdk.KEY_space || keyValue == GI.Gdk.KEY_AudioPlay) && isVideo) $
     void $ playPauseButtonClickHandler playbin playPauseButton playImage pauseImage eventButton
   -- Volume Up
-  when ((isControl && keyValue == GI.Gdk.KEY_Up) || keyValue == GI.Gdk.KEY_AudioRaiseVolume) $ do
+  when (keyValue == GI.Gdk.KEY_Up || keyValue == GI.Gdk.KEY_AudioRaiseVolume) $ do
     let newVolume = if oldVolume >= 1.0 then 1.0 else oldVolume + volumeDelta
     GI.Gtk.scaleButtonSetValue volumeButton newVolume
   -- Volume Down
-  when ((isControl && keyValue == GI.Gdk.KEY_Down) || keyValue == GI.Gdk.KEY_AudioLowerVolume) $ do
+  when (keyValue == GI.Gdk.KEY_Down || keyValue == GI.Gdk.KEY_AudioLowerVolume) $ do
     let newVolume = if oldVolume <= 0.0 then 0.0 else oldVolume - volumeDelta
     GI.Gtk.scaleButtonSetValue volumeButton newVolume
   -- Controls Show
