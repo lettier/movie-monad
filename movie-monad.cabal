@@ -17,11 +17,26 @@ cabal-version:        >= 1.10
 extra-source-files:     README.md
                       , LICENSE
                       , CHANGELOG.md
-                      , ./src/MovieMonadLib.hs
                       , ./src/dev/Paths_movie_monad.hs
                       , ./src/data/gui.glade
                       , ./src/data/movie-monad-logo.svg
                       , ./src/data/movie-monad-icon.png
+                      , ./src/Records.hs
+                      , ./src/Constants.hs
+                      , ./src/Window.hs
+                      , ./src/Keyboard.hs
+                      , ./src/Mouse.hs
+                      , ./src/FileChooser.hs
+                      , ./src/Seek.hs
+                      , ./src/PlayPause.hs
+                      , ./src/VideoSizeSelector.hs
+                      , ./src/Fullscreen.hs
+                      , ./src/ErrorMessage.hs
+                      , ./src/About.hs
+                      , ./src/VideoInfo.hs
+                      , ./src/Playbin.hs
+                      , ./src/Uri.hs
+                      , ./src/Utils.hs
 data-files:             data/gui.glade
                       , data/movie-monad-logo.svg
                       , data/movie-monad-icon.png
@@ -52,5 +67,21 @@ executable            movie-monad
                       , gi-gst == 1.0.*
                       , gi-gtk == 3.0.*
   ghc-options:        -threaded -with-rtsopts=-N -Wall -freverse-errors
-  other-modules:      Paths_movie_monad, MovieMonadLib
+  other-modules:        Paths_movie_monad
+                      , Records
+                      , Constants
+                      , Window
+                      , Keyboard
+                      , Mouse
+                      , FileChooser
+                      , Seek
+                      , PlayPause
+                      , VideoSizeSelector
+                      , Fullscreen
+                      , ErrorMessage
+                      , About
+                      , VideoInfo
+                      , Uri
+                      , Playbin
+                      , Utils
   hs-source-dirs:     ./src/

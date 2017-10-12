@@ -212,6 +212,7 @@ Author: David Lettier
                         <property name="receives_default">True</property>
                         <property name="tooltip_text" translatable="yes">Click to play</property>
                         <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
                         <property name="image">play-image</property>
                         <property name="always_show_image">True</property>
                       </object>
@@ -265,11 +266,13 @@ audio-volume-medium-symbolic</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBoxText" id="desired-video-width-combo-box">
+                      <object class="GtkComboBoxText" id="video-width-selection-combo-box">
                         <property name="visible">True</property>
                         <property name="app_paintable">True</property>
                         <property name="can_focus">False</property>
                         <property name="tooltip_text" translatable="yes">Set the video width</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
                         <property name="active">1</property>
                         <property name="has_frame">False</property>
                         <property name="active_id">800</property>
@@ -304,6 +307,7 @@ audio-volume-medium-symbolic</property>
                         <property name="receives_default">False</property>
                         <property name="tooltip_text" translatable="yes">Toggle on or off fullscreen</property>
                         <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
                         <property name="image">fullscreen-image</property>
                         <property name="relief">half</property>
                         <property name="always_show_image">True</property>
@@ -334,6 +338,7 @@ audio-volume-medium-symbolic</property>
                         <property name="can_focus">False</property>
                         <property name="receives_default">False</property>
                         <property name="tooltip_text" translatable="yes">About Movie Monad</property>
+                        <property name="margin_left">5</property>
                         <property name="margin_right">5</property>
                         <property name="image">about-image</property>
                         <property name="relief">half</property>
