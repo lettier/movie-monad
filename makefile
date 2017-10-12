@@ -29,7 +29,7 @@ clean_cabal_sandbox: setup
   $(CABAL) sandbox delete && \
   $(CABAL) sandbox init
 
-build_linux_binaries:
+build_relocatable_binaries:
   $(CABAL) sandbox init && \
   $(CABAL) --require-sandbox install --dependencies-only && \
   $(CABAL) --require-sandbox configure --enable-relocatable && \
