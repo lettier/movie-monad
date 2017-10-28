@@ -61,6 +61,13 @@ data IORefs = IORefs {
     , videoInfoRef :: IORef VideoInfo
   }
 
+data ScreensaverAndPowerManagementActions = ScreensaverAndPowerManagementActions {
+      disabledPowerManagement :: Bool
+    , disabledXScreensaver :: Bool
+    , disabledCinnamonScreensaver :: Bool
+    , disabledGnomeScreensaver :: Bool
+  }
+
 data Application = Application {
       guiObjects :: GuiObjects
     , ioRefs :: IORefs

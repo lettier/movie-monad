@@ -21,6 +21,7 @@
 - Support for GTK 3.10
 - macOS screenshots
 - macOS build instructions
+- Screensaver and power management enable/disable
 
 #### Changed
 

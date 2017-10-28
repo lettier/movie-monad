@@ -115,7 +115,7 @@ export PATH=$PATH:"$HOME/.local/bin/"
 movie-monad
 ```
 
-### Hackage
+### [Hackage](https://hackage.haskell.org/package/movie-monad)
 
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
@@ -128,7 +128,7 @@ cabal install movie-monad
 movie-monad
 ```
 
-### GitHub
+### [GitHub](https://github.com/lettier/movie-monad)
 
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)

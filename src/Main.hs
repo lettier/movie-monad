@@ -10,6 +10,7 @@
 module Main where
 
 import Prelude
+import System.Info
 import Data.IORef
 import Data.Maybe
 import Data.Text
@@ -34,6 +35,7 @@ import ErrorMessage
 import About
 import VideoSizeSelector
 import Playbin
+import ScreensaverAndPowerManagement (disable, enable)
 import Utils
 
 import Paths_movie_monad
@@ -158,8 +160,13 @@ main = do
   addKeyboardEventHandler application
   addErrorMessageDialogHandler application
 
+  let operatingSystem = System.Info.os
+  screenAndPowerManagementActions <- ScreensaverAndPowerManagement.disable operatingSystem
+
   GI.Gtk.widgetShowAll window
   GI.Gtk.main
+
+  ScreensaverAndPowerManagement.enable operatingSystem screenAndPowerManagementActions
 
 builderGetObject ::
   (GI.GObject.GObject b, GI.Gtk.IsBuilder a) =>

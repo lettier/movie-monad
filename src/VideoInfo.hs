@@ -9,9 +9,7 @@
 
 module VideoInfo where
 
-import System.Process
 import System.Exit
-import Control.Exception
 import Text.Read
 import Data.Maybe
 import Data.Text
@@ -19,15 +17,11 @@ import Data.IORef
 
 import qualified Records as R
 import Uri
+import Utils
 
 getVideoInfoRaw :: Prelude.String -> IO (Maybe Prelude.String)
 getVideoInfoRaw uri = do
-  (code, out, _) <- catch (
-      readProcessWithExitCode
-        "gst-discoverer-1.0"
-        [uri, "-v"]
-        ""
-    ) (\ (e :: Control.Exception.IOException) -> print e >> return (ExitFailure 1, "", ""))
+  (code, out, _) <- safeRunProcessGetOutput "gst-discoverer-1.0" [uri, "-v"]
   if code == System.Exit.ExitSuccess
     then return (Just out)
     else return Nothing

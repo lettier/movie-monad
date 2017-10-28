@@ -37,6 +37,7 @@ extra-source-files:     README.md
                       , ./src/Playbin.hs
                       , ./src/Uri.hs
                       , ./src/Utils.hs
+                      , ./src/ScreensaverAndPowerManagement.hs
 data-files:             data/gui.glade
                       , data/movie-monad-logo.svg
                       , data/movie-monad-icon.png
@@ -84,4 +85,5 @@ executable            movie-monad
                       , Uri
                       , Playbin
                       , Utils
+                      , ScreensaverAndPowerManagement
   hs-source-dirs:     ./src/

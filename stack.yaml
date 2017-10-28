@@ -1,11 +1,9 @@
-resolver: lts-9.1
-packages:
-- '.'
-extra-deps: [
-  haskell-gi-overloading-1.0,
-  gi-gstbase-1.0.15,
-  gi-gst-1.0.14,
-  gi-gstvideo-1.0.14
-]
 flags: {}
 extra-package-dbs: []
+packages:
+- '.'
+extra-deps:
+- gi-gst-1.0.14
+- gi-gstbase-1.0.15
+- gi-gstvideo-1.0.14
+resolver: lts-9.1
