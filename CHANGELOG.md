@@ -4,10 +4,6 @@
 
 ### 0.0.2.0
 
-#### Downstreams
-
-- [Hackage](https://hackage.haskell.org/package/movie-monad-0.0.2.0)
-
 #### Added
 
 - Hides the cursor and the on-screen controls when the mouse is idle
@@ -45,10 +41,6 @@
 
 ### 0.0.1.0
 
-#### Downstreams
-
-- [Hackage](https://hackage.haskell.org/package/movie-monad-0.0.1.0)
-
 #### Added
 
 - Fullscreen mode
@@ -67,10 +59,6 @@
 -------------------------------------------------------------------------------
 
 ### 0.0.0.0
-
-#### Downstreams
-
-- [Hackage (deprecated)](https://hackage.haskell.org/package/movie-monad-0.0.0.0)
 
 #### Added
 
@@ -93,14 +81,3 @@
 #### Removed
 
 -
-
--------------------------------------------------------------------------------
-
-## License
-
-See [LICENSE](LICENSE).
-
-## Copyright
-
-(C) 2017 David Lettier  
-[lettier.com](http://www.lettier.com/)
