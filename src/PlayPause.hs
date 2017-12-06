@@ -58,10 +58,10 @@ setPlayPauseButton ::
   Bool ->
   IO ()
 setPlayPauseButton playPauseButton _ pauseImage True = do
-  GI.Gtk.buttonSetImage playPauseButton pauseImage
+  GI.Gtk.buttonSetImage playPauseButton (Just pauseImage)
   GI.Gtk.widgetSetTooltipText playPauseButton (Just "Click to pause")
 setPlayPauseButton playPauseButton playImage _ False = do
-  GI.Gtk.buttonSetImage playPauseButton playImage
+  GI.Gtk.buttonSetImage playPauseButton (Just playImage)
   GI.Gtk.widgetSetTooltipText playPauseButton (Just "Click to play")
 
 isPlayPauseButtonPlaying ::

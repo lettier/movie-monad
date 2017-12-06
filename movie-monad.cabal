@@ -66,7 +66,7 @@ executable            movie-monad
                       , gi-gdk == 3.0.*
                       , gi-gdkpixbuf == 2.0.*
                       , gi-gst == 1.0.*
-                      , gi-gtk == 3.0.*
+                      , gi-gtk == 3.0.18
   ghc-options:        -threaded -with-rtsopts=-N -Wall -freverse-errors
   other-modules:        Paths_movie_monad
                       , Records
