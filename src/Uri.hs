@@ -8,6 +8,7 @@
 
 module Uri where
 
+import System.FilePath
 import Filesystem
 import Filesystem.Path.CurrentOS
 import Data.Text
@@ -49,3 +50,17 @@ addUriSchemeIfNone filePathName =
 
 isLocalFile :: Prelude.String -> IO Bool
 isLocalFile = Filesystem.isFile . Filesystem.Path.CurrentOS.fromText . Data.Text.pack . removeFileUriScheme
+
+toAbsoluteUri :: String -> IO String
+toAbsoluteUri uri = do
+  cwd <- getWorkingDirectory
+  let cwd' = case toText cwd of
+              Right x -> x
+              Left  y -> y
+  isLocal <- isLocalFile uri
+  if not isLocal
+    then return uri
+    else
+      if isRelative uri
+        then return $ normalise $ combine (Data.Text.unpack cwd') uri
+        else return uri

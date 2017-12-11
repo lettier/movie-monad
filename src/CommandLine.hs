@@ -12,6 +12,7 @@ import GI.Gtk
 
 import qualified Records as R
 import FileChooser
+import Uri
 import Utils
 
 playVideoFromCommandLineIfNeeded :: R.Application -> IO ()
@@ -25,6 +26,7 @@ playVideoFromCommandLineIfNeeded
   args <- getArgs
   case args of
     [] -> return ()
-    (filePath:_) -> do
+    (filePath':_) -> do
+      filePath <- toAbsoluteUri filePath'
       GI.Gtk.entrySetText fileChooserEntry (Data.Text.pack filePath)
       fileChooserDialogResponseHandler application (enumToInt32 GI.Gtk.ResponseTypeOk)
