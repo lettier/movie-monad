@@ -24,23 +24,25 @@ import Mouse
 import PlayPause
 import Utils
 
-addWindowHandlers :: R.Application -> IO ()
+addWindowHandlers :: R.Application -> [R.Application -> IO ()] -> IO ()
 addWindowHandlers
   application@R.Application {
-        R.guiObjects = guiObjects@R.GuiObjects {
+        R.guiObjects = R.GuiObjects {
               R.window = window
             , R.videoWidget = videoWidget
           }
       , R.ioRefs = R.IORefs {
-            R.isWindowFullScreenRef = isWindowFullScreenRef
-        }
+              R.isWindowFullScreenRef = isWindowFullScreenRef
+          }
       , R.playbin = playbin
     }
+  functionsToRunOnWindowRealized
   =
   void (
       GI.Gtk.onWidgetRealize videoWidget (
           windowRealizedHandler
-            guiObjects
+            application
+            functionsToRunOnWindowRealized
         )
     ) >>
   void (
@@ -54,18 +56,23 @@ addWindowHandlers
     )
 
 windowRealizedHandler ::
-  R.GuiObjects ->
+  R.Application ->
+  [R.Application -> IO ()] ->
   GI.Gtk.WidgetRealizeCallback
 windowRealizedHandler
-  guiObjects@R.GuiObjects {
-        R.videoWidget = videoWidget
-      , R.seekScale = seekScale
+  application@R.Application {
+        R.guiObjects = guiObjects@R.GuiObjects {
+              R.videoWidget = videoWidget
+            , R.seekScale = seekScale
+          }
     }
+  functionsToRunOnWindowRealized
   = do
   let eventMask = enumToInt32 GI.Gdk.EventMaskAllEventsMask
   GI.Gtk.widgetAddEvents videoWidget eventMask
   GI.Gtk.widgetAddEvents seekScale eventMask
   resetWindow guiObjects
+  mapM_ (\ f -> f application) functionsToRunOnWindowRealized
 
 widgetWindowStateEventHandler ::
   IORef Bool ->
@@ -117,8 +124,8 @@ hideOnScreenControls
     atomicWriteIORef mouseMovedLastRef timeNow
   return True
 
-getWindowSize :: Int -> R.VideoInfo -> IO (Maybe (Int32, Int32))
-getWindowSize videoWidthSelection retrievedVideoInfo =
+calculateWindowSize :: Int -> R.VideoInfo -> IO (Maybe (Int32, Int32))
+calculateWindowSize videoWidthSelection retrievedVideoInfo =
   widthHeightToDouble retrievedVideoInfo >>=
   ratio >>=
   windowSize

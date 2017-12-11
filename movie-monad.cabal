@@ -24,6 +24,7 @@ extra-source-files:     README.md
                       , ./src/Records.hs
                       , ./src/Constants.hs
                       , ./src/Window.hs
+                      , ./src/CommandLine.hs
                       , ./src/Keyboard.hs
                       , ./src/Mouse.hs
                       , ./src/FileChooser.hs
@@ -72,6 +73,7 @@ executable            movie-monad
                       , Records
                       , Constants
                       , Window
+                      , CommandLine
                       , Keyboard
                       , Mouse
                       , FileChooser

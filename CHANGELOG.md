@@ -18,6 +18,7 @@
 - macOS screenshots
 - macOS build instructions
 - Screensaver and power management enable/disable
+- Video file path command line option that, if present, plays the video on window realized
 
 #### Changed
 

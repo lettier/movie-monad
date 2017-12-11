@@ -25,6 +25,7 @@ import GI.GdkPixbuf
 import qualified Records as R
 import Constants
 import Window
+import CommandLine
 import Mouse
 import Keyboard
 import FileChooser
@@ -80,7 +81,7 @@ main = do
   logo <- GI.GdkPixbuf.pixbufNewFromFile (pack logoFile)
   GI.Gtk.aboutDialogSetLogo aboutDialog (Just logo)
 
-  -- Glade does not allow us to use the response ID nicknames so we setup them up programmatically here.
+  -- Glade does not allow us to use the response ID nicknames so we programmatically set them here.
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserCancelButton (enumToInt32 GI.Gtk.ResponseTypeCancel)
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserOpenButton   (enumToInt32 GI.Gtk.ResponseTypeOk)
 
@@ -148,7 +149,7 @@ main = do
       , R.playbinBus = playbinBus
     }
 
-  addWindowHandlers application
+  addWindowHandlers application [playVideoFromCommandLineIfNeeded]
   addPlaybinHandler application
   addFileChooserHandlers application
   addPlayPauseButtonClickHandler application

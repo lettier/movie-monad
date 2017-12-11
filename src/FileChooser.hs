@@ -24,8 +24,8 @@ import PlayPause
 import ErrorMessage
 import VideoInfo
 import Playbin
-import Utils
 import Uri
+import Utils
 
 addFileChooserHandlers :: R.Application -> IO ()
 addFileChooserHandlers
@@ -110,7 +110,7 @@ fileChooserDialogResponseHandler
       videoWidthSelection
       = do
       retrievedVideoInfo <- getVideoInfo videoInfoRef filePathNameStr
-      maybeWindowSize <- getWindowSize videoWidthSelection retrievedVideoInfo
+      maybeWindowSize <- calculateWindowSize videoWidthSelection retrievedVideoInfo
       GI.Gtk.widgetSetSensitive seekScale True
       if R.isSeekable retrievedVideoInfo
         then GI.Gtk.widgetShow seekScale

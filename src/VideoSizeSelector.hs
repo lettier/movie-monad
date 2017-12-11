@@ -22,8 +22,11 @@ addVideoSizeSelectorHandler
               R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
           }
     }
-  =
-  void (GI.Gtk.onComboBoxChanged videoWidthSelectionComboBox (videoSizeSelectionHandler application))
+  = void (
+        GI.Gtk.onComboBoxChanged
+          videoWidthSelectionComboBox
+          (videoSizeSelectionHandler application)
+      )
 
 videoSizeSelectionHandler ::
   R.Application ->
@@ -38,14 +41,14 @@ videoSizeSelectionHandler
             , R.fileChooserEntry = fileChooserEntry
           }
       , R.ioRefs = R.IORefs {
-          R.videoInfoRef = videoInfoRef
+              R.videoInfoRef = videoInfoRef
         }
     }
   = do
   filePathName <- Data.Text.unpack <$> GI.Gtk.entryGetText fileChooserEntry
   videoWidthSelection <- getSelectedVideoWidth videoWidthSelectionComboBox
   retrievedVideoInfo <- getVideoInfo videoInfoRef filePathName
-  maybeWindowSize <- getWindowSize videoWidthSelection retrievedVideoInfo
+  maybeWindowSize <- calculateWindowSize videoWidthSelection retrievedVideoInfo
   case maybeWindowSize of
     Nothing -> resetWindow guiObjects
     Just (width, height) -> setWindowSize width height fileChooserButton videoWidget window
