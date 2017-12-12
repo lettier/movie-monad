@@ -23,6 +23,9 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * Seek
 * Play and pause
 * Volume
+* Command line play
+    * `movie-monad ./path/to/video/file.mp4`
+    * `movie-monad http://www.domain.tld/path/to/video/file.mp4`
 
 ## Keyboard Shortcuts
 
@@ -47,6 +50,7 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ### Linux
 
+* [Ubuntu 17.10](https://www.ubuntu.com/desktop)
 * [Ubuntu 16.04](https://www.ubuntu.com/desktop)
 * [Ubuntu 14.04](https://www.ubuntu.com/desktop)
 * [Linux Mint 18.2](https://linuxmint.com/)
@@ -69,7 +73,8 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 ### Build
 
-* [Haskell](https://www.haskell.org/platform/)
+* [Haskell](https://www.haskell.org/platform/prior.html)
+    * GHC == 8.0.2
 
 ## Install & Run
 
@@ -119,12 +124,13 @@ movie-monad
 ### [Hackage](https://hackage.haskell.org/package/movie-monad)
 
 ```bash
+# Install GObject Introspection (https://wiki.gnome.org/action/show/Projects/GObjectIntrospection)
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
 # Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
 # Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
 # Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
-# Install Cabal (https://www.haskell.org/platform/)
-# Install Cabal Install (https://www.haskell.org/platform/)
+# Install Cabal, GHC == 8.0.2 (https://www.haskell.org/platform/prior.html)
+# Install Cabal Install (https://www.haskell.org/platform/prior.html)
 cabal install movie-monad
 movie-monad
 ```
@@ -132,13 +138,14 @@ movie-monad
 ### [GitHub](https://github.com/lettier/movie-monad)
 
 ```bash
+# Install GObject Introspection (https://wiki.gnome.org/action/show/Projects/GObjectIntrospection)
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
 # Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
 # Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
 # Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Git (https://git-scm.com/downloads)
 # Install GNU Make (https://www.gnu.org/software/make/)
-# Install Haskell (https://www.haskell.org/platform/)
+# Install Haskell, GHC == 8.0.2 (https://www.haskell.org/platform/prior.html)
 # Install Haksell Stack (https://www.haskell.org/platform/)
 git clone https://github.com/lettier/movie-monad.git
 cd movie-monad/
