@@ -60,13 +60,13 @@ executable            movie-monad
                       , process == 1.4.*
                       , MissingH == 1.4.*
                       , network-uri == 2.6.*
-                      , haskell-gi-base == 0.20.*
+                      , haskell-gi-base == 0.20.4
                       , gi-gobject == 2.0.*
                       , gi-glib == 2.0.*
-                      , gi-gstvideo == 1.0.*
                       , gi-gdk == 3.0.*
                       , gi-gdkpixbuf == 2.0.*
                       , gi-gst == 1.0.*
+                      , gi-gstvideo == 1.0.*
                       , gi-gtk == 3.0.18
   ghc-options:        -threaded -with-rtsopts=-N -Wall -freverse-errors
   other-modules:        Paths_movie_monad
