@@ -17,19 +17,23 @@ build: setup
   stack build
 
 install: build
-  stack  install
+  stack install
 
 run: install
   stack exec -- movie-monad
 
-build_dist:
+build_sdist:
   stack sdist
 
-clean_cabal_sandbox: setup
+cabal_update:
+  $(CABAL) update
+
+cabal_clean: cabal_update
+  $(CABAL) clean && \
   $(CABAL) sandbox delete && \
   $(CABAL) sandbox init
 
-build_relocatable_executable:
+cabal_install_relocatable_executable: cabal_clean
   $(CABAL) sandbox init && \
   $(CABAL) --require-sandbox install --dependencies-only -j && \
   $(CABAL) --require-sandbox configure --enable-relocatable && \
