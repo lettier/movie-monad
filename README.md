@@ -57,6 +57,7 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * [Manjaro 17.04](https://manjaro.org/)
 * [Deepin 15.4.1](https://www.deepin.org/en/dde/)
 * [Antergos 17.10](https://antergos.com/)
+* [Fedora 27](https://getfedora.org/)
 
 ### Mac
 
