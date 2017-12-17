@@ -96,7 +96,7 @@ chmod a+x movie-monad-*-x86_64.AppImage
 ./movie-monad-*-x86_64.AppImage
 # If you would like to install the AppImage, you can run the following
 cd
-wget "https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/movie-monad-install.sh" -O "movie-monad-install.sh"
+wget "https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/generic/movie-monad-install.sh" -O "movie-monad-install.sh"
 chmod +x "movie-monad-install.sh"
 ./movie-monad-install.sh
 ```
