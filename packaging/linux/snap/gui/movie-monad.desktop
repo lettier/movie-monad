@@ -1,7 +1,10 @@
 [Desktop Entry]
 Type=Application
-Exec=movie-monad
 Name=Movie Monad
-Comment=A free and simple to use video player built with Haskell.
+GenericName=Video Player
+Categories=AudioVideo;Audio;Video;Player;
+Comment=Play Videos
 Icon=${SNAP}/meta/gui/movie-monad.svg
-Categories=AudioVideo;Audio;Video;
+Exec=movie-monad
+TryExec=movie-monad
+Terminal=false

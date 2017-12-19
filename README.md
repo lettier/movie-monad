@@ -54,8 +54,8 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * [Ubuntu 16.04](https://www.ubuntu.com/desktop)
 * [Ubuntu 14.04](https://www.ubuntu.com/desktop)
 * [Linux Mint 18.2](https://linuxmint.com/)
-* [Manjaro 17.04](https://manjaro.org/)
 * [Deepin 15.4.1](https://www.deepin.org/en/dde/)
+* [Manjaro 17.04](https://manjaro.org/)
 * [Antergos 17.10](https://antergos.com/)
 * [Fedora 27](https://getfedora.org/)
 
@@ -83,22 +83,50 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 
 #### AppImage
 
+##### Download & Run
+
 ```bash
 # Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
 # Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
 # Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
 # Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
+# Install Wget (https://www.gnu.org/software/wget/)
 # Visit https://github.com/lettier/movie-monad/releases
 # * equals the current version
 # Download the latest AppImage movie-monad-*-x86_64.AppImage
 wget https://github.com/lettier/movie-monad/releases/download/*/movie-monad-*-x86_64.AppImage
 chmod a+x movie-monad-*-x86_64.AppImage
 ./movie-monad-*-x86_64.AppImage
-# If you would like to install the AppImage, you can run the following
+```
+
+##### Install
+
+```bash
+# Install GTK+ >= 3.10 (https://www.gtk.org/download/index.php)
+# Install GStreamer >= 1.0 (https://gstreamer.freedesktop.org/download/)
+# Install GStreamer Good Plug-ins (https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
+# Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
+# Install Wget (https://www.gnu.org/software/wget/)
+wget "https://raw.githubusercontent.com/lettier/movie-monad/master/scripts/sh/install-app-image.sh" -O "movie-monad-install-app-image.sh"
+chmod +x "movie-monad-install-app-image.sh"
+./movie-monad-install-app-image.sh
+```
+
+#### [Arch/Manjaro/Antergos](https://aur.archlinux.org/packages/movie-monad/)
+
+```
 cd
-wget "https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/generic/movie-monad-install.sh" -O "movie-monad-install.sh"
-chmod +x "movie-monad-install.sh"
-./movie-monad-install.sh
+# Install Git
+sudo pacman -S git
+# Install Movie Monad from AUR
+mkdir -p movie-monad-tmp
+cd movie-monad-tmp
+git clone https://aur.archlinux.org/movie-monad.git
+cd movie-monad
+makepkg -sic
+cd
+rm -rf movie-monad-tmp
+movie-monad
 ```
 
 ### Mac

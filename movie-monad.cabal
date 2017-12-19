@@ -17,6 +17,7 @@ cabal-version:        >= 1.10
 extra-source-files:     README.md
                       , LICENSE
                       , CHANGELOG.md
+                      , makefile
                       , ./src/dev/Paths_movie_monad.hs
                       , ./src/data/gui.glade
                       , ./src/data/movie-monad-logo.svg
