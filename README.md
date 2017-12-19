@@ -114,11 +114,11 @@ chmod +x "movie-monad-install-app-image.sh"
 
 #### [Arch/Manjaro/Antergos](https://aur.archlinux.org/packages/movie-monad/)
 
-```
+```bash
 cd
-# Install Git
+# Install Git (https://git-scm.com/downloads)
 sudo pacman -S git
-# Install Movie Monad from AUR
+# Install Movie Monad from the AUR (https://aur.archlinux.org/packages/movie-monad/)
 mkdir -p movie-monad-tmp
 cd movie-monad-tmp
 git clone https://aur.archlinux.org/movie-monad.git
