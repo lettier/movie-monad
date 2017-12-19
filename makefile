@@ -3,29 +3,37 @@
 
 .RECIPEPREFIX != ps
 
-CABAL=stack exec -- cabal exec -- cabal
+STACK=stack --allow-different-user
+STACK_PATH_LOCAL_BIN=`$(STACK) path --local-bin`
+STACK_GHC_EXE=`$(STACK) path --compiler-exe`
+STACK_GHC_BIN=`$(STACK) path --compiler-bin`
+STACK_PATHS=$(STACK_PATH_LOCAL_BIN):$(STACK_GHC_BIN)
+CABAL=env PATH=$(PATH):$(STACK_PATHS) $(STACK_PATH_LOCAL_BIN)/cabal
 
-all: setup update build
+export PATH := $(PATH):$(STACK_PATH_LOCAL_BIN)
+
+all: setup build
 
 setup:
-  stack setup
-
-update: setup
-  stack update
+  $(STACK) setup && \
+  $(STACK) update && \
+  $(STACK) install cabal-install && \
+  $(STACK) install alex && \
+  $(STACK) install happy
 
 build: setup
-  stack build
+  $(STACK) build
 
 install: build
-  stack install
+  $(STACK) install
 
 run: install
-  stack exec -- movie-monad
+  $(STACK) exec -- movie-monad
 
 build_sdist:
-  stack sdist
+  $(STACK) sdist
 
-cabal_update:
+cabal_update: setup
   $(CABAL) update
 
 cabal_clean: cabal_update
@@ -35,7 +43,7 @@ cabal_clean: cabal_update
 
 cabal_install_relocatable_executable: cabal_clean
   $(CABAL) sandbox init && \
-  $(CABAL) --require-sandbox install --dependencies-only -j && \
-  $(CABAL) --require-sandbox configure --enable-relocatable && \
+  $(CABAL) --require-sandbox install --dependencies-only -j -w $(STACK_GHC_EXE) && \
+  $(CABAL) --require-sandbox configure --enable-relocatable -w $(STACK_GHC_EXE) && \
   $(CABAL) --require-sandbox build -j && \
-  $(CABAL) --require-sandbox install --enable-relocatable -j
+  $(CABAL) --require-sandbox install --enable-relocatable -j -w $(STACK_GHC_EXE)
