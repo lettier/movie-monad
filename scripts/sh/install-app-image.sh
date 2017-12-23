@@ -3,9 +3,9 @@
 # (C) 2017 David Lettier
 # lettier.com
 
-MOVIE_MONAD_VERSION="0.0.2.0"
+MOVIE_MONAD_VERSION="0.0.3.0"
 MOVIE_MONAD_RELEASES_DOWNLOAD="https://github.com/lettier/movie-monad/releases/download/$MOVIE_MONAD_VERSION"
-MOVIE_MONAD_PACKAGING_LINUX="https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/generic"
+MOVIE_MONAD_PACKAGING_LINUX="https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/app-image"
 MOVIE_MONAD_APP_IMAGE="movie-monad-$MOVIE_MONAD_VERSION-x86_64.AppImage"
 
 echo -e "Installing Movie Monad...\n"

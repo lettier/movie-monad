@@ -34,10 +34,7 @@ videoSizeSelectionHandler ::
 videoSizeSelectionHandler
   R.Application {
         R.guiObjects = guiObjects@R.GuiObjects {
-              R.window = window
-            , R.fileChooserButton = fileChooserButton
-            , R.videoWidget = videoWidget
-            , R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
+              R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
             , R.fileChooserEntry = fileChooserEntry
           }
       , R.ioRefs = R.IORefs {
@@ -48,7 +45,7 @@ videoSizeSelectionHandler
   filePathName <- Data.Text.unpack <$> GI.Gtk.entryGetText fileChooserEntry
   videoWidthSelection <- getSelectedVideoWidth videoWidthSelectionComboBox
   retrievedVideoInfo <- getVideoInfo videoInfoRef filePathName
-  maybeWindowSize <- calculateWindowSize videoWidthSelection retrievedVideoInfo
+  maybeWindowSize <- calculateWindowSize guiObjects videoWidthSelection retrievedVideoInfo
   case maybeWindowSize of
     Nothing -> resetWindow guiObjects
-    Just (width, height) -> setWindowSize width height fileChooserButton videoWidget window
+    Just (width, height) -> setWindowSize guiObjects width height

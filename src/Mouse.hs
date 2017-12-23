@@ -16,24 +16,29 @@ import qualified GI.Gtk
 
 import qualified Records as R
 
-addWindowMouseMoveHandlers :: R.Application -> IO ()
-addWindowMouseMoveHandlers
+addMouseMoveHandlers :: R.Application -> [R.Application -> IO ()] -> IO ()
+addMouseMoveHandlers
   application@R.Application {
         R.guiObjects = R.GuiObjects {
               R.videoWidget = videoWidget
             , R.seekScale = seekScale
           }
     }
+  onMouseMoveCallbacks
   =
-  void (GI.Gtk.onWidgetMotionNotifyEvent videoWidget (windowMouseMoveHandler application)) >>
-  void (GI.Gtk.onWidgetMotionNotifyEvent seekScale (windowMouseMoveHandler application))
+      void (GI.Gtk.onWidgetMotionNotifyEvent videoWidget mouseMoveHandler')
+  >>  void (GI.Gtk.onWidgetMotionNotifyEvent seekScale   mouseMoveHandler')
+  where
+    mouseMoveHandler' :: GI.Gdk.EventMotion -> IO Bool
+    mouseMoveHandler' = mouseMoveHandler application onMouseMoveCallbacks
 
-windowMouseMoveHandler ::
-  R.Application ->
-  GI.Gdk.EventMotion ->
-  IO Bool
-windowMouseMoveHandler
-  R.Application {
+mouseMoveHandler
+  :: R.Application
+  -> [R.Application -> IO ()]
+  -> GI.Gdk.EventMotion
+  -> IO Bool
+mouseMoveHandler
+  application@R.Application {
         R.guiObjects = R.GuiObjects {
               R.window = window
             , R.fileChooserButton = fileChooserButton
@@ -44,6 +49,7 @@ windowMouseMoveHandler
           , R.mouseMovedLastRef = mouseMovedLastRef
         }
     }
+  onMouseMoveCallbacks
   _
   = do
   isWindowFullScreen <- readIORef isWindowFullScreenRef
@@ -52,6 +58,7 @@ windowMouseMoveHandler
   setCursor window Nothing
   timeNow <- getPOSIXTime
   atomicWriteIORef mouseMovedLastRef (round timeNow)
+  mapM_ (\ f -> f application) onMouseMoveCallbacks
   return False
 
 setCursor :: GI.Gtk.Window -> Maybe Text -> IO ()

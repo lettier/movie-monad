@@ -50,9 +50,7 @@ fileChooserDialogResponseHandler ::
 fileChooserDialogResponseHandler
   R.Application {
         R.guiObjects = guiObjects@R.GuiObjects {
-              R.window = window
-            , R.fileChooserButton = fileChooserButton
-            , R.videoWidget = videoWidget
+              R.videoWidget = videoWidget
             , R.seekScale = seekScale
             , R.playPauseButton = playPauseButton
             , R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
@@ -110,7 +108,7 @@ fileChooserDialogResponseHandler
       videoWidthSelection
       = do
       retrievedVideoInfo <- getVideoInfo videoInfoRef filePathNameStr
-      maybeWindowSize <- calculateWindowSize videoWidthSelection retrievedVideoInfo
+      maybeWindowSize <- calculateWindowSize guiObjects videoWidthSelection retrievedVideoInfo
       GI.Gtk.widgetSetSensitive seekScale True
       if R.isSeekable retrievedVideoInfo
         then GI.Gtk.widgetShow seekScale
@@ -135,7 +133,7 @@ fileChooserDialogResponseHandler
               GI.Gtk.widgetShow fullscreenButton
               setPlayPauseButton playPauseButton playImage pauseImage True
               unless isWindowFullScreen $
-                setWindowSize width height fileChooserButton videoWidget window
+                setWindowSize guiObjects width height
               void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
 
 fileChooserButtonClickHandler ::

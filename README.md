@@ -2,28 +2,35 @@
 
 # Movie Monad
 
-A desktop video player built with Haskell that uses GStreamer and GTK+.
+A free and simple to use video player built with Haskell.
 
 ## Screenshots
 
-![GUI showing Sintel from the Blender Foundation](https://i.imgur.com/UBNYbER.jpg)
+### Linux
 
-![GUI showing Big Buck Bunny from the Blender Foundation](https://i.imgur.com/Tgmk7SW.png)
+![GUI showing "Caminandes 3: LLamigos" from the Blender Foundation](https://i.imgur.com/aYf6XOB.png)
 
-![GUI showing the About window as seen on the Mac](https://i.imgur.com/hiix2Wm.png)
+![GUI showing "Sintel" from the Blender Foundation](https://i.imgur.com/UBNYbER.jpg)
+
+### Mac
+
+![GUI showing "Big Buck Bunny" from the Blender Foundation](https://i.imgur.com/Tgmk7SW.png)
+
+![GUI showing the About window as seen on the Mac](https://i.imgur.com/pTJLQdM.png)
 
 ## Features
 
-* Local or remote video file playback
+* Local or Remote Video Playback
     * `file://`
     * `http://`
     * `https://`
-* Window size selection
-* Fullscreen mode
+* Window Size Quick Select
+* Responsive Window Resizing
+* Fullscreen Mode
 * Seek
-* Play and pause
+* Play and Pause
 * Volume
-* Command line play
+* Command-line Play
     * `movie-monad ./path/to/video/file.mp4`
     * `movie-monad http://www.domain.tld/path/to/video/file.mp4`
 
@@ -42,6 +49,10 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * Volume Down
     * `ArrowDown`
     * `AudioLowerVolume`
+* Seek Left
+    * `ArrowLeft`
+* Seek Right
+    * `ArrowRight`
 * Play/Pause
     * `Space`
     * `AudioPlay`
@@ -58,6 +69,7 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * [Manjaro 17.04](https://manjaro.org/)
 * [Antergos 17.10](https://antergos.com/)
 * [Fedora 27](https://getfedora.org/)
+* [Solus 3](https://solus-project.com/2017/08/15/solus-3-released/)
 
 ### Mac
 
@@ -70,7 +82,7 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 * [GTK+ >= 3.10](https://www.gtk.org/download/index.php)
 * [GStreamer >= 1.0](https://gstreamer.freedesktop.org/download/)
     * [GStreamer Good Plug-ins](https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
-    * [GStreamer Bad Plug-ins](https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
+    * [GStreamer Bad Plug-ins >= 1.8](https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 
 ### Build
 
@@ -92,11 +104,10 @@ A desktop video player built with Haskell that uses GStreamer and GTK+.
 # Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Wget (https://www.gnu.org/software/wget/)
 # Visit https://github.com/lettier/movie-monad/releases
-# * equals the current version
-# Download the latest AppImage movie-monad-*-x86_64.AppImage
-wget https://github.com/lettier/movie-monad/releases/download/*/movie-monad-*-x86_64.AppImage
-chmod a+x movie-monad-*-x86_64.AppImage
-./movie-monad-*-x86_64.AppImage
+# Download the latest AppImage movie-monad-0.0.3.0-x86_64.AppImage
+wget https://github.com/lettier/movie-monad/releases/download/0.0.3.0/movie-monad-0.0.3.0-x86_64.AppImage
+chmod a+x movie-monad-0.0.3.0-x86_64.AppImage
+./movie-monad-0.0.3.0-x86_64.AppImage
 ```
 
 ##### Install

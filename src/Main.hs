@@ -156,7 +156,7 @@ main = do
   addSeekHandlers application
   addVideoSizeSelectorHandler application
   addFullscreenButtonReleaseHandler application
-  addWindowMouseMoveHandlers application
+  addMouseMoveHandlers application [fillWindowWithVideo]
   addAboutHandler application
   addKeyboardEventHandler application
   addErrorMessageDialogHandler application

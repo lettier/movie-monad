@@ -10,6 +10,7 @@ module Window where
 
 import GHC.Word
 import Control.Monad
+import Data.Maybe
 import Data.Int
 import Data.IORef
 import Data.Time.Clock.POSIX
@@ -36,13 +37,13 @@ addWindowHandlers
           }
       , R.playbin = playbin
     }
-  functionsToRunOnWindowRealized
+  onWidgetRealizeCallbacks
   =
   void (
       GI.Gtk.onWidgetRealize videoWidget (
           windowRealizedHandler
             application
-            functionsToRunOnWindowRealized
+            onWidgetRealizeCallbacks
         )
     ) >>
   void (
@@ -55,10 +56,10 @@ addWindowHandlers
       GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 (hideOnScreenControls application)
     )
 
-windowRealizedHandler ::
-  R.Application ->
-  [R.Application -> IO ()] ->
-  GI.Gtk.WidgetRealizeCallback
+windowRealizedHandler
+  :: R.Application
+  -> [R.Application -> IO ()]
+  -> GI.Gtk.WidgetRealizeCallback
 windowRealizedHandler
   application@R.Application {
         R.guiObjects = guiObjects@R.GuiObjects {
@@ -66,18 +67,15 @@ windowRealizedHandler
             , R.seekScale = seekScale
           }
     }
-  functionsToRunOnWindowRealized
+  onWidgetRealizeCallbacks
   = do
   let eventMask = enumToInt32 GI.Gdk.EventMaskAllEventsMask
   GI.Gtk.widgetAddEvents videoWidget eventMask
   GI.Gtk.widgetAddEvents seekScale eventMask
   resetWindow guiObjects
-  mapM_ (\ f -> f application) functionsToRunOnWindowRealized
+  mapM_ (\ f -> f application) onWidgetRealizeCallbacks
 
-widgetWindowStateEventHandler ::
-  IORef Bool ->
-  GI.Gdk.EventWindowState ->
-  IO Bool
+widgetWindowStateEventHandler :: IORef Bool -> GI.Gdk.EventWindowState -> IO Bool
 widgetWindowStateEventHandler isWindowFullScreenRef eventWindowState = do
   windowStates <- GI.Gdk.getEventWindowStateNewWindowState eventWindowState
   let isWindowFullScreen = Prelude.foldl (\ acc x ->
@@ -86,32 +84,29 @@ widgetWindowStateEventHandler isWindowFullScreenRef eventWindowState = do
   atomicWriteIORef isWindowFullScreenRef isWindowFullScreen
   return True
 
-windowDestroyHandler ::
-  GI.Gst.Element ->
-  IO ()
+windowDestroyHandler :: GI.Gst.Element -> IO ()
 windowDestroyHandler playbin = do
   _ <- GI.Gst.elementSetState playbin GI.Gst.StateNull
   _ <- GI.Gst.objectUnref playbin
   GI.Gtk.mainQuit
 
-hideOnScreenControls ::
-  R.Application ->
-  IO Bool
+hideOnScreenControls :: R.Application -> IO Bool
 hideOnScreenControls
-  R.Application {
+  application@R.Application {
         R.guiObjects = R.GuiObjects {
               R.window = window
             , R.fileChooserButton = fileChooserButton
             , R.bottomControlsGtkBox = bottomControlsGtkBox
           }
       , R.ioRefs = R.IORefs {
-            R.videoInfoRef = videoInfoRef
-          , R.mouseMovedLastRef = mouseMovedLastRef
-        }
+              R.videoInfoRef = videoInfoRef
+            , R.mouseMovedLastRef = mouseMovedLastRef
+          }
       , R.playbin = playbin
     }
   = do
-  isVideo <- R.isVideo <$> readIORef videoInfoRef
+  videoInfoGathered <- readIORef videoInfoRef
+  let isVideo = R.isVideo videoInfoGathered
   mouseMovedLast <- readIORef mouseMovedLastRef
   timeNow <- fmap round getPOSIXTime
   (_, playBinState, _) <- GI.Gst.elementGetState playbin (fromIntegral GI.Gst.MSECOND :: GHC.Word.Word64)
@@ -122,52 +117,71 @@ hideOnScreenControls
     GI.Gtk.widgetHide bottomControlsGtkBox
     setCursor window (Just "none")
     atomicWriteIORef mouseMovedLastRef timeNow
+    fillWindowWithVideo application
   return True
 
-calculateWindowSize :: Int -> R.VideoInfo -> IO (Maybe (Int32, Int32))
-calculateWindowSize videoWidthSelection retrievedVideoInfo =
-  widthHeightToDouble retrievedVideoInfo >>=
-  ratio >>=
-  windowSize
-  where
-    widthHeightToDouble :: R.VideoInfo -> IO (Maybe Double, Maybe Double)
-    widthHeightToDouble R.VideoInfo { R.isVideo = False } = return (Nothing, Nothing)
-    widthHeightToDouble R.VideoInfo { R.videoWidth = w, R.videoHeight = h } =
-      return (Just $ fromIntegral w :: Maybe Double, Just $ fromIntegral h :: Maybe Double)
-    ratio :: (Maybe Double, Maybe Double) -> IO (Maybe Double)
-    ratio (Just width, Just height) =
-      if width <= 0.0 then return Nothing else return (Just (height / width))
-    ratio _ = return Nothing
-    windowSize :: Maybe Double -> IO (Maybe (Int32, Int32))
-    windowSize Nothing = return Nothing
-    windowSize (Just ratio') =
-      return (
-          Just (
-                fromIntegral videoWidthSelection :: Int32
-              , round ((fromIntegral videoWidthSelection :: Double) *  ratio') :: Int32
-            )
-        )
+fillWindowWithVideo :: R.Application -> IO ()
+fillWindowWithVideo
+  R.Application {
+        R.guiObjects = guiObjects@R.GuiObjects {
+              R.window = window
+          }
+      , R.ioRefs = R.IORefs {
+              R.videoInfoRef = videoInfoRef
+            , R.isWindowFullScreenRef = isWindowFullScreenRef
+          }
+    }
+  = do
+  isWindowFullScreen <- readIORef isWindowFullScreenRef
+  when (not isWindowFullScreen) $ do
+    videoInfoGathered <- readIORef videoInfoRef
+    (width, _) <- GI.Gtk.windowGetSize window
+    maybeWindowSize <- calculateWindowSize guiObjects (fromIntegral width :: Int) videoInfoGathered
+    when (isJust maybeWindowSize) $ do
+      let (windowWidth, windowHeight) = fromMaybe (0, 0) maybeWindowSize
+      setWindowSize guiObjects windowWidth windowHeight
+  return ()
 
-setWindowSize ::
-  Int32 ->
-  Int32 ->
-  GI.Gtk.Button ->
-  GI.Gtk.Widget ->
-  GI.Gtk.Window ->
-  IO ()
-setWindowSize width height fileChooserButton videoWidget window = do
-  GI.Gtk.setWidgetWidthRequest fileChooserButton width
-  GI.Gtk.setWidgetWidthRequest videoWidget width
-  GI.Gtk.setWidgetHeightRequest videoWidget height
-  GI.Gtk.setWidgetWidthRequest window width
-  GI.Gtk.setWidgetHeightRequest window height
+calculateWindowSize :: R.GuiObjects -> Int -> R.VideoInfo -> IO (Maybe (Int32, Int32))
+calculateWindowSize _ _ R.VideoInfo { R.isVideo = False } = return Nothing
+calculateWindowSize
+  R.GuiObjects {
+        R.fileChooserButton = fileChooserButton
+      , R.bottomControlsGtkBox = bottomControlsGtkBox
+    }
+  desiredWidth
+  R.VideoInfo { R.videoWidth = videoWidth, R.videoHeight = videoHeight }
+  = do
+  fileChooserButtonIsVisible    <- GI.Gtk.widgetGetVisible fileChooserButton
+  bottomControlsGtkBoxIsVisible <- GI.Gtk.widgetGetVisible bottomControlsGtkBox
+  fileChooserButtonHeight    <- GI.Gtk.widgetGetAllocation fileChooserButton >>= GI.Gdk.getRectangleHeight
+  bottomControlsGtkBoxHeight <- GI.Gtk.widgetGetAllocation bottomControlsGtkBox >>= GI.Gdk.getRectangleHeight
+  let videoWidthDouble = fromIntegral videoWidth :: Double
+  let videoHeightDouble = fromIntegral videoHeight :: Double
+  let ratio = if videoWidthDouble <= 0.0 then 0.0 else videoHeightDouble / videoWidthDouble
+  let desiredWidthDouble = fromIntegral desiredWidth :: Double
+  let topMargin = if fileChooserButtonIsVisible
+                    then (fromIntegral fileChooserButtonHeight :: Double)
+                    else 0.0
+  let bottomMargin = if bottomControlsGtkBoxIsVisible
+                        then (fromIntegral bottomControlsGtkBoxHeight :: Double)
+                        else 0.0
+  let height = topMargin + (desiredWidthDouble * ratio) + bottomMargin
+  return (Just (fromIntegral desiredWidth:: Int32, round height :: Int32))
+
+setWindowSize :: R.GuiObjects -> Int32 -> Int32 -> IO ()
+setWindowSize
+  R.GuiObjects {
+        R.window = window
+    }
+  width
+  height
+  =
   GI.Gtk.windowResize window width (if height <= 0 then 1 else height)
 
-resetWindow ::
-  R.GuiObjects ->
-  IO ()
+resetWindow :: R.GuiObjects -> IO ()
 resetWindow
-  R.GuiObjects {
+  guiObjects@R.GuiObjects {
         R.window = window
       , R.fileChooserButton = fileChooserButton
       , R.videoWidget = videoWidget
@@ -192,4 +206,4 @@ resetWindow
   GI.Gtk.widgetShow videoWidthSelectionComboBox
   setCursor window Nothing
   setPlayPauseButton playPauseButton playImage pauseImage False
-  setWindowSize width 0 fileChooserButton videoWidget window
+  setWindowSize guiObjects width 0

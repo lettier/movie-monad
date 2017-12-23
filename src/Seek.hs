@@ -9,7 +9,6 @@ module Seek where
 import Control.Monad
 import Data.IORef
 import Data.Int
-import Data.Time.Clock.POSIX
 import Data.GI.Base.Signals
 import GI.GLib
 import GI.GObject
@@ -44,10 +43,6 @@ addSeekHandlers
             seekScaleHandlerId
         )
     )
-
-seekRequestLastDeltaThreshold :: R.VideoInfo -> POSIXTime
-seekRequestLastDeltaThreshold R.VideoInfo { R.isLocalFile = True }  = 0.0
-seekRequestLastDeltaThreshold R.VideoInfo { R.isLocalFile = False } = 0.0
 
 onRangeValueChanged ::
   GI.Gst.Element ->

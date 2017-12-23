@@ -33,7 +33,7 @@ Author: David Lettier
   <requires lib="gtk+" version="3.10"/>
   <!-- interface-license-type bsd3c -->
   <!-- interface-name Movie Monad -->
-  <!-- interface-description A desktop video player built with Haskell that uses GStreamer and GTK+. -->
+  <!-- interface-description A free and simple to use video player built with Haskell. -->
   <!-- interface-copyright 2017 David Lettier -->
   <!-- interface-authors David Lettier -->
   <object class="GtkImage" id="about-image">
@@ -81,6 +81,8 @@ Author: David Lettier
     <property name="can_focus">True</property>
     <property name="title" translatable="yes">Movie Monad</property>
     <property name="window_position">center</property>
+    <property name="default_width">800</property>
+    <property name="default_height">600</property>
     <property name="icon">movie-monad-icon.png</property>
     <property name="gravity">center</property>
     <child>
@@ -97,7 +99,6 @@ Author: David Lettier
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkButton" id="file-chooser-button">
-                <property name="width_request">800</property>
                 <property name="visible">True</property>
                 <property name="app_paintable">True</property>
                 <property name="can_focus">True</property>
@@ -270,7 +271,7 @@ audio-volume-medium-symbolic</property>
                         <property name="visible">True</property>
                         <property name="app_paintable">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Set the video width</property>
+                        <property name="tooltip_text" translatable="yes">Set the window width</property>
                         <property name="margin_left">5</property>
                         <property name="margin_right">5</property>
                         <property name="active">1</property>
@@ -382,6 +383,7 @@ audio-volume-medium-symbolic</property>
   <object class="GtkAboutDialog" id="about-dialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Movie Monad - About</property>
+    <property name="resizable">False</property>
     <property name="window_position">center</property>
     <property name="icon_name">dialog-information</property>
     <property name="type_hint">dialog</property>
@@ -389,7 +391,7 @@ audio-volume-medium-symbolic</property>
     <property name="transient_for">window</property>
     <property name="attached_to">window</property>
     <property name="program_name">Movie Monad</property>
-    <property name="version">0.0.2.0</property>
+    <property name="version">0.0.3.0</property>
     <property name="copyright" translatable="yes">(C) 2017 David Lettier
 lettier.com</property>
     <property name="website">https://github.com/lettier/movie-monad</property>

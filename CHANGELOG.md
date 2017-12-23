@@ -1,6 +1,36 @@
 # [Movie Monad](https://github.com/lettier/movie-monad)
 
-## Changelog
+## CHANGELOG
+
+### 0.0.3.0
+
+#### Added
+
+- PKGBUILD for Arch Linux
+- AppImage specific desktop file
+- Linux screenshot
+- Ubuntu snapcraft.yaml
+- Seek left and right keyboard shortcuts
+
+#### Changed
+
+- Cabal file
+    - Added stack.yaml
+    - Added makefile
+    - Changed base to use ghc-8.0.1 or ghc-8.0.2
+- README
+- makefile
+    - Ensure cabal binary is stack version
+    - Force reinstalls for cabal install
+- Dependencies
+- Allow the window to be freely resized no matter the current width selection
+- Adjusts the window height so that the video can fill the width of the window
+
+#### Removed
+
+- Version from mac screenshot
+
+-------------------------------------------------------------------------------
 
 ### 0.0.2.0
 

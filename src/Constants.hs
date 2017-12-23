@@ -15,3 +15,6 @@ hideOnScreenControlsInterval = 5
 
 invalidVideoWidgetName :: Data.Text.Text
 invalidVideoWidgetName = "invalid-video-widget"
+
+keyboardShortcutSeekAdvanceBy :: Double
+keyboardShortcutSeekAdvanceBy = 10.0

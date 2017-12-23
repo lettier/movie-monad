@@ -8,3 +8,4 @@ extra-deps:
 - gi-gstbase-1.0.15
 - gi-gstvideo-1.0.14
 resolver: lts-9.1
+compiler-check: match-exact
