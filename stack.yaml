@@ -2,10 +2,13 @@ flags: {}
 extra-package-dbs: []
 packages:
 - '.'
+explicit-setup-deps:
+  ! '*': true
 extra-deps:
 - gi-gst-1.0.14
 - gi-gtk-3.0.18
 - gi-gstbase-1.0.15
 - gi-gstvideo-1.0.14
+- haskell-gi-base-0.20.8
 resolver: lts-9.1
 compiler-check: match-exact

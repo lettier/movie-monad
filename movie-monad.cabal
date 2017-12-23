@@ -62,7 +62,7 @@ executable            movie-monad
                       , process == 1.4.*
                       , MissingH == 1.4.*
                       , network-uri == 2.6.*
-                      , haskell-gi-base == 0.20.4
+                      , haskell-gi-base == 0.20.8
                       , gi-gobject == 2.0.*
                       , gi-glib == 2.0.*
                       , gi-gdk == 3.0.*

@@ -39,6 +39,7 @@ cabal_update: setup
 
 cabal_clean: cabal_update
   $(CABAL) clean && \
+  $(CABAL) sandbox init && \
   $(CABAL) sandbox delete && \
   $(CABAL) sandbox init
 
