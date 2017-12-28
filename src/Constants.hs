@@ -17,4 +17,4 @@ invalidVideoWidgetName :: Data.Text.Text
 invalidVideoWidgetName = "invalid-video-widget"
 
 keyboardShortcutSeekAdvanceBy :: Double
-keyboardShortcutSeekAdvanceBy = 10.0
+keyboardShortcutSeekAdvanceBy = 1.0

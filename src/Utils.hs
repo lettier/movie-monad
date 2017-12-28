@@ -56,3 +56,9 @@ safeRunProcessGetOutput processName args =
         print e >>
         return (ExitFailure 1, "", "")
       )
+
+clamp :: Ord a => a -> a -> a -> a
+clamp minimum' maximum' el
+  | el < minimum' = minimum'
+  | el > maximum' = maximum'
+  | otherwise     = el

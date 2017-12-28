@@ -7,7 +7,6 @@
 module Keyboard where
 
 import Control.Monad
-import Data.Fixed
 import Data.IORef
 import qualified GI.Gdk
 import qualified GI.Gtk
@@ -18,6 +17,7 @@ import Mouse
 import PlayPause
 import Fullscreen
 import Constants
+import Utils
 
 addKeyboardEventHandler :: R.Application -> IO ()
 addKeyboardEventHandler
@@ -68,15 +68,15 @@ keyboardEventHandler
     let newVolume = if oldVolume <= 0.0 then 0.0 else oldVolume - volumeDelta
     GI.Gtk.scaleButtonSetValue volumeButton newVolume
   -- Seek left
-  when (keyValue == GI.Gdk.KEY_Left) $ do
+  when (keyValue == GI.Gdk.KEY_Left) $
     void $ GI.Gtk.rangeSetValue
       seekScale
-      ((rangeValue - keyboardShortcutSeekAdvanceBy) `Data.Fixed.mod'` 100.0)
+      (clamp 0.0 100.0 (rangeValue - keyboardShortcutSeekAdvanceBy))
   -- Seek right
-  when (keyValue == GI.Gdk.KEY_Right) $ do
+  when (keyValue == GI.Gdk.KEY_Right) $
     void $ GI.Gtk.rangeSetValue
       seekScale
-      ((rangeValue + keyboardShortcutSeekAdvanceBy) `Data.Fixed.mod'` 100.0)
+      (clamp 0.0 100.0 (rangeValue + keyboardShortcutSeekAdvanceBy))
   -- Show Controls
   when (keyValue == GI.Gdk.KEY_c) $ do
     eventMotion <- GI.Gdk.newZeroEventMotion

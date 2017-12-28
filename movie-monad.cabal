@@ -1,5 +1,5 @@
 name:                 movie-monad
-version:              0.0.3.0
+version:              0.0.4.0
 synopsis:             Plays videos using GStreamer and GTK+.
 description:          A free and simple to use video player built with Haskell.
 homepage:             https://github.com/lettier/movie-monad

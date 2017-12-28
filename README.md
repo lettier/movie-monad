@@ -104,10 +104,10 @@ A free and simple to use video player built with Haskell.
 # Install GStreamer Bad Plug-ins >= 1.8 (https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 # Install Wget (https://www.gnu.org/software/wget/)
 # Visit https://github.com/lettier/movie-monad/releases
-# Download the latest AppImage movie-monad-0.0.3.0-x86_64.AppImage
-wget https://github.com/lettier/movie-monad/releases/download/0.0.3.0/movie-monad-0.0.3.0-x86_64.AppImage
-chmod a+x movie-monad-0.0.3.0-x86_64.AppImage
-./movie-monad-0.0.3.0-x86_64.AppImage
+# Download the latest AppImage movie-monad-0.0.4.0-x86_64.AppImage
+wget https://github.com/lettier/movie-monad/releases/download/0.0.4.0/movie-monad-0.0.4.0-x86_64.AppImage
+chmod a+x movie-monad-0.0.4.0-x86_64.AppImage
+./movie-monad-0.0.4.0-x86_64.AppImage
 ```
 
 ##### Install

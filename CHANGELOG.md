@@ -2,6 +2,21 @@
 
 ## CHANGELOG
 
+### 0.0.4.0
+
+#### Added
+
+-
+
+#### Changed
+
+- Clamped keyboard shortcut seek left and right to 0.0 and 100.0
+- Reduced keyboard shortcut seek left and right proportion
+
+#### Removed
+
+-
+
 ### 0.0.3.0
 
 #### Added
