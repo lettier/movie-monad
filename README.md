@@ -30,6 +30,9 @@ A free and simple to use video player built with Haskell.
 * Seek
 * Play and Pause
 * Volume
+* Subtitles
+    * Disable
+    * List and Pick from the Available Languages
 * Command-line Play
     * `movie-monad ./path/to/video/file.mp4`
     * `movie-monad http://www.domain.tld/path/to/video/file.mp4`
