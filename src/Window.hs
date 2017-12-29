@@ -133,7 +133,7 @@ fillWindowWithVideo
     }
   = do
   isWindowFullScreen <- readIORef isWindowFullScreenRef
-  when (not isWindowFullScreen) $ do
+  unless isWindowFullScreen $ do
     videoInfoGathered <- readIORef videoInfoRef
     (width, _) <- GI.Gtk.windowGetSize window
     maybeWindowSize <- calculateWindowSize guiObjects (fromIntegral width :: Int) videoInfoGathered
@@ -188,6 +188,7 @@ resetWindow
       , R.seekScale = seekScale
       , R.playPauseButton = playPauseButton
       , R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
+      , R.subtitleSelectionComboBox = subtitleSelectionComboBox
       , R.fullscreenButton = fullscreenButton
       , R.playImage = playImage
       , R.pauseImage = pauseImage
@@ -201,6 +202,7 @@ resetWindow
   GI.Gtk.widgetHide seekScale
   GI.Gtk.widgetHide playPauseButton
   GI.Gtk.widgetHide fullscreenButton
+  GI.Gtk.widgetHide subtitleSelectionComboBox
   GI.Gtk.widgetShow fileChooserButton
   GI.Gtk.widgetShow bottomControlsGtkBox
   GI.Gtk.widgetShow videoWidthSelectionComboBox

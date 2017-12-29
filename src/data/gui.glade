@@ -36,6 +36,55 @@ Author: David Lettier
   <!-- interface-description A free and simple to use video player built with Haskell. -->
   <!-- interface-copyright 2017 David Lettier -->
   <!-- interface-authors David Lettier -->
+  <object class="GtkWindow">
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkBox">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <child>
+          <object class="GtkSwitch">
+            <property name="visible">True</property>
+            <property name="can_focus">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFileChooserWidget">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="local_only">False</property>
+            <property name="search_mode">True</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkFileChooserButton">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="title" translatable="yes"/>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
+            <property name="position">2</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+  </object>
   <object class="GtkImage" id="about-image">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -302,6 +351,23 @@ audio-volume-medium-symbolic</property>
                       </packing>
                     </child>
                     <child>
+                      <object class="GtkComboBoxText" id="subtitle-selection-combo-box">
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Select the subtitle language</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="active_id">-1</property>
+                        <items>
+                          <item id="-1" translatable="yes">None</item>
+                        </items>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">3</property>
+                      </packing>
+                    </child>
+                    <child>
                       <object class="GtkButton" id="fullscreen-button">
                         <property name="app_paintable">True</property>
                         <property name="can_focus">False</property>
@@ -316,7 +382,7 @@ audio-volume-medium-symbolic</property>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">3</property>
+                        <property name="position">4</property>
                       </packing>
                     </child>
                     <child>
@@ -329,7 +395,7 @@ audio-volume-medium-symbolic</property>
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="position">4</property>
+                        <property name="position">5</property>
                       </packing>
                     </child>
                     <child>
@@ -349,7 +415,7 @@ audio-volume-medium-symbolic</property>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
                         <property name="pack_type">end</property>
-                        <property name="position">5</property>
+                        <property name="position">6</property>
                       </packing>
                     </child>
                   </object>

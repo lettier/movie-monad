@@ -28,9 +28,7 @@ addVideoSizeSelectorHandler
           (videoSizeSelectionHandler application)
       )
 
-videoSizeSelectionHandler ::
-  R.Application ->
-  IO ()
+videoSizeSelectionHandler :: R.Application -> IO ()
 videoSizeSelectionHandler
   R.Application {
         R.guiObjects = guiObjects@R.GuiObjects {

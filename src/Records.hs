@@ -47,6 +47,7 @@ data GuiObjects = GuiObjects {
     , pauseImage :: GI.Gtk.Image
     , volumeButton :: GI.Gtk.VolumeButton
     , videoWidthSelectionComboBox :: GI.Gtk.ComboBoxText
+    , subtitleSelectionComboBox :: GI.Gtk.ComboBoxText
     , fullscreenButton :: GI.Gtk.Button
     , bufferingSpinner :: GI.Gtk.Spinner
     , errorMessageDialog :: GI.Gtk.MessageDialog

@@ -35,6 +35,7 @@ import Fullscreen
 import ErrorMessage
 import About
 import VideoSizeSelector
+import SubtitleSelector
 import Playbin
 import ScreensaverAndPowerManagement (disable, enable)
 import Utils
@@ -71,6 +72,7 @@ main = do
   pauseImage <- builderGetObject GI.Gtk.Image builder "pause-image"
   volumeButton <- builderGetObject GI.Gtk.VolumeButton builder "volume-button"
   videoWidthSelectionComboBox <- builderGetObject GI.Gtk.ComboBoxText builder "video-width-selection-combo-box"
+  subtitleSelectionComboBox <- builderGetObject GI.Gtk.ComboBoxText builder "subtitle-selection-combo-box"
   fullscreenButton <- builderGetObject GI.Gtk.Button builder "fullscreen-button"
   bufferingSpinner <- builderGetObject GI.Gtk.Spinner builder "buffering-spinner"
   errorMessageDialog <- builderGetObject GI.Gtk.MessageDialog builder "error-message-dialog"
@@ -116,6 +118,8 @@ main = do
   GI.Gtk.widgetSetVexpand videoWidget True
   GI.Gtk.widgetSetSensitive videoWidget True
 
+  turnOffSubtitles playbin
+
   playbinBus <- GI.Gst.elementGetBus playbin
 
   let guiObjects = R.GuiObjects {
@@ -135,6 +139,7 @@ main = do
       , R.pauseImage = pauseImage
       , R.volumeButton = volumeButton
       , R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
+      , R.subtitleSelectionComboBox = subtitleSelectionComboBox
       , R.fullscreenButton = fullscreenButton
       , R.bufferingSpinner = bufferingSpinner
       , R.errorMessageDialog = errorMessageDialog
@@ -150,11 +155,12 @@ main = do
     }
 
   addWindowHandlers application [playVideoFromCommandLineIfNeeded]
-  addPlaybinHandler application
+  addPlaybinHandlers application
   addFileChooserHandlers application
   addPlayPauseButtonClickHandler application
   addSeekHandlers application
   addVideoSizeSelectorHandler application
+  addSubtitleSelectorHandler application
   addFullscreenButtonReleaseHandler application
   addMouseMoveHandlers application [fillWindowWithVideo]
   addAboutHandler application

@@ -6,7 +6,9 @@
 
 #### Added
 
--
+- Subtitle support
+- C src directory
+- C FFI files
 
 #### Changed
 
