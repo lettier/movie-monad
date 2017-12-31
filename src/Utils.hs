@@ -53,7 +53,7 @@ safeRunProcessGetOutput processName args =
         args
         ""
     ) (\ (e :: Control.Exception.IOException) ->
-        print e >>
+        putStr (show e) >>
         return (ExitFailure 1, "", "")
       )
 

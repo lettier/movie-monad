@@ -78,15 +78,14 @@ pipelineBusMessageHandler
   entryText <- GI.Gtk.entryGetText fileChooserEntry
   labelText <- GI.Gtk.labelGetText fileChooserButtonLabel
   when (
-      messageType == GI.Gst.MessageTypeError &&
-      (
+      messageType == GI.Gst.MessageTypeError && (
         (not . Data.Text.null) entryText ||
         labelText /= "Open"
       )
     ) $ do
       (gError, text) <- GI.Gst.messageParseError message
       gErrorText <- GI.Gst.gerrorMessage gError
-      Prelude.mapM_ print [text, "\n", gErrorText]
+      putStr ((Data.Text.unpack . Data.Text.unlines) [text, gErrorText])
       GI.Gtk.entrySetText fileChooserEntry ""
       GI.Gtk.labelSetText fileChooserButtonLabel "Open"
       _ <- GI.Gst.elementSetState playbin GI.Gst.StateNull
@@ -119,17 +118,19 @@ pipelineBusMessageHandler
       (Just "-1")
       "None"
     _ <- GI.Gtk.comboBoxSetActiveId subtitleSelectionComboBox (Just "-1")
-    if nText <= 0
-      then GI.Gtk.widgetHide subtitleSelectionComboBox
-      else GI.Gtk.widgetShow subtitleSelectionComboBox
-    mapM_ (\ i -> do
-      (_, maybeCode) <- getTextTagLanguageNameAndCode playbin i
-      forM_ maybeCode (
-          GI.Gtk.comboBoxTextAppend
-            subtitleSelectionComboBox
-            (Just (Data.Text.pack (show i)))
-        )
-      ) [0..(nText-1)]
+    GI.Gtk.widgetHide subtitleSelectionComboBox
+    when (nText > 0) $
+      mapM_ (\ i -> do
+        (_, maybeCode) <- getTextTagLanguageNameAndCode playbin i
+        case maybeCode of
+          Nothing -> return ()
+          Just code -> do
+            GI.Gtk.widgetShow subtitleSelectionComboBox
+            GI.Gtk.comboBoxTextAppend
+              subtitleSelectionComboBox
+              (Just (Data.Text.pack (show i)))
+              code
+        ) [0..(nText-1)]
   return True
 
 volumeButtonValueChangedHandler ::

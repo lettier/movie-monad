@@ -74,7 +74,6 @@ executable            movie-monad
                       , gi-gst == 1.0.*
                       , gi-gstvideo == 1.0.*
                       , gi-gtk == 3.0.18
-  ghc-options:        -threaded -Wall -freverse-errors
   other-modules:        Paths_movie_monad
                       , Records
                       , Constants
@@ -98,3 +97,4 @@ executable            movie-monad
   hs-source-dirs:       ./src/
   includes:             ./src/c/gst-ffi.h
   c-sources:            ./src/c/gst-ffi.c
+  ghc-options:        -O2 -rtsopts -with-rtsopts=-N -threaded -Wall -freverse-errors
