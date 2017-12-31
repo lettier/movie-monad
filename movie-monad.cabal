@@ -97,4 +97,4 @@ executable            movie-monad
   hs-source-dirs:       ./src/
   includes:             ./src/c/gst-ffi.h
   c-sources:            ./src/c/gst-ffi.c
-  ghc-options:        -O2 -rtsopts -with-rtsopts=-N -threaded -Wall -freverse-errors
+  ghc-options:        -rtsopts -with-rtsopts=-N -threaded -Wall -freverse-errors
