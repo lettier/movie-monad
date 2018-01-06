@@ -126,6 +126,36 @@ chmod +x "movie-monad-install-app-image.sh"
 ./movie-monad-install-app-image.sh
 ```
 
+#### [Snap](https://www.ubuntu.com/desktop/snappy)
+
+```bash
+# Install snapd (https://docs.snapcraft.io/core/install)
+snap install movie-monad
+sudo snap connect movie-monad:mount-observe
+sudo snap connect movie-monad:removable-media
+sudo snap connect movie-monad:raw-usb
+movie-monad
+```
+
+##### Known Issues
+
+- Ubuntu 17
+    - Does not launch if using Wayland
+        - At login, click the gear and select Ubuntu on Xorg
+        - Note that Movie Monad works with Wayland when not using the snap
+- File Explorer
+    - Some of the left sidebar shortcuts do not map to the expected user directories
+        - They instead map to the snap's read-only filesystem or to nothing at all
+- Subtitles
+    - Subtitles do not show even though you can select them in the drop down
+        - GStreamer must not have access to or cannot find any suitable fonts
+
+All of these issues can be avoided if you run the executable directly.
+
+```bash
+/snap/movie-monad/current/user/bin/movie-monad
+```
+
 #### [Arch/Manjaro/Antergos](https://aur.archlinux.org/packages/movie-monad/)
 
 ```bash
