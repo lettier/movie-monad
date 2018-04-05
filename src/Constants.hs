@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -11,10 +11,13 @@ module Constants where
 import Data.Text
 
 hideOnScreenControlsInterval :: Integral a => a
-hideOnScreenControlsInterval = 5
+hideOnScreenControlsInterval = 7
 
 invalidVideoWidgetName :: Data.Text.Text
 invalidVideoWidgetName = "invalid-video-widget"
 
 keyboardShortcutSeekAdvanceBy :: Double
 keyboardShortcutSeekAdvanceBy = 1.0
+
+windowMinimumSize :: Integral a => a
+windowMinimumSize = 448

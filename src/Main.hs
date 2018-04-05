@@ -1,11 +1,13 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE
+    OverloadedStrings
+  , ScopedTypeVariables
+#-}
 
 module Main where
 
@@ -24,6 +26,7 @@ import GI.GdkPixbuf
 
 import qualified Records as R
 import Constants
+import Reset
 import Window
 import CommandLine
 import Mouse
@@ -38,6 +41,7 @@ import VideoSizeSelector
 import SubtitleSelector
 import Playbin
 import ScreensaverAndPowerManagement (disable, enable)
+import CssStyle
 import Utils
 
 import Paths_movie_monad
@@ -54,30 +58,31 @@ main = do
   _ <- GI.Gtk.init Nothing
 
   gladeFile <- getDataFileName "data/gui.glade"
-  builder <- GI.Gtk.builderNewFromFile (pack gladeFile)
+  builder   <- GI.Gtk.builderNewFromFile (pack gladeFile)
 
-  window <- builderGetObject GI.Gtk.Window builder "window"
-  fileChooserButton <- builderGetObject GI.Gtk.Button builder "file-chooser-button"
-  fileChooserButtonLabel <- builderGetObject GI.Gtk.Label builder "file-chooser-button-label"
-  fileChooserDialog <- builderGetObject GI.Gtk.Dialog builder "file-chooser-dialog"
-  fileChooserEntry <- builderGetObject GI.Gtk.Entry builder "file-chooser-entry"
-  fileChooserWidget <- builderGetObject GI.Gtk.FileChooserWidget builder "file-chooser-widget"
-  fileChooserCancelButton <- builderGetObject GI.Gtk.Button builder "file-chooser-cancel-button"
-  fileChooserOpenButton <- builderGetObject GI.Gtk.Button builder "file-chooser-open-button"
-  videoWidgetBox <- builderGetObject GI.Gtk.Box builder "video-widget-box"
-  bottomControlsGtkBox <- builderGetObject GI.Gtk.Box builder "bottom-controls-gtk-box"
-  seekScale <- builderGetObject GI.Gtk.Scale builder "seek-scale"
-  playPauseButton <- builderGetObject GI.Gtk.Button builder "play-pause-button"
-  playImage <- builderGetObject GI.Gtk.Image builder "play-image"
-  pauseImage <- builderGetObject GI.Gtk.Image builder "pause-image"
-  volumeButton <- builderGetObject GI.Gtk.VolumeButton builder "volume-button"
-  videoWidthSelectionComboBox <- builderGetObject GI.Gtk.ComboBoxText builder "video-width-selection-combo-box"
-  subtitleSelectionComboBox <- builderGetObject GI.Gtk.ComboBoxText builder "subtitle-selection-combo-box"
-  fullscreenButton <- builderGetObject GI.Gtk.Button builder "fullscreen-button"
-  bufferingSpinner <- builderGetObject GI.Gtk.Spinner builder "buffering-spinner"
-  errorMessageDialog <- builderGetObject GI.Gtk.MessageDialog builder "error-message-dialog"
-  aboutButton <- builderGetObject GI.Gtk.Button builder "about-button"
-  aboutDialog <- builderGetObject GI.Gtk.AboutDialog builder "about-dialog"
+  window                           <- builderGetObject GI.Gtk.Window            builder "window"
+  fileChooserButtonLabel           <- builderGetObject GI.Gtk.Label             builder "file-chooser-button-label"
+  fileChooserEntry                 <- builderGetObject GI.Gtk.Entry             builder "file-chooser-entry"
+  fileChooserWidget                <- builderGetObject GI.Gtk.FileChooserWidget builder "file-chooser-widget"
+  videoWidgetBox                   <- builderGetObject GI.Gtk.Box               builder "video-widget-box"
+  bottomControlsGtkBox             <- builderGetObject GI.Gtk.Box               builder "bottom-controls-gtk-box"
+  seekScale                        <- builderGetObject GI.Gtk.Scale             builder "seek-scale"
+  fileChooserButton                <- builderGetObject GI.Gtk.Button            builder "file-chooser-button"
+  fileChooserCancelButton          <- builderGetObject GI.Gtk.Button            builder "file-chooser-cancel-button"
+  fileChooserOpenButton            <- builderGetObject GI.Gtk.Button            builder "file-chooser-open-button"
+  playPauseButton                  <- builderGetObject GI.Gtk.Button            builder "play-pause-button"
+  fullscreenButton                 <- builderGetObject GI.Gtk.Button            builder "fullscreen-button"
+  aboutButton                      <- builderGetObject GI.Gtk.Button            builder "about-button"
+  repeatCheckButton                <- builderGetObject GI.Gtk.CheckButton       builder "repeat-check-button"
+  volumeButton                     <- builderGetObject GI.Gtk.VolumeButton      builder "volume-button"
+  playImage                        <- builderGetObject GI.Gtk.Image             builder "play-image"
+  pauseImage                       <- builderGetObject GI.Gtk.Image             builder "pause-image"
+  windowWidthSelectionComboBoxText <- builderGetObject GI.Gtk.ComboBoxText      builder "window-width-selection-combo-box-text"
+  subtitleSelectionComboBoxText    <- builderGetObject GI.Gtk.ComboBoxText      builder "subtitle-selection-combo-box-text"
+  bufferingSpinner                 <- builderGetObject GI.Gtk.Spinner           builder "buffering-spinner"
+  fileChooserDialog                <- builderGetObject GI.Gtk.Dialog            builder "file-chooser-dialog"
+  errorMessageDialog               <- builderGetObject GI.Gtk.MessageDialog     builder "error-message-dialog"
+  aboutDialog                      <- builderGetObject GI.Gtk.AboutDialog       builder "about-dialog"
 
   logoFile <- getDataFileName "data/movie-monad-logo.svg"
   logo <- GI.GdkPixbuf.pixbufNewFromFile (pack logoFile)
@@ -87,17 +92,18 @@ main = do
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserCancelButton (enumToInt32 GI.Gtk.ResponseTypeCancel)
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserOpenButton   (enumToInt32 GI.Gtk.ResponseTypeOk)
 
-  isWindowFullScreenRef <- newIORef False
-  mouseMovedLastRef <- newIORef 0
+  isWindowFullScreenRef   <- newIORef False
+  mouseMovedLastRef       <- newIORef 0
   previousFileNamePathRef <- newIORef ""
-  videoInfoRef <- newIORef R.defaultVideoInfo
+  videoInfoRef            <- newIORef R.defaultVideoInfo
 
-  let ioRefs = R.IORefs {
-        R.isWindowFullScreenRef = isWindowFullScreenRef
-      , R.mouseMovedLastRef = mouseMovedLastRef
-      , R.previousFileNamePathRef = previousFileNamePathRef
-      , R.videoInfoRef = videoInfoRef
-    }
+  let ioRefs =
+        R.IORefs
+          { R.isWindowFullScreenRef = isWindowFullScreenRef
+          , R.mouseMovedLastRef = mouseMovedLastRef
+          , R.previousFileNamePathRef = previousFileNamePathRef
+          , R.videoInfoRef = videoInfoRef
+          }
 
   playbin <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayerPlaybin")
   maybeGtkSink <- GI.Gst.elementFactoryMake "gtksink" (Just "MultimediaPlayerGtkSink")
@@ -114,73 +120,82 @@ main = do
   Data.GI.Base.Properties.setObjectPropertyObject playbin "video-sink" maybeGtkSink
   Data.GI.Base.Properties.setObjectPropertyBool   playbin "force-aspect-ratio" True
   GI.Gtk.boxPackStart videoWidgetBox videoWidget True True 0
-  GI.Gtk.widgetSetHexpand videoWidget True
-  GI.Gtk.widgetSetVexpand videoWidget True
+  GI.Gtk.widgetSetHexpand   videoWidget True
+  GI.Gtk.widgetSetVexpand   videoWidget True
   GI.Gtk.widgetSetSensitive videoWidget True
 
   turnOffSubtitles playbin
 
   playbinBus <- GI.Gst.elementGetBus playbin
 
-  let guiObjects = R.GuiObjects {
-        R.window = window
-      , R.fileChooserButton = fileChooserButton
-      , R.fileChooserButtonLabel = fileChooserButtonLabel
-      , R.fileChooserDialog = fileChooserDialog
-      , R.fileChooserEntry = fileChooserEntry
-      , R.fileChooserWidget = fileChooserWidget
-      , R.fileChooserCancelButton = fileChooserCancelButton
-      , R.fileChooserOpenButton = fileChooserOpenButton
-      , R.videoWidget = videoWidget
-      , R.bottomControlsGtkBox = bottomControlsGtkBox
-      , R.seekScale = seekScale
-      , R.playPauseButton = playPauseButton
-      , R.playImage = playImage
-      , R.pauseImage = pauseImage
-      , R.volumeButton = volumeButton
-      , R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
-      , R.subtitleSelectionComboBox = subtitleSelectionComboBox
-      , R.fullscreenButton = fullscreenButton
-      , R.bufferingSpinner = bufferingSpinner
-      , R.errorMessageDialog = errorMessageDialog
-      , R.aboutButton = aboutButton
-      , R.aboutDialog = aboutDialog
-    }
+  let guiObjects =
+        R.GuiObjects
+          { R.window                           = window
+          , R.fileChooserButtonLabel           = fileChooserButtonLabel
+          , R.fileChooserEntry                 = fileChooserEntry
+          , R.fileChooserWidget                = fileChooserWidget
+          , R.fileChooserCancelButton          = fileChooserCancelButton
+          , R.fileChooserOpenButton            = fileChooserOpenButton
+          , R.videoWidget                      = videoWidget
+          , R.bottomControlsGtkBox             = bottomControlsGtkBox
+          , R.seekScale                        = seekScale
+          , R.fileChooserButton                = fileChooserButton
+          , R.playPauseButton                  = playPauseButton
+          , R.fullscreenButton                 = fullscreenButton
+          , R.volumeButton                     = volumeButton
+          , R.repeatCheckButton                = repeatCheckButton
+          , R.playImage                        = playImage
+          , R.pauseImage                       = pauseImage
+          , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
+          , R.subtitleSelectionComboBoxText    = subtitleSelectionComboBoxText
+          , R.bufferingSpinner                 = bufferingSpinner
+          , R.errorMessageDialog               = errorMessageDialog
+          , R.fileChooserDialog                = fileChooserDialog
+          , R.aboutButton                      = aboutButton
+          , R.aboutDialog                      = aboutDialog
+          }
 
-  let application = R.Application {
-        R.guiObjects = guiObjects
-      , R.ioRefs = ioRefs
-      , R.playbin = playbin
-      , R.playbinBus = playbinBus
-    }
+  let application =
+        R.Application
+          { R.guiObjects = guiObjects
+          , R.ioRefs = ioRefs
+          , R.playbin = playbin
+          , R.playbinBus = playbinBus
+          }
 
-  addWindowHandlers application [playVideoFromCommandLineIfNeeded]
-  addPlaybinHandlers application
-  addFileChooserHandlers application
-  addPlayPauseButtonClickHandler application
-  addSeekHandlers application
-  addVideoSizeSelectorHandler application
-  addSubtitleSelectorHandler application
+  addWindowHandlers                 application [playVideoFromCommandLineIfNeeded]
+  addPlaybinHandlers                application
+  addFileChooserHandlers            application
+  addPlayPauseButtonClickHandler    application
+  addSeekHandlers                   application
+  addVideoSizeSelectorHandlers      application
+  addSubtitleSelectorHandler        application
   addFullscreenButtonReleaseHandler application
-  addMouseMoveHandlers application [fillWindowWithVideo]
-  addAboutHandler application
-  addKeyboardEventHandler application
-  addErrorMessageDialogHandler application
+  addMouseMoveHandlers              application [fillWindowWithVideo]
+  addAboutHandler                   application
+  addKeyboardEventHandler           application
+  addErrorMessageDialogHandler      application
 
   let operatingSystem = System.Info.os
   screenAndPowerManagementActions <- ScreensaverAndPowerManagement.disable operatingSystem
 
+  applyCss guiObjects
+
   GI.Gtk.widgetShowAll window
+
   GI.Gtk.main
+
+  resetPlaybin playbin
 
   ScreensaverAndPowerManagement.enable operatingSystem screenAndPowerManagementActions
 
-builderGetObject ::
-  (GI.GObject.GObject b, GI.Gtk.IsBuilder a) =>
-  (Data.GI.Base.ManagedPtr b -> b) ->
-  a ->
-  Prelude.String ->
-  IO b
+builderGetObject
+  ::  (GI.GObject.GObject b, GI.Gtk.IsBuilder a)
+  =>  (Data.GI.Base.ManagedPtr b -> b)
+  ->  a
+  ->  Prelude.String
+  ->  IO b
 builderGetObject objectTypeClass builder objectId =
   fromJust <$> GI.Gtk.builderGetObject builder (pack objectId) >>=
     GI.Gtk.unsafeCastTo objectTypeClass
+

@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -31,8 +31,8 @@ fullscreenButtonReleaseHandler
   R.Application {
         R.guiObjects = R.GuiObjects {
               R.window = window
-            , R.fileChooserButton = fileChooserButton
-            , R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
+            , R.fileChooserButton                = fileChooserButton
+            , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
           }
       , R.ioRefs = R.IORefs {
             R.isWindowFullScreenRef = isWindowFullScreenRef
@@ -43,11 +43,11 @@ fullscreenButtonReleaseHandler
   isWindowFullScreen <- readIORef isWindowFullScreenRef
   if isWindowFullScreen
     then do
-      GI.Gtk.widgetShow videoWidthSelectionComboBox
+      GI.Gtk.widgetShow windowWidthSelectionComboBoxText
       GI.Gtk.widgetShow fileChooserButton
       void $ GI.Gtk.windowUnfullscreen window
     else do
-      GI.Gtk.widgetHide videoWidthSelectionComboBox
+      GI.Gtk.widgetHide windowWidthSelectionComboBoxText
       GI.Gtk.widgetHide fileChooserButton
       void $ GI.Gtk.windowFullscreen window
   return True

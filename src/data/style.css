@@ -1,0 +1,299 @@
+/*
+  Movie Monad
+  (C) 2018 David Lettier
+  lettier.com
+*/
+
+@define-color _movie_monad_black       rgba(10, 10, 10, 0.8);
+@define-color _movie_monad_white_nine  rgba(255, 255, 255, 0.9);
+@define-color _movie_monad_white_five  rgba(255, 255, 255, 0.5);
+@define-color _movie_monad_blue        rgba(87, 172, 227, 1.0);
+@define-color _movie_monad_pink        rgba(224, 67, 127, 1.0);
+
+@keyframes movie_monad_fade_in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+#bottom-controls-gtk-box {
+  background-color: @_movie_monad_black;
+  border-color: @_movie_monad_black;
+  border-width: 1px;
+  border-radius: 5px;
+  padding: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-bottom: 0px;
+}
+
+#play-pause-button,
+#about-button,
+#volume-button,
+#volume-plus-button,
+#volume-minus-button,
+#repeat-check-button,
+#fullscreen-button,
+#window-width-selection-combo-box-text button.combo,
+#subtitle-selection-combo-box-text button.combo,
+#bottom-controls-gtk-box .button {
+  background-color: transparent;
+  border-color: transparent;
+  border-width: 0px;
+  border-radius: 5px;
+  margin: 5px;
+  background-image: none;
+  color: white;
+  box-shadow: none;
+  text-shadow: none;
+  border-image-source: none;
+}
+
+GtkBox#bottom-controls-gtk-box .button {
+  padding-left: 7.5px;
+  padding-right: 7.5px;
+}
+
+#play-pause-button image,
+#about-button image,
+#volume-button image,
+#repeat-check-button image,
+#repeat-check-button check,
+#fullscreen-button image,
+#play-pause-button image:hover,
+#about-button image:hover,
+#volume-button image:hover,
+#repeat-check-button image:hover,
+#fullscreen-button image:hover {
+  text-shadow: none;
+  border-color: transparent;
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+  border-left-color: transparent;
+  border-right-color: transparent;
+  background-image: none;
+}
+
+#play-pause-button:focus,
+#about-button:focus,
+#volume-button:focus,
+#volume-plus-button:focus,
+#volume-minus-button:focus,
+#repeat-check-button:focus,
+#fullscreen-button:focus,
+#window-width-selection-combo-box-text button.combo:focus,
+#subtitle-selection-combo-box-text button.combo:focus,
+#play-pause-button image:focus,
+#about-button image:focus,
+#volume-button image:focus,
+#repeat-check-button image:focus,
+#repeat-check-button check:focus,
+#fullscreen-button image:focus,
+#play-pause-button image:focus,
+#about-button image:focus,
+#volume-button image:focus,
+#repeat-check-button image:focus,
+#fullscreen-button image:focus {
+  outline-color: transparent;
+  outline-offset: 0px;
+  outline-width: 0px;
+  outline-style: none;
+  outline: none;
+}
+
+#play-pause-button:hover,
+#about-button:hover,
+#volume-button:hover,
+#volume-plus-button:hover,
+#volume-minus-button:hover,
+#repeat-check-button:hover,
+#repeat-check-button:active,
+#fullscreen-button:hover,
+#window-width-selection-combo-box-text button.combo:hover,
+#subtitle-selection-combo-box-text button.combo:hover,
+#window-width-selection-combo-box-text .button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+GtkScale {
+  background-color: @_movie_monad_black;
+  background-image: none;
+  border-color: black;
+  border: none;
+  color: @_movie_monad_white_five;
+}
+
+GtkScale.horizontal {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+scale slider {
+  background-color: @_movie_monad_white_nine;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  background-image: none;
+  box-shadow: none;
+  border-radius: 100%;
+  margin: -5px;
+  padding: 0px;
+}
+
+#seek-scale .slider,
+GtkPopover .slider {
+  background-color: @_movie_monad_white_nine;
+  margin: -3px;
+}
+
+GtkBox#bottom-controls-gtk-box .trough {
+  margin-right: 10px;
+  margin-left: 10px;
+}
+
+scale trough,
+GtkScale .trough {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border-image: none;
+  border: none;
+  background-image: none;
+}
+
+scale trough:focus,
+GtkScale .trough {
+  outline-color: transparent;
+  outline-offset: 0px;
+  outline-width: 0px;
+  outline-style: none;
+  outline: none;
+}
+
+scale fill {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border: none;
+}
+
+scale highlight,
+.highlight {
+  background-color: @_movie_monad_blue;
+  background-image: none;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border: none;
+}
+
+scale value {
+  color: @_movie_monad_white_five;
+  margin-bottom: 5px;
+}
+
+scale#seek-scale highlight,
+GtkScale#seek-scale .highlight {
+  background-image: linear-gradient(to right, @_movie_monad_blue 0%, @_movie_monad_pink 100%);
+}
+
+popover highlight,
+GtkPopover .highlight {
+  background-image: linear-gradient(to top, @_movie_monad_blue 0%, @_movie_monad_pink 100%);
+}
+
+combobox button,
+GtkComboBox .button {
+  color: white;
+  text-shadow: none;
+}
+
+.scale-popup,
+combobox menu,
+GtkComboBox .menu {
+  background-color: @_movie_monad_black;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border: none;
+  box-shadow: none;
+}
+
+combobox window,
+combobox decoration,
+combobox arrow,
+GtkComboBox .arrow {
+  background-color: transparent;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  box-shadow: none;
+}
+
+menuitem,
+GtkMenuItem {
+  background-color: transparent;
+  color: white;
+  background-image: none;
+  text-shadow: none;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border: none;
+  box-shadow: none;
+}
+
+menuitem:hover,
+GtkMenuItem:hover {
+  background-color: @_movie_monad_white_nine;
+  color: black;
+  background-image: none;
+  text-shadow: none;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border: none;
+  box-shadow: none;
+}
+
+menuitem:focus,
+GtkMenuItem:focus {
+  outline-color: transparent;
+  outline-offset: 0px;
+  outline-width: 0px;
+  outline-style: none;
+  outline: none;
+}
+
+menuitem cellview,
+GtkMenuItem GtkCellView {
+  color: inherit;
+}
+
+arrow,
+GtkMenu .arrow {
+  text-shadow: none;
+  color: white;
+}
+
+tooltip,
+.tooltip {
+  color: white;
+  background-image: none;
+  background-color: @_movie_monad_black;
+  border-radius: 0px;
+  border-color: @_movie_monad_black;
+  border-width: 0px;
+  border-style: none;
+  border-image-source: none;
+  border: none;
+  box-shadow: none;
+}
+
+.movie-monad-fade-in {
+  animation-name: movie_monad_fade_in;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}

@@ -3,50 +3,63 @@
 
 .RECIPEPREFIX != ps
 
-STACK=stack --allow-different-user
-STACK_SNAPSHOT_INSTALL_ROOT=`$(STACK) path --snapshot-install-root`
-STACK_SNAPSHOT_INSTALL_ROOT_BIN=$(STACK_SNAPSHOT_INSTALL_ROOT)/bin
-STACK_PATH_LOCAL_BIN=`$(STACK) path --local-bin`
-STACK_GHC_EXE=`$(STACK) path --compiler-exe`
-STACK_GHC_BIN=`$(STACK) path --compiler-bin`
-STACK_PATHS=$(STACK_PATH_LOCAL_BIN):$(STACK_GHC_BIN):$(STACK_SNAPSHOT_INSTALL_ROOT):$(STACK_SNAPSHOT_INSTALL_ROOT_BIN)
-CABAL=env PATH=$(PATH):$(STACK_PATHS) $(STACK_SNAPSHOT_INSTALL_ROOT_BIN)/cabal
+_NAME="movie-monad"
+_STACK=stack --allow-different-user
+_STACK_SNAPSHOT_INSTALL_ROOT=`$(_STACK) path --snapshot-install-root`
+_STACK_SNAPSHOT_INSTALL_ROOT_BIN="$(_STACK_SNAPSHOT_INSTALL_ROOT)/bin"
+_STACK_PATH_LOCAL_BIN=`$(_STACK) path --local-bin`
+_STACK_GHC_EXE=`$(_STACK) path --compiler-exe`
+_STACK_GHC_BIN=`$(_STACK) path --compiler-bin`
+_STACK_PATHS=$(_STACK_PATH_LOCAL_BIN):$(_STACK_GHC_BIN):$(_STACK_SNAPSHOT_INSTALL_ROOT):$(_STACK_SNAPSHOT_INSTALL_ROOT_BIN)
+_CABAL=env PATH=$(PATH):$(_STACK_PATHS) "$(_STACK_SNAPSHOT_INSTALL_ROOT_BIN)/cabal"
+_CABAL_SANDBOX_DIR=".cabal-sandbox"
+_APPLICATIONS_DESKTOP_DIR="$(_CABAL_SANDBOX_DIR)/share/applications"
+_ICONS_HICOLOR_SCALABLE_APPS_DIR="$(_CABAL_SANDBOX_DIR)/share/icons/hicolor/scalable/apps"
+_PACKAGING_LINUX_COMMON_DIR="./packaging/linux/common"
 
-export PATH := $(PATH):$(STACK_PATHS)
+export PATH := $(PATH):$(_STACK_PATHS)
 
-all: setup build
+all: install
 
 setup:
-  $(STACK) setup && \
-  $(STACK) update && \
-  $(STACK) build alex && \
-  $(STACK) build happy
-
-build: setup
-  $(STACK) build
-
-install: build
-  $(STACK) install
-
-run: install
-  $(STACK) exec -- movie-monad
-
-build_sdist:
-  $(STACK) sdist
+  $(_STACK) update && \
+  $(_STACK) setup && \
+  $(_STACK) install alex happy && \
+  $(_STACK) install haskell-gi
 
 cabal_update: setup
-  $(STACK) build cabal-install && \
-  $(CABAL) update
+  $(_CABAL) update
+
+cabal_sandbox_init: cabal_update
+  $(_CABAL) sandbox init
 
 cabal_clean: cabal_update
-  $(CABAL) clean && \
-  $(CABAL) sandbox init && \
-  $(CABAL) sandbox delete && \
-  $(CABAL) sandbox init
+  $(_CABAL) clean && \
+  $(_CABAL) sandbox init && \
+  $(_CABAL) sandbox delete && \
+  $(_CABAL) sandbox init
 
-cabal_install_relocatable_executable: cabal_clean
-  $(CABAL) sandbox init && \
-  $(CABAL) --require-sandbox install --dependencies-only --force-reinstalls -j -w $(STACK_GHC_EXE) && \
-  $(CABAL) --require-sandbox configure --enable-relocatable -w $(STACK_GHC_EXE) && \
-  $(CABAL) --require-sandbox build -j && \
-  $(CABAL) --require-sandbox install --enable-relocatable --force-reinstalls -j -w $(STACK_GHC_EXE)
+cabal_install_dependencies: cabal_sandbox_init
+  $(_CABAL) --require-sandbox install --dependencies-only --force-reinstalls -j -w $(_STACK_GHC_EXE)
+
+cabal_configure: cabal_install_dependencies
+  $(_CABAL) --require-sandbox configure --enable-relocatable -w $(_STACK_GHC_EXE)
+
+cabal_build: cabal_configure
+  $(_CABAL) --require-sandbox build -j
+
+cabal_install: cabal_build
+  $(_CABAL) --require-sandbox install --enable-relocatable --force-reinstalls -j -w $(_STACK_GHC_EXE)
+
+applications_desktop:
+  mkdir -p $(_APPLICATIONS_DESKTOP_DIR) && \
+  cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME).desktop $(_APPLICATIONS_DESKTOP_DIR)/
+
+icons_hicolor_scalable_apps:
+  mkdir -p $(_ICONS_HICOLOR_SCALABLE_APPS_DIR) && \
+  cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME)-icon.svg $(_ICONS_HICOLOR_SCALABLE_APPS_DIR)/
+
+install: cabal_install applications_desktop icons_hicolor_scalable_apps
+
+build_sdist:
+  $(_STACK) sdist

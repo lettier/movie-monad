@@ -1,13 +1,13 @@
 name:                 movie-monad
-version:              0.0.4.0
+version:              0.0.5.0
 synopsis:             Plays videos using GStreamer and GTK+.
-description:          A free and simple to use video player built with Haskell.
+description:          A free and simple to use video player made with Haskell.
 homepage:             https://github.com/lettier/movie-monad
 license:              BSD3
 license-file:         LICENSE
 author:               Lettier
 maintainer:           Lettier
-copyright:            2017 David Lettier
+copyright:            (C) 2017 David Lettier
 category:               Application
                       , Multimedia
                       , Multimedia Player
@@ -21,10 +21,19 @@ extra-source-files:     README.md
                       , stack.yaml
                       , ./src/dev/Paths_movie_monad.hs
                       , ./src/data/gui.glade
+                      , ./src/data/style.css
+                      , ./src/data/style-3-18.css
+                      , ./src/data/style-3-20.css
                       , ./src/data/movie-monad-logo.svg
-                      , ./src/data/movie-monad-icon.png
+                      , ./src/data/movie-monad-icon.svg
+                      , ./src/data/about-icon.svg
+                      , ./src/data/play-icon.svg
+                      , ./src/data/pause-icon.svg
+                      , ./src/data/repeat-icon.svg
+                      , ./src/data/fullscreen-icon.svg
                       , ./src/Records.hs
                       , ./src/Constants.hs
+                      , ./src/Reset.hs
                       , ./src/Window.hs
                       , ./src/CommandLine.hs
                       , ./src/Keyboard.hs
@@ -40,13 +49,22 @@ extra-source-files:     README.md
                       , ./src/VideoInfo.hs
                       , ./src/Playbin.hs
                       , ./src/Uri.hs
+                      , ./src/CssStyle.hs
                       , ./src/Utils.hs
                       , ./src/ScreensaverAndPowerManagement.hs
                       , ./src/c/gst-ffi.h
                       , ./src/c/gst-ffi.c
 data-files:             data/gui.glade
+                      , data/style.css
+                      , data/style-3-18.css
+                      , data/style-3-20.css
                       , data/movie-monad-logo.svg
-                      , data/movie-monad-icon.png
+                      , data/movie-monad-icon.svg
+                      , data/about-icon.svg
+                      , data/play-icon.svg
+                      , data/pause-icon.svg
+                      , data/repeat-icon.svg
+                      , data/fullscreen-icon.svg
 data-dir:             ./src/
 
 source-repository     head
@@ -54,8 +72,8 @@ source-repository     head
   location:           https://github.com/lettier/movie-monad.git
 
 executable            movie-monad
-  main-is:              Main.hs
-  default-language:     Haskell2010
+  main-is:            Main.hs
+  default-language:   Haskell2010
   build-depends:        base == 4.9.*
                       , filepath == 1.4.*
                       , system-fileio == 0.3.*
@@ -65,18 +83,21 @@ executable            movie-monad
                       , process == 1.4.*
                       , MissingH == 1.4.*
                       , network-uri == 2.6.*
-                      , haskell-gi == 0.20.*
-                      , haskell-gi-base == 0.20.8
+                      , bytestring == 0.10.*
+                      , haskell-gi == 0.21.*
+                      , haskell-gi-base == 0.21.*
+                      , haskell-gi-overloading == 1.0
                       , gi-gobject == 2.0.*
                       , gi-glib == 2.0.*
                       , gi-gdk == 3.0.*
                       , gi-gdkpixbuf == 2.0.*
                       , gi-gst == 1.0.*
                       , gi-gstvideo == 1.0.*
-                      , gi-gtk == 3.0.18
+                      , gi-gtk == 3.0.*
   other-modules:        Paths_movie_monad
                       , Records
                       , Constants
+                      , Reset
                       , Window
                       , CommandLine
                       , Keyboard
@@ -92,9 +113,10 @@ executable            movie-monad
                       , VideoInfo
                       , Uri
                       , Playbin
+                      , CssStyle
                       , Utils
                       , ScreensaverAndPowerManagement
-  hs-source-dirs:       ./src/
-  includes:             ./src/c/gst-ffi.h
-  c-sources:            ./src/c/gst-ffi.c
+  hs-source-dirs:     ./src/
+  includes:           ./src/c/gst-ffi.h
+  c-sources:          ./src/c/gst-ffi.c
   ghc-options:        -rtsopts -with-rtsopts=-N -threaded -Wall -freverse-errors

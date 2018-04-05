@@ -1,8 +1,9 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
+{-# LANGUAGE OverloadedStrings #-}
 
 module Mouse where
 
@@ -18,43 +19,51 @@ import qualified Records as R
 
 addMouseMoveHandlers :: R.Application -> [R.Application -> IO ()] -> IO ()
 addMouseMoveHandlers
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.videoWidget = videoWidget
-            , R.seekScale = seekScale
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.videoWidget = videoWidget
+          , R.seekScale = seekScale
           }
     }
   onMouseMoveCallbacks
-  =
-      void (GI.Gtk.onWidgetMotionNotifyEvent videoWidget mouseMoveHandler')
-  >>  void (GI.Gtk.onWidgetMotionNotifyEvent seekScale   mouseMoveHandler')
+  = do
+  void $ GI.Gtk.onWidgetMotionNotifyEvent videoWidget mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent seekScale   mouseMoveHandler'
   where
     mouseMoveHandler' :: GI.Gdk.EventMotion -> IO Bool
     mouseMoveHandler' = mouseMoveHandler application onMouseMoveCallbacks
 
 mouseMoveHandler
-  :: R.Application
-  -> [R.Application -> IO ()]
-  -> GI.Gdk.EventMotion
-  -> IO Bool
+  ::  R.Application
+  ->  [R.Application -> IO ()]
+  ->  GI.Gdk.EventMotion
+  ->  IO Bool
 mouseMoveHandler
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.window = window
-            , R.fileChooserButton = fileChooserButton
-            , R.bottomControlsGtkBox = bottomControlsGtkBox
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.window               = window
+          , R.fileChooserButton    = fileChooserButton
+          , R.bottomControlsGtkBox = bottomControlsGtkBox
           }
-      , R.ioRefs = R.IORefs {
-            R.isWindowFullScreenRef = isWindowFullScreenRef
-          , R.mouseMovedLastRef = mouseMovedLastRef
-        }
+      , R.ioRefs =
+          R.IORefs
+            { R.isWindowFullScreenRef = isWindowFullScreenRef
+            , R.mouseMovedLastRef     = mouseMovedLastRef
+            , R.videoInfoRef          = videoInfoRef
+            }
     }
   onMouseMoveCallbacks
   _
   = do
   isWindowFullScreen <- readIORef isWindowFullScreenRef
+  videoInfo          <- readIORef videoInfoRef
   unless isWindowFullScreen $ GI.Gtk.widgetShow fileChooserButton
-  GI.Gtk.widgetShow bottomControlsGtkBox
+  when (R.isVideo videoInfo) $ do
+    GI.Gtk.widgetShow bottomControlsGtkBox
+    styleContext <- GI.Gtk.widgetGetStyleContext bottomControlsGtkBox
+    GI.Gtk.styleContextAddClass styleContext "movie-monad-fade-in"
   setCursor window Nothing
   timeNow <- getPOSIXTime
   atomicWriteIORef mouseMovedLastRef (round timeNow)

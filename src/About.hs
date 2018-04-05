@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -14,26 +14,21 @@ import qualified Records as R
 
 addAboutHandler :: R.Application -> IO ()
 addAboutHandler
-  R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.aboutButton = aboutButton
-            , R.aboutDialog = aboutDialog
+  R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.aboutButton = aboutButton
+          , R.aboutDialog = aboutDialog
           }
     }
   =
-  void (
-      GI.Gtk.onWidgetButtonReleaseEvent aboutButton (aboutButtonReleaseHandler aboutDialog)
-    )
+  void $
+    GI.Gtk.onWidgetButtonReleaseEvent
+      aboutButton
+      (aboutButtonReleaseHandler aboutDialog)
 
-aboutButtonReleaseHandler ::
-  GI.Gtk.AboutDialog ->
-  GI.Gdk.EventButton ->
-  IO Bool
-aboutButtonReleaseHandler aboutDialog _ =
-  void (
-      GI.Gtk.onDialogResponse aboutDialog (\ _ -> GI.Gtk.widgetHide aboutDialog)
-    ) >>
-  void (
-      GI.Gtk.dialogRun aboutDialog
-    ) >>
+aboutButtonReleaseHandler :: GI.Gtk.AboutDialog -> GI.Gdk.EventButton -> IO Bool
+aboutButtonReleaseHandler aboutDialog _ = do
+  _ <- GI.Gtk.onDialogResponse aboutDialog (\ _ -> GI.Gtk.widgetHide aboutDialog)
+  _ <- GI.Gtk.dialogRun aboutDialog
   return True

@@ -1,14 +1,34 @@
-flags: {}
-extra-package-dbs: []
+resolver: lts-9.1
+compiler-check: match-exact
 packages:
 - '.'
+extra-package-dbs: []
 explicit-setup-deps:
   ! '*': true
 extra-deps:
-- gi-gst-1.0.14
-- gi-gtk-3.0.18
+- haskell-gi-base-0.21.0
+- haskell-gi-overloading-1.0
+- haskell-gi-0.21.0
+- gi-gobject-2.0.16
+- gi-glib-2.0.16
+- gi-gdk-3.0.15
+- gi-gdkpixbuf-2.0.15
+- gi-gst-1.0.15
 - gi-gstbase-1.0.15
-- gi-gstvideo-1.0.14
-- haskell-gi-base-0.20.8
-resolver: lts-9.1
-compiler-check: match-exact
+- gi-gstvideo-1.0.15
+- gi-gtk-3.0.21
+flags:
+  gi-gobject:
+    enable-overloading: false
+  gi-glib:
+    enable-overloading: false
+  gi-gdk:
+    enable-overloading: false
+  gi-gdkpixbuf:
+    enable-overloading: false
+  gi-gst:
+    enable-overloading: false
+  gi-gstvideo:
+    enable-overloading: false
+  gi-gtk:
+    enable-overloading: false

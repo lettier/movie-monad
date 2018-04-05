@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -49,14 +49,16 @@ addUriSchemeIfNone filePathName =
         else if hasHttpUriScheme filePathName then filePathName else "http://" ++ filePathName
 
 isLocalFile :: Prelude.String -> IO Bool
-isLocalFile = Filesystem.isFile . Filesystem.Path.CurrentOS.fromText . Data.Text.pack . removeFileUriScheme
+isLocalFile =
+  Filesystem.isFile . Filesystem.Path.CurrentOS.fromText . Data.Text.pack . removeFileUriScheme
 
 toAbsoluteUri :: String -> IO String
 toAbsoluteUri uri = do
   cwd <- getWorkingDirectory
-  let cwd' = case toText cwd of
-              Right x -> x
-              Left  y -> y
+  let cwd' =
+        case toText cwd of
+          Right x -> x
+          Left  y -> y
   isLocal <- isLocalFile uri
   if not isLocal
     then return uri

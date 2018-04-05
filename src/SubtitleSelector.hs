@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -17,12 +17,12 @@ addSubtitleSelectorHandler :: R.Application -> IO ()
 addSubtitleSelectorHandler
   application@R.Application {
         R.guiObjects = R.GuiObjects {
-              R.subtitleSelectionComboBox = subtitleSelectionComboBox
+              R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
           }
     }
   = void (
         GI.Gtk.onComboBoxChanged
-          subtitleSelectionComboBox
+          subtitleSelectionComboBoxText
           (subtitleSelectorHandler application)
       )
 
@@ -30,12 +30,12 @@ subtitleSelectorHandler :: R.Application -> IO ()
 subtitleSelectorHandler
   R.Application {
         R.guiObjects = R.GuiObjects {
-              R.subtitleSelectionComboBox = subtitleSelectionComboBox
+              R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
           }
       , R.playbin = playbin
     }
   = do
-    maybeActiveId <- GI.Gtk.getComboBoxActiveId subtitleSelectionComboBox
+    maybeActiveId <- GI.Gtk.getComboBoxActiveId subtitleSelectionComboBoxText
     nText <- getTextStreamCount playbin
     case maybeActiveId of
       Nothing -> return ()

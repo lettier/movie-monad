@@ -2,6 +2,38 @@
 
 ## CHANGELOG
 
+-------------------------------------------------------------------------------
+
+### 0.0.5.0
+
+#### Added
+
+- Repeat mode
+- Custom icons for new bottom controls
+- Custom styling for new bottom controls
+- Added a one second fade in animation for the bottom controls
+- Added extra error checking around window width combo box selection
+- Mac install script
+
+#### Changed
+
+- Tooltips
+- Use a SVG icon instead of PNG
+- Fixed video info being changed before selecting a video
+- Use play and pause image widget names to determine state of the play pause button
+- If the user sets the window to a custom size, select nothing in the window selection combo box
+- Set timeout for hiding the bottom controls to seven seconds instead of five
+- AppImage meta data
+- AppImage install script
+- Snap packaging
+- AUR packaging
+
+#### Removed
+
+-
+
+-------------------------------------------------------------------------------
+
 ### 0.0.4.0
 
 #### Added

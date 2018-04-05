@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -18,26 +18,31 @@ import qualified Records as R
 
 addPlayPauseButtonClickHandler :: R.Application -> IO ()
 addPlayPauseButtonClickHandler
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.playPauseButton = playPauseButton
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.playPauseButton = playPauseButton
           }
     }
   =
-  void $ GI.Gtk.onWidgetButtonReleaseEvent playPauseButton (playPauseButtonClickHandler application)
+  void $
+    GI.Gtk.onWidgetButtonReleaseEvent
+      playPauseButton $
+        playPauseButtonClickHandler application
 
 playPauseButtonClickHandler ::
   R.Application ->
   GI.Gdk.EventButton ->
   IO Bool
 playPauseButtonClickHandler
-  R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.playPauseButton = playPauseButton
-            , R.playImage = playImage
-            , R.pauseImage = pauseImage
+  R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.playPauseButton = playPauseButton
+          , R.playImage = playImage
+          , R.pauseImage = pauseImage
           }
-      , R.playbin = playbin
+    , R.playbin = playbin
     }
   _
   = do
@@ -51,22 +56,20 @@ playPauseButtonClickHandler
       void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
   return False
 
-setPlayPauseButton ::
-  GI.Gtk.Button ->
-  GI.Gtk.Image ->
-  GI.Gtk.Image ->
-  Bool ->
-  IO ()
+setPlayPauseButton
+  ::  GI.Gtk.Button
+  ->  GI.Gtk.Image
+  ->  GI.Gtk.Image
+  ->  Bool
+  ->  IO ()
 setPlayPauseButton playPauseButton _ pauseImage True = do
   GI.Gtk.buttonSetImage playPauseButton (Just pauseImage)
-  GI.Gtk.widgetSetTooltipText playPauseButton (Just "Click to pause")
+  GI.Gtk.widgetSetTooltipText playPauseButton (Just "Click to Pause")
 setPlayPauseButton playPauseButton playImage _ False = do
   GI.Gtk.buttonSetImage playPauseButton (Just playImage)
-  GI.Gtk.widgetSetTooltipText playPauseButton (Just "Click to play")
+  GI.Gtk.widgetSetTooltipText playPauseButton (Just "Click to Play")
 
-isPlayPauseButtonPlaying ::
-  GI.Gtk.Button ->
-  IO Bool
+isPlayPauseButtonPlaying :: GI.Gtk.Button -> IO Bool
 isPlayPauseButtonPlaying playPauseButton =
   GI.Gtk.buttonGetImage playPauseButton >>= getImage >>= getName >>= getMatch
   where
@@ -75,7 +78,7 @@ isPlayPauseButtonPlaying playPauseButton =
     getImage (Just widget) = GI.Gtk.castTo GI.Gtk.Image widget
     getName :: Maybe GI.Gtk.Image -> IO (Maybe Text)
     getName Nothing        = return Nothing
-    getName (Just image)   = GI.Gtk.getImageStock image
+    getName (Just image)   = Just . Data.Text.strip . Data.Text.toLower <$> GI.Gtk.widgetGetName image
     getMatch :: Maybe Text -> IO Bool
     getMatch Nothing       = return False
-    getMatch (Just text)   = return ("gtk-media-pause" == text)
+    getMatch (Just text)   = return ("pause-image" == text)

@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -8,42 +8,76 @@ module VideoSizeSelector where
 
 import Control.Monad
 import Data.Text
+import Data.IORef
+import qualified GI.GLib
 import qualified GI.Gtk
 
 import qualified Records as R
+import Reset
 import Window
-import VideoInfo
 import Utils
 
-addVideoSizeSelectorHandler :: R.Application -> IO ()
-addVideoSizeSelectorHandler
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
+addVideoSizeSelectorHandlers :: R.Application -> IO ()
+addVideoSizeSelectorHandlers
+  application@R.Application
+    { R.guiObjects =
+        guiObjects@R.GuiObjects
+          { R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
           }
     }
-  = void (
-        GI.Gtk.onComboBoxChanged
-          videoWidthSelectionComboBox
-          (videoSizeSelectionHandler application)
-      )
+  = do
+  void $
+    GI.Gtk.onComboBoxChanged
+      windowWidthSelectionComboBoxText $
+        videoSizeSelectionHandler application
+  void $
+    GI.GLib.timeoutAddSeconds
+      GI.GLib.PRIORITY_DEFAULT
+      1 $
+        setToCustomIfNeeded guiObjects
 
 videoSizeSelectionHandler :: R.Application -> IO ()
 videoSizeSelectionHandler
-  R.Application {
-        R.guiObjects = guiObjects@R.GuiObjects {
-              R.videoWidthSelectionComboBox = videoWidthSelectionComboBox
-            , R.fileChooserEntry = fileChooserEntry
+  application@R.Application
+    { R.guiObjects =
+        guiObjects@R.GuiObjects
+          { R.window                           = window
+          , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
           }
-      , R.ioRefs = R.IORefs {
-              R.videoInfoRef = videoInfoRef
-        }
+    , R.ioRefs =
+        R.IORefs
+          { R.videoInfoRef = videoInfoRef
+          }
     }
   = do
-  filePathName <- Data.Text.unpack <$> GI.Gtk.entryGetText fileChooserEntry
-  videoWidthSelection <- getSelectedVideoWidth videoWidthSelectionComboBox
-  retrievedVideoInfo <- getVideoInfo videoInfoRef filePathName
-  maybeWindowSize <- calculateWindowSize guiObjects videoWidthSelection retrievedVideoInfo
+  videoInfo         <- readIORef videoInfoRef
+  desiredWindowWidth <- getDesiredWindowWidth windowWidthSelectionComboBoxText window
+  maybeWindowSize   <- calculateWindowSize guiObjects desiredWindowWidth videoInfo
   case maybeWindowSize of
-    Nothing -> resetWindow guiObjects
+    Nothing              -> resetApplication application
     Just (width, height) -> setWindowSize guiObjects width height
+
+setToCustomIfNeeded :: R.GuiObjects -> IO Bool
+setToCustomIfNeeded
+  R.GuiObjects
+    { R.window                      = window
+    , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
+    }
+  = do
+  (windowWidth', _)  <- GI.Gtk.windowGetSize window
+  maybeSelectedWidth <- getSelectedWindowWidth windowWidthSelectionComboBoxText
+  let windowWidth    = fromIntegral windowWidth' :: Int
+  case maybeSelectedWidth of
+    Just selectedWidth ->
+      when (windowWidth /= selectedWidth) $
+        GI.Gtk.comboBoxSetActive windowWidthSelectionComboBoxText (-1)
+    Nothing -> do
+      let windowWidthText = Data.Text.pack $ show windowWidth
+      present <-
+        GI.Gtk.comboBoxSetActiveId
+          windowWidthSelectionComboBoxText $
+            Just windowWidthText
+      if present
+        then return ()
+        else GI.Gtk.comboBoxSetActive windowWidthSelectionComboBoxText (-1)
+  return True

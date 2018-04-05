@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David lettier
+  (C) 2017 David Lettier
   lettier.com
 -}
 
@@ -14,6 +14,7 @@ import Foreign.Ptr
 import Data.Bits
 import Data.Text
 import Data.Maybe
+import Data.Int
 import Data.GI.Base.Properties
 import Data.GI.Base.ManagedPtr
 import qualified GI.GLib
@@ -21,7 +22,7 @@ import qualified GI.Gtk
 import qualified GI.Gst
 
 import qualified Records as R
-import Window
+import Reset
 import PlayPause
 import ErrorMessage
 import Uri
@@ -31,69 +32,72 @@ foreign import ccall "gst-ffi.h get_text_tag_list"
 
 addPlaybinHandlers :: R.Application -> IO ()
 addPlaybinHandlers
-  R.Application {
-        R.guiObjects = guiObjects@R.GuiObjects {
-              R.volumeButton = volumeButton
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.volumeButton      = volumeButton
+          , R.repeatCheckButton = repeatCheckButton
           }
-      , R.playbin = playbin
-      , R.playbinBus = playbinBus
+    , R.playbin    = playbin
+    , R.playbinBus = playbinBus
     }
-  =
-  void(
-      GI.Gst.busAddWatch playbinBus GI.GLib.PRIORITY_DEFAULT (
-          pipelineBusMessageHandler
-            guiObjects
-            playbin
-        )
-    ) >>
-  void (
-      GI.Gtk.onScaleButtonValueChanged volumeButton (volumeButtonValueChangedHandler playbin)
-    )
+  = do
+  void $
+    GI.Gst.busAddWatch playbinBus GI.GLib.PRIORITY_DEFAULT $
+      pipelineBusMessageHandler application
+  void $
+    GI.Gtk.onScaleButtonValueChanged
+      volumeButton
+      (setPlaybinVolume playbin)
+  void $
+    GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 $ do
+      rewindPlaybackIfVideoEndedAndRepeat
+        playbin
+        repeatCheckButton
+      return True
 
-pipelineBusMessageHandler ::
-  R.GuiObjects ->
-  GI.Gst.Element ->
-  GI.Gst.Bus ->
-  GI.Gst.Message ->
-  IO Bool
 pipelineBusMessageHandler
-  guiObjects@R.GuiObjects {
-        R.seekScale = seekScale
-      , R.fileChooserEntry = fileChooserEntry
-      , R.fileChooserButtonLabel = fileChooserButtonLabel
-      , R.volumeButton = volumeButton
-      , R.errorMessageDialog = errorMessageDialog
-      , R.bufferingSpinner = bufferingSpinner
-      , R.playPauseButton = playPauseButton
-      , R.subtitleSelectionComboBox = subtitleSelectionComboBox
+  ::  R.Application
+  ->  GI.Gst.Bus
+  ->  GI.Gst.Message
+  ->  IO Bool
+pipelineBusMessageHandler
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.seekScale                     = seekScale
+          , R.fileChooserEntry              = fileChooserEntry
+          , R.fileChooserButtonLabel        = fileChooserButtonLabel
+          , R.errorMessageDialog            = errorMessageDialog
+          , R.bufferingSpinner              = bufferingSpinner
+          , R.playPauseButton               = playPauseButton
+          , R.repeatCheckButton             = repeatCheckButton
+          , R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
+          }
+    , R.playbin = playbin
     }
-  playbin
   _
   message
   = do
   messageTypes <- GI.Gst.getMessageType message
-  let messageType = case messageTypes of
-                      [] -> GI.Gst.MessageTypeUnknown
-                      (msg:_) -> msg
+  let messageType =
+        case messageTypes of
+          []      -> GI.Gst.MessageTypeUnknown
+          (msg:_) -> msg
   entryText <- GI.Gtk.entryGetText fileChooserEntry
   labelText <- GI.Gtk.labelGetText fileChooserButtonLabel
-  when (
-      messageType == GI.Gst.MessageTypeError && (
-        (not . Data.Text.null) entryText ||
-        labelText /= "Open"
-      )
+  when
+    (  messageType == GI.Gst.MessageTypeError
+    && ((not . Data.Text.null) entryText || labelText /= "Open")
     ) $ do
       (gError, text) <- GI.Gst.messageParseError message
       gErrorText <- GI.Gst.gerrorMessage gError
       putStr ((Data.Text.unpack . Data.Text.unlines) [text, gErrorText])
-      GI.Gtk.entrySetText fileChooserEntry ""
-      GI.Gtk.labelSetText fileChooserButtonLabel "Open"
-      _ <- GI.Gst.elementSetState playbin GI.Gst.StateNull
-      setPlaybinUriAndVolume playbin "" volumeButton
-      resetWindow guiObjects
+      resetApplication application
       runErrorMessageDialog
-        errorMessageDialog
-        (Data.Text.concat ["There was a problem trying to play the video \"", entryText, "\"."])
+        errorMessageDialog $
+          Data.Text.concat
+            ["There was a problem trying to play the video \"", entryText, "\"."]
   when (messageType == GI.Gst.MessageTypeBuffering) $ do
     percent <- GI.Gst.messageParseBuffering message
     isPlaying <- isPlayPauseButtonPlaying playPauseButton
@@ -102,7 +106,9 @@ pipelineBusMessageHandler
         GI.Gtk.widgetHide bufferingSpinner
         GI.Gtk.setSpinnerActive bufferingSpinner False
         GI.Gtk.widgetSetSensitive seekScale True
-        when isPlaying $ void $ GI.Gst.elementSetState playbin GI.Gst.StatePlaying
+        when isPlaying $
+          void $
+            GI.Gst.elementSetState playbin GI.Gst.StatePlaying
       else do
         GI.Gtk.widgetShow bufferingSpinner
         GI.Gtk.setSpinnerActive bufferingSpinner True
@@ -112,40 +118,71 @@ pipelineBusMessageHandler
   when (messageType == GI.Gst.MessageTypeStreamStart) $ do
     turnOffSubtitles playbin
     nText <- getTextStreamCount playbin
-    GI.Gtk.comboBoxTextRemoveAll subtitleSelectionComboBox
+    GI.Gtk.comboBoxTextRemoveAll subtitleSelectionComboBoxText
     GI.Gtk.comboBoxTextAppend
-      subtitleSelectionComboBox
+      subtitleSelectionComboBoxText
       (Just "-1")
       "None"
-    _ <- GI.Gtk.comboBoxSetActiveId subtitleSelectionComboBox (Just "-1")
-    GI.Gtk.widgetHide subtitleSelectionComboBox
+    _ <- GI.Gtk.comboBoxSetActiveId subtitleSelectionComboBoxText (Just "-1")
+    GI.Gtk.widgetHide subtitleSelectionComboBoxText
     when (nText > 0) $
       mapM_ (\ i -> do
         (_, maybeCode) <- getTextTagLanguageNameAndCode playbin i
         case maybeCode of
           Nothing -> return ()
           Just code -> do
-            GI.Gtk.widgetShow subtitleSelectionComboBox
+            GI.Gtk.widgetShow subtitleSelectionComboBoxText
             GI.Gtk.comboBoxTextAppend
-              subtitleSelectionComboBox
+              subtitleSelectionComboBoxText
               (Just (Data.Text.pack (show i)))
               code
         ) [0..(nText-1)]
+  when (messageType == GI.Gst.MessageTypeEos) $
+    rewindPlaybackIfRepeat playbin repeatCheckButton
   return True
 
-volumeButtonValueChangedHandler ::
-  GI.Gst.Element ->
-  Double ->
-  IO ()
-volumeButtonValueChangedHandler playbin volume =
+rewindPlaybackIfVideoEndedAndRepeat :: GI.Gst.Element -> GI.Gtk.CheckButton -> IO ()
+rewindPlaybackIfVideoEndedAndRepeat playbin repeatCheckButton = do
+  maybeDurationAndPosition <- queryPlaybinForDurationAndPosition playbin
+  case maybeDurationAndPosition of
+    (Just (duration, position)) ->
+      -- Position may never be >= duration even though an EOS event has occurred.
+      -- Allow for a half second tolerance.
+      when (position >= duration || ((duration - position) < 50000000)) $
+        rewindPlaybackIfRepeat playbin repeatCheckButton
+    _ -> return ()
+
+rewindPlaybackIfRepeat :: GI.Gst.Element -> GI.Gtk.CheckButton -> IO ()
+rewindPlaybackIfRepeat playbin repeatCheckButton = do
+  repeatVideo <- GI.Gtk.toggleButtonGetActive repeatCheckButton
+  when repeatVideo $
+    void $
+      GI.Gst.elementSeekSimple playbin GI.Gst.FormatTime [ GI.Gst.SeekFlagsFlush ] 0
+
+setPlaybinVolume :: GI.Gst.Element -> Double -> IO ()
+setPlaybinVolume playbin volume =
     void $ Data.GI.Base.Properties.setObjectPropertyDouble playbin "volume" volume
+
+setPlaybinUri :: GI.Gst.Element -> Maybe String -> IO ()
+setPlaybinUri playbin (Just uri) =
+    void $ Data.GI.Base.Properties.setObjectPropertyString playbin "uri" (Just $ pack uri)
+setPlaybinUri playbin Nothing =
+    void $ Data.GI.Base.Properties.setObjectPropertyString playbin "uri" (Just "")
 
 setPlaybinUriAndVolume :: GI.Gst.Element -> Prelude.String -> GI.Gtk.VolumeButton -> IO ()
 setPlaybinUriAndVolume playbin fileName volumeButton = do
-  uri <- addUriSchemeIfNone fileName
+  uri    <- addUriSchemeIfNone fileName
   volume <- GI.Gtk.scaleButtonGetValue volumeButton
-  Data.GI.Base.Properties.setObjectPropertyDouble playbin "volume" volume
-  Data.GI.Base.Properties.setObjectPropertyString playbin "uri" (Just $ pack uri)
+  setPlaybinVolume playbin volume
+  setPlaybinUri playbin (Just uri)
+
+queryPlaybinForDurationAndPosition :: GI.Gst.Element -> IO (Maybe (Int64, Int64))
+queryPlaybinForDurationAndPosition playbin = do
+  (couldQueryDuration, duration) <- GI.Gst.elementQueryDuration playbin GI.Gst.FormatTime
+  (couldQueryPosition, position) <- GI.Gst.elementQueryPosition playbin GI.Gst.FormatTime
+  if couldQueryDuration && couldQueryPosition && duration > 0 && position >= 0
+    then return (Just (duration, position))
+    else return Nothing
 
 getTextTagLanguageNameAndCode :: GI.Gst.Element -> Int -> IO (Maybe Text, Maybe Text)
 getTextTagLanguageNameAndCode playbin streamId = do
@@ -160,15 +197,17 @@ getTextTagLanguageNameAndCode playbin streamId = do
           else do
             tagList <- wrapBoxed GI.Gst.TagList tagListPtr
             tagListAsString <- fmap (fromMaybe "") (GI.Gst.tagListToString tagList)
-            (successName, name) <- if "language-name" `Data.Text.isInfixOf` tagListAsString
-                                    then GI.Gst.tagListGetString tagList "language-name"
-                                    else return (False, "")
-            (successCode, code) <- if "language-code" `Data.Text.isInfixOf` tagListAsString
-                                    then GI.Gst.tagListGetString tagList "language-code"
-                                    else return (False, "")
-            return (
-                  if successName then Just name else Nothing
-                , if successCode then Just code else Nothing
+            (successName, name) <-
+              if "language-name" `Data.Text.isInfixOf` tagListAsString
+                then GI.Gst.tagListGetString tagList "language-name"
+                else return (False, "")
+            (successCode, code) <-
+              if "language-code" `Data.Text.isInfixOf` tagListAsString
+                then GI.Gst.tagListGetString tagList "language-code"
+                else return (False, "")
+            return
+              ( if successName then Just name else Nothing
+              , if successCode then Just code else Nothing
               )
     else return (Nothing, Nothing)
 
@@ -198,13 +237,17 @@ turnOffSubtitles playbin = do
 
 getTextStreamCount :: GI.Gst.Element -> IO Int
 getTextStreamCount playbin =
-    Data.GI.Base.Properties.getObjectPropertyInt playbin "n-text"
-  >>= \ x -> return (if x < 0 then 0 else fromIntegral x :: Int)
+  Data.GI.Base.Properties.getObjectPropertyInt playbin "n-text" >>=
+    \ x -> return (if x < 0 then 0 else fromIntegral x :: Int)
 
 getCurrentTextStreamId :: GI.Gst.Element -> IO Int
 getCurrentTextStreamId playbin =
-  Data.GI.Base.Properties.getObjectPropertyInt playbin "current-text" >>= \ x -> return (fromIntegral x :: Int)
+  Data.GI.Base.Properties.getObjectPropertyInt playbin "current-text" >>=
+    \ x -> return (fromIntegral x :: Int)
 
 setCurrentTextStreamId :: GI.Gst.Element -> Int -> IO ()
 setCurrentTextStreamId playbin streamId =
-  Data.GI.Base.Properties.setObjectPropertyInt playbin "current-text" (fromIntegral streamId :: CInt)
+  Data.GI.Base.Properties.setObjectPropertyInt
+    playbin
+    "current-text"
+    (fromIntegral streamId :: CInt)
