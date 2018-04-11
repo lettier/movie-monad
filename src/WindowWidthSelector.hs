@@ -4,7 +4,7 @@
   lettier.com
 -}
 
-module VideoSizeSelector where
+module WindowWidthSelector where
 
 import Control.Monad
 import Data.Text
@@ -17,8 +17,8 @@ import Reset
 import Window
 import Utils
 
-addVideoSizeSelectorHandlers :: R.Application -> IO ()
-addVideoSizeSelectorHandlers
+addWindowWidthSelectorHandlers :: R.Application -> IO ()
+addWindowWidthSelectorHandlers
   application@R.Application
     { R.guiObjects =
         guiObjects@R.GuiObjects

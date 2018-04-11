@@ -19,5 +19,11 @@ invalidVideoWidgetName = "invalid-video-widget"
 keyboardShortcutSeekAdvanceBy :: Double
 keyboardShortcutSeekAdvanceBy = 1.0
 
-windowMinimumSize :: Integral a => a
-windowMinimumSize = 448
+windowMinimumWidth :: Integral a => a
+windowMinimumWidth = 480
+
+fadeInClassName :: Text
+fadeInClassName = "movie-monad-fade-in"
+
+fadeOutClassName :: Text
+fadeOutClassName = "movie-monad-fade-out"

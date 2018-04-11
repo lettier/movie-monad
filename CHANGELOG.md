@@ -4,6 +4,28 @@
 
 -------------------------------------------------------------------------------
 
+### 0.0.6.0
+
+#### Added
+
+- Flatpak packaging
+- Fade out animation to bottom controls box
+- Variable rate playback
+
+#### Changed
+
+- Fixed memory error due to resetting playbin after releasing its reference
+- Fixed minimum window height for very small videos
+- Fixed file dialog text entry pop up style issue
+- Replace seek bar with buffer spinner when buffering
+- Move about dialog button to top button controls
+
+#### Removed
+
+-
+
+-------------------------------------------------------------------------------
+
 ### 0.0.5.0
 
 #### Added

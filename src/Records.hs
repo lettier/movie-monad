@@ -27,7 +27,8 @@ data GuiObjects =
     , fileChooserEntry                 :: GI.Gtk.Entry
     , fileChooserWidget                :: GI.Gtk.FileChooserWidget
     , videoWidget                      :: GI.Gtk.Widget
-    , bottomControlsGtkBox             :: GI.Gtk.Box
+    , topControlsBox                   :: GI.Gtk.Box
+    , bottomControlsBox                :: GI.Gtk.Box
     , seekScale                        :: GI.Gtk.Scale
     , fileChooserButton                :: GI.Gtk.Button
     , playPauseButton                  :: GI.Gtk.Button
@@ -40,6 +41,7 @@ data GuiObjects =
     , playImage                        :: GI.Gtk.Image
     , pauseImage                       :: GI.Gtk.Image
     , windowWidthSelectionComboBoxText :: GI.Gtk.ComboBoxText
+    , videoSpeedSelectionComboboxText  :: GI.Gtk.ComboBoxText
     , subtitleSelectionComboBoxText    :: GI.Gtk.ComboBoxText
     , bufferingSpinner                 :: GI.Gtk.Spinner
     , errorMessageDialog               :: GI.Gtk.MessageDialog
@@ -48,10 +50,11 @@ data GuiObjects =
 
 data IORefs =
   IORefs
-    { isWindowFullScreenRef   :: IORef Bool
-    , mouseMovedLastRef       :: IORef Integer
-    , previousFileNamePathRef :: IORef Data.Text.Text
-    , videoInfoRef            :: IORef VideoInfo
+    { isWindowFullScreenRef                  :: IORef Bool
+    , mouseMovedLastRef                      :: IORef Integer
+    , previousFileNamePathRef                :: IORef Data.Text.Text
+    , videoInfoRef                           :: IORef VideoInfo
+    , alteringBottomControlsBoxVisibilityRef :: IORef Bool
     }
 
 data VideoInfo =

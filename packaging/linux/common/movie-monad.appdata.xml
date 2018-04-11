@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2017 David lettier -->
+<!-- Copyright 2017 David Lettier -->
 <component type="desktop-application">
-  <id>org.lettier.movie-monad</id>
+  <id>com.lettier.movie-monad</id>
   <metadata_license>CC-BY-SA-3.0</metadata_license>
   <project_license>BSD-3-Clause</project_license>
   <name>Movie Monad</name>
@@ -18,7 +18,7 @@
   <screenshots>
     <screenshot type="default">
       <caption>The main Movie Monad window.</caption>
-      <image type="source" width="1362" height="776">https://i.imgur.com/vbhIIFI.png</image>
+      <image type="source" width="1362" height="784">https://i.imgur.com/1sSz09V.png</image>
     </screenshot>
   </screenshots>
   <url type="homepage">https://github.com/lettier/movie-monad</url>

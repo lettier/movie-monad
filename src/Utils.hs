@@ -15,7 +15,9 @@ import Text.Read
 import Data.List
 import Data.Text
 import Data.Int
+import qualified GI.Gdk
 import qualified GI.Gtk
+import qualified GI.Gst
 
 fileNameFromFilePathName :: Data.Text.Text -> Data.Text.Text
 fileNameFromFilePathName = Data.Text.pack . System.FilePath.takeFileName . Data.Text.unpack
@@ -87,3 +89,18 @@ clamp minimum' maximum' el
   | el < minimum' = minimum'
   | el > maximum' = maximum'
   | otherwise     = el
+
+getWidgetSize :: GI.Gtk.IsWidget w => w -> IO (Int32, Int32)
+getWidgetSize widget = do
+  rectangle <- GI.Gtk.widgetGetAllocation widget
+  width     <- GI.Gdk.getRectangleWidth   rectangle
+  height    <- GI.Gdk.getRectangleHeight  rectangle
+  return (width, height)
+
+queryPlaybinForDurationAndPosition :: GI.Gst.Element -> IO (Maybe (Int64, Int64))
+queryPlaybinForDurationAndPosition playbin = do
+  (couldQueryDuration, duration) <- GI.Gst.elementQueryDuration playbin GI.Gst.FormatTime
+  (couldQueryPosition, position) <- GI.Gst.elementQueryPosition playbin GI.Gst.FormatTime
+  if couldQueryDuration && couldQueryPosition && duration > 0 && position >= 0
+    then return (Just (duration, position))
+    else return Nothing

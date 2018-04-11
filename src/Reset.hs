@@ -37,12 +37,14 @@ resetApplication
 resetIoRefs :: R.IORefs -> IO ()
 resetIoRefs
   R.IORefs
-    { R.videoInfoRef            = videoInfoRef
-    , R.previousFileNamePathRef = previousFileNamePathRef
+    { R.videoInfoRef                           = videoInfoRef
+    , R.previousFileNamePathRef                = previousFileNamePathRef
+    , R.alteringBottomControlsBoxVisibilityRef = alteringBottomControlsBoxVisibilityRef
     }
   = do
   void $ resetVideoInfo videoInfoRef
   atomicWriteIORef previousFileNamePathRef ""
+  atomicWriteIORef alteringBottomControlsBoxVisibilityRef False
 
 resetVideoInfo :: IORef R.VideoInfo -> IO R.VideoInfo
 resetVideoInfo videoInfoRef = do
@@ -53,7 +55,7 @@ resetVideoInfo videoInfoRef = do
 resetPlaybin :: GI.Gst.Element -> IO ()
 resetPlaybin playbin = do
   void $ GI.Gst.elementSetState playbin GI.Gst.StateNull
-  void $ Data.GI.Base.Properties.setObjectPropertyDouble playbin "volume" 0.0
+  void $ Data.GI.Base.Properties.setObjectPropertyDouble playbin "volume" 0.5
   void $ Data.GI.Base.Properties.setObjectPropertyString playbin "uri" (Just "")
 
 resetGuiObjects :: R.GuiObjects -> IO ()
@@ -68,30 +70,36 @@ resetGuiObjects
     , R.playPauseButton                  = playPauseButton
     , R.repeatCheckButton                = repeatCheckButton
     , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
+    , R.videoSpeedSelectionComboboxText  = videoSpeedSelectionComboboxText
     , R.subtitleSelectionComboBoxText    = subtitleSelectionComboBoxText
     , R.fullscreenButton                 = fullscreenButton
     , R.playImage                        = playImage
     , R.pauseImage                       = pauseImage
-    , R.bottomControlsGtkBox             = bottomControlsGtkBox
+    , R.bottomControlsBox                = bottomControlsBox
+    , R.bufferingSpinner                 = bufferingSpinner
     }
   = do
   desiredWindowWidth <- getDesiredWindowWidth windowWidthSelectionComboBoxText window
-  styleContext <- GI.Gtk.widgetGetStyleContext bottomControlsGtkBox
-  GI.Gtk.widgetSetSizeRequest window windowMinimumSize (-1)
+  styleContext <- GI.Gtk.widgetGetStyleContext bottomControlsBox
+  GI.Gtk.widgetSetSizeRequest window windowMinimumWidth (-1)
   GI.Gtk.windowUnfullscreen window
   GI.Gtk.widgetHide videoWidget
-  GI.Gtk.widgetHide bottomControlsGtkBox
+  GI.Gtk.widgetHide bottomControlsBox
   GI.Gtk.widgetHide seekScale
   GI.Gtk.widgetHide playPauseButton
   GI.Gtk.widgetHide repeatCheckButton
   GI.Gtk.widgetHide fullscreenButton
   GI.Gtk.widgetHide subtitleSelectionComboBoxText
-  GI.Gtk.widgetShow fileChooserButton
+  GI.Gtk.widgetHide bufferingSpinner
   GI.Gtk.widgetShow windowWidthSelectionComboBoxText
+  GI.Gtk.widgetShow fileChooserButton
+  GI.Gtk.comboBoxSetActive subtitleSelectionComboBoxText 0
+  GI.Gtk.comboBoxSetActive videoSpeedSelectionComboboxText 1
   GI.Gtk.setToggleButtonActive repeatCheckButton False
   GI.Gtk.entrySetText fileChooserEntry ""
   GI.Gtk.labelSetText fileChooserButtonLabel "Open"
   GI.Gtk.windowResize window (fromIntegral desiredWindowWidth :: Int32) 1
-  GI.Gtk.styleContextRemoveClass styleContext "movie-monad-fade-in"
+  GI.Gtk.styleContextRemoveClass styleContext fadeInClassName
+  GI.Gtk.styleContextRemoveClass styleContext fadeOutClassName
   setCursor window Nothing
   setPlayPauseButton playPauseButton playImage pauseImage False

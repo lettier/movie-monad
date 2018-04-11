@@ -26,7 +26,6 @@ import GI.GdkPixbuf
 
 import qualified Records as R
 import Constants
-import Reset
 import Window
 import CommandLine
 import Mouse
@@ -37,8 +36,9 @@ import PlayPause
 import Fullscreen
 import ErrorMessage
 import About
-import VideoSizeSelector
+import WindowWidthSelector
 import SubtitleSelector
+import VideoSpeedSelector
 import Playbin
 import ScreensaverAndPowerManagement (disable, enable)
 import CssStyle
@@ -65,7 +65,8 @@ main = do
   fileChooserEntry                 <- builderGetObject GI.Gtk.Entry             builder "file-chooser-entry"
   fileChooserWidget                <- builderGetObject GI.Gtk.FileChooserWidget builder "file-chooser-widget"
   videoWidgetBox                   <- builderGetObject GI.Gtk.Box               builder "video-widget-box"
-  bottomControlsGtkBox             <- builderGetObject GI.Gtk.Box               builder "bottom-controls-gtk-box"
+  topControlsBox                   <- builderGetObject GI.Gtk.Box               builder "top-controls-box"
+  bottomControlsBox                <- builderGetObject GI.Gtk.Box               builder "bottom-controls-box"
   seekScale                        <- builderGetObject GI.Gtk.Scale             builder "seek-scale"
   fileChooserButton                <- builderGetObject GI.Gtk.Button            builder "file-chooser-button"
   fileChooserCancelButton          <- builderGetObject GI.Gtk.Button            builder "file-chooser-cancel-button"
@@ -78,6 +79,7 @@ main = do
   playImage                        <- builderGetObject GI.Gtk.Image             builder "play-image"
   pauseImage                       <- builderGetObject GI.Gtk.Image             builder "pause-image"
   windowWidthSelectionComboBoxText <- builderGetObject GI.Gtk.ComboBoxText      builder "window-width-selection-combo-box-text"
+  videoSpeedSelectionComboboxText  <- builderGetObject GI.Gtk.ComboBoxText      builder "video-speed-selection-combo-box-text"
   subtitleSelectionComboBoxText    <- builderGetObject GI.Gtk.ComboBoxText      builder "subtitle-selection-combo-box-text"
   bufferingSpinner                 <- builderGetObject GI.Gtk.Spinner           builder "buffering-spinner"
   fileChooserDialog                <- builderGetObject GI.Gtk.Dialog            builder "file-chooser-dialog"
@@ -92,17 +94,19 @@ main = do
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserCancelButton (enumToInt32 GI.Gtk.ResponseTypeCancel)
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserOpenButton   (enumToInt32 GI.Gtk.ResponseTypeOk)
 
-  isWindowFullScreenRef   <- newIORef False
-  mouseMovedLastRef       <- newIORef 0
-  previousFileNamePathRef <- newIORef ""
-  videoInfoRef            <- newIORef R.defaultVideoInfo
+  isWindowFullScreenRef                  <- newIORef False
+  mouseMovedLastRef                      <- newIORef 0
+  previousFileNamePathRef                <- newIORef ""
+  videoInfoRef                           <- newIORef R.defaultVideoInfo
+  alteringBottomControlsBoxVisibilityRef <- newIORef False
 
   let ioRefs =
         R.IORefs
-          { R.isWindowFullScreenRef = isWindowFullScreenRef
-          , R.mouseMovedLastRef = mouseMovedLastRef
-          , R.previousFileNamePathRef = previousFileNamePathRef
-          , R.videoInfoRef = videoInfoRef
+          { R.isWindowFullScreenRef                  = isWindowFullScreenRef
+          , R.mouseMovedLastRef                      = mouseMovedLastRef
+          , R.previousFileNamePathRef                = previousFileNamePathRef
+          , R.videoInfoRef                           = videoInfoRef
+          , R.alteringBottomControlsBoxVisibilityRef = alteringBottomControlsBoxVisibilityRef
           }
 
   playbin <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayerPlaybin")
@@ -137,7 +141,8 @@ main = do
           , R.fileChooserCancelButton          = fileChooserCancelButton
           , R.fileChooserOpenButton            = fileChooserOpenButton
           , R.videoWidget                      = videoWidget
-          , R.bottomControlsGtkBox             = bottomControlsGtkBox
+          , R.topControlsBox                   = topControlsBox
+          , R.bottomControlsBox                = bottomControlsBox
           , R.seekScale                        = seekScale
           , R.fileChooserButton                = fileChooserButton
           , R.playPauseButton                  = playPauseButton
@@ -147,6 +152,7 @@ main = do
           , R.playImage                        = playImage
           , R.pauseImage                       = pauseImage
           , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
+          , R.videoSpeedSelectionComboboxText  = videoSpeedSelectionComboboxText
           , R.subtitleSelectionComboBoxText    = subtitleSelectionComboBoxText
           , R.bufferingSpinner                 = bufferingSpinner
           , R.errorMessageDialog               = errorMessageDialog
@@ -168,7 +174,8 @@ main = do
   addFileChooserHandlers            application
   addPlayPauseButtonClickHandler    application
   addSeekHandlers                   application
-  addVideoSizeSelectorHandlers      application
+  addWindowWidthSelectorHandlers    application
+  addVideoSpeedSelectionHandlers    application
   addSubtitleSelectorHandler        application
   addFullscreenButtonReleaseHandler application
   addMouseMoveHandlers              application [fillWindowWithVideo]
@@ -184,8 +191,6 @@ main = do
   GI.Gtk.widgetShowAll window
 
   GI.Gtk.main
-
-  resetPlaybin playbin
 
   ScreensaverAndPowerManagement.enable operatingSystem screenAndPowerManagementActions
 

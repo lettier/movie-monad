@@ -28,7 +28,9 @@ addKeyboardEventHandler
           }
     }
   =
-  void $ GI.Gtk.onWidgetKeyPressEvent window $ keyboardEventHandler application
+  void $
+    GI.Gtk.onWidgetKeyPressEvent window $
+      keyboardEventHandler application
 
 keyboardEventHandler :: R.Application -> GI.Gdk.EventKey -> IO Bool
 keyboardEventHandler
@@ -46,12 +48,12 @@ keyboardEventHandler
     }
   eventKey
   = do
-  videoInfo   <- readIORef videoInfoRef
-  oldVolume   <- GI.Gtk.scaleButtonGetValue volumeButton
-  keyValue    <- GI.Gdk.getEventKeyKeyval eventKey
-  eventButton <- GI.Gdk.newZeroEventButton
-  rangeValue  <- GI.Gtk.rangeGetValue seekScale
-  let isVideo = R.isVideo videoInfo
+  videoInfo       <- readIORef videoInfoRef
+  oldVolume       <- GI.Gtk.scaleButtonGetValue volumeButton
+  keyValue        <- GI.Gdk.getEventKeyKeyval eventKey
+  eventButton     <- GI.Gdk.newZeroEventButton
+  rangeValue      <- GI.Gtk.rangeGetValue seekScale
+  let isVideo     = R.isVideo videoInfo
   let volumeDelta = 0.05
   -- Mute Toggle
   when (keyValue == GI.Gdk.KEY_m || keyValue == GI.Gdk.KEY_AudioMute) $ do

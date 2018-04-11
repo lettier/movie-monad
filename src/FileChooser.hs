@@ -41,13 +41,21 @@ addFileChooserHandlers
     }
   = do
   void $
-    GI.Gtk.onWidgetButtonReleaseEvent fileChooserButton (fileChooserButtonClickHandler application)
+    GI.Gtk.onWidgetButtonReleaseEvent
+      fileChooserButton $
+        fileChooserButtonClickHandler application
   void $
-    GI.Gtk.onDialogResponse fileChooserDialog (fileChooserDialogResponseHandler application)
+    GI.Gtk.onDialogResponse
+      fileChooserDialog $
+        fileChooserDialogResponseHandler application
   void $
-    GI.Gtk.onFileChooserSelectionChanged fileChooserWidget (fileChooserSelectionChangedHandler application)
+    GI.Gtk.onFileChooserSelectionChanged
+      fileChooserWidget $
+        fileChooserSelectionChangedHandler application
   void $
-    GI.Gtk.onEntryIconRelease fileChooserEntry (\ _ _ -> GI.Gtk.entrySetText fileChooserEntry "")
+    GI.Gtk.onEntryIconRelease
+      fileChooserEntry $ \ _ _ ->
+        GI.Gtk.entrySetText fileChooserEntry ""
 
 fileChooserDialogResponseHandler :: R.Application -> Int32 -> IO ()
 fileChooserDialogResponseHandler
@@ -96,7 +104,7 @@ fileChooserDialogResponseHandler
                 else do
                   isWindowFullScreen <- readIORef isWindowFullScreenRef
                   setupWindowForPlayback
-                    guiObjects
+                    application
                     (R.isSeekable videoInfo)
                     isWindowFullScreen
                     width
@@ -111,8 +119,7 @@ fileChooserDialogResponseHandler
                 errorMessageDialog $
                   Data.Text.pack $
                   Prelude.concat ["\"", filePathNameStr, "\" is not a video."]
-        _ ->
-          resetApplication application
+        _ -> resetApplication application
     else do
       filePathName <- readIORef previousFileNamePathRef
       fromMaybe R.defaultVideoInfo <$>
@@ -162,7 +169,11 @@ fileChooserSelectionChangedHandler
       let uri = Network.URI.unEscapeString $ Data.Text.unpack uri'
       local <- isLocalFile uri
       video <- R.isVideo . fromMaybe R.defaultVideoInfo <$> getVideoInfo videoInfoRef uri
-      GI.Gtk.entrySetText fileChooserEntry (if local && video then Data.Text.pack uri else "")
+      GI.Gtk.entrySetText
+        fileChooserEntry $
+          if local && video
+            then Data.Text.pack uri
+            else ""
 
 setFileChooserButtonLabel :: GI.Gtk.Label -> Data.Text.Text -> IO (Maybe Data.Text.Text)
 setFileChooserButtonLabel fileChooserButtonLabel filePathName = do

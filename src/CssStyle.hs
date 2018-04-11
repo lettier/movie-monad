@@ -1,6 +1,6 @@
 {-
   Movie Monad
-  (C) 2017 David Lettier
+  (C) 2018 David Lettier
   lettier.com
 -}
 
@@ -22,17 +22,17 @@ import Paths_movie_monad
 
 cssPriority :: Word32
 cssPriority =
-  fromIntegral GI.Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION :: Word32
+  fromIntegral GI.Gtk.STYLE_PROVIDER_PRIORITY_USER :: Word32
 
 applyCss :: R.GuiObjects -> IO ()
 applyCss
   guiObjects
   = do
-  maybeScreen  <- GI.Gdk.screenGetDefault
-  provider     <- GI.Gtk.cssProviderNew
-  styleFile    <- getDataFileName "data/style.css"
-  styleFile318 <- getDataFileName "data/style-3-18.css"
-  styleFile320 <- getDataFileName "data/style-3-20.css"
+  maybeScreen         <- GI.Gdk.screenGetDefault
+  provider            <- GI.Gtk.cssProviderNew
+  styleFile           <- getDataFileName "data/style.css"
+  styleFile318        <- getDataFileName "data/style-3-18.css"
+  styleFile320        <- getDataFileName "data/style-3-20.css"
   isGtkVersionGte310  <- isGtkVersionGte 3 10
   isGtkVersionGte318  <- isGtkVersionGte 3 18
   isGtkVersionGte320  <- isGtkVersionGte 3 20

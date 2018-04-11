@@ -86,7 +86,7 @@ Author: David Lettier
     <property name="page_increment">10</property>
   </object>
   <object class="GtkWindow" id="window">
-    <property name="width_request">448</property>
+    <property name="width_request">480</property>
     <property name="can_focus">True</property>
     <property name="title" translatable="yes">Movie Monad</property>
     <property name="window_position">center</property>
@@ -100,56 +100,86 @@ Author: David Lettier
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkButton" id="file-chooser-button">
+          <object class="GtkBox" id="top-controls-box">
+            <property name="name">top-controls-box</property>
             <property name="visible">True</property>
-            <property name="app_paintable">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="tooltip_text" translatable="yes">Load a Video</property>
+            <property name="can_focus">False</property>
             <property name="valign">start</property>
-            <property name="hexpand">True</property>
-            <property name="relief">half</property>
-            <property name="image_position">right</property>
-            <property name="always_show_image">True</property>
             <child>
-              <object class="GtkBox" id="box-2">
+              <object class="GtkButton" id="file-chooser-button">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="app_paintable">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">Load a Video</property>
+                <property name="relief">half</property>
+                <property name="image_position">right</property>
+                <property name="always_show_image">True</property>
                 <child>
-                  <object class="GtkLabel" id="file-chooser-button-label">
+                  <object class="GtkBox" id="box-2">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Open</property>
-                    <property name="justify">fill</property>
-                    <property name="ellipsize">end</property>
-                    <property name="single_line_mode">True</property>
+                    <child>
+                      <object class="GtkLabel" id="file-chooser-button-label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">Open</property>
+                        <property name="justify">fill</property>
+                        <property name="ellipsize">end</property>
+                        <property name="single_line_mode">True</property>
+                      </object>
+                      <packing>
+                        <property name="expand">True</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkImage" id="open-image">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="stock">gtk-open</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="pack_type">end</property>
+                        <property name="position">2</property>
+                      </packing>
+                    </child>
                   </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkImage" id="open-image">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="stock">gtk-open</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="pack_type">end</property>
-                    <property name="position">2</property>
-                  </packing>
                 </child>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="about-button">
+                <property name="name">about-button</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="focus_on_click">False</property>
+                <property name="receives_default">False</property>
+                <property name="tooltip_text" translatable="yes">About Movie Monad</property>
+                <property name="double_buffered">False</property>
+                <property name="image">about-image</property>
+                <property name="always_show_image">True</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">False</property>
+                <property name="pack_type">end</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">1</property>
+            <property name="fill">True</property>
+            <property name="position">0</property>
           </packing>
         </child>
         <child>
@@ -175,33 +205,59 @@ Author: David Lettier
               </packing>
             </child>
             <child type="overlay">
-              <object class="GtkBox" id="bottom-controls-gtk-box">
-                <property name="name">bottom-controls-gtk-box</property>
-                <property name="width_request">400</property>
+              <object class="GtkBox" id="bottom-controls-box">
+                <property name="name">bottom-controls-box</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="halign">center</property>
                 <property name="valign">end</property>
+                <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="orientation">vertical</property>
                 <property name="baseline_position">bottom</property>
                 <child>
-                  <object class="GtkScale" id="seek-scale">
-                    <property name="name">seek-scale</property>
+                  <object class="GtkBox" id="seek-scale-buffering-spinner-box">
+                    <property name="name">seek-scale-buffering-spinner-box</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="valign">center</property>
-                    <property name="margin_left">5</property>
-                    <property name="margin_right">5</property>
-                    <property name="margin_top">5</property>
-                    <property name="adjustment">seek-scale-adjustment</property>
-                    <property name="show_fill_level">True</property>
-                    <property name="fill_level">100</property>
+                    <property name="can_focus">False</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkScale" id="seek-scale">
+                        <property name="name">seek-scale</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="valign">center</property>
+                        <property name="margin_left">5</property>
+                        <property name="margin_right">5</property>
+                        <property name="margin_top">5</property>
+                        <property name="adjustment">seek-scale-adjustment</property>
+                        <property name="show_fill_level">True</property>
+                        <property name="fill_level">100</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkSpinner" id="buffering-spinner">
+                        <property name="sensitive">False</property>
+                        <property name="can_focus">False</property>
+                        <property name="valign">center</property>
+                        <property name="margin_top">5</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
-                    <property name="fill">False</property>
-                    <property name="position">0</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
                 <child>
@@ -293,57 +349,6 @@ audio-volume-medium-symbolic</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkComboBoxText" id="window-width-selection-combo-box-text">
-                        <property name="name">window-width-selection-combo-box-text</property>
-                        <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="tooltip_text" translatable="yes">Set the Window Width</property>
-                        <property name="active">1</property>
-                        <property name="has_frame">False</property>
-                        <property name="active_id">800</property>
-                        <items>
-                          <item id="448" translatable="yes">448</item>
-                          <item id="800" translatable="yes">800</item>
-                          <item id="1024" translatable="yes">1024</item>
-                          <item id="1152" translatable="yes">1152</item>
-                          <item id="1280" translatable="yes">1280</item>
-                          <item id="1360" translatable="yes">1360</item>
-                          <item id="1366" translatable="yes">1366</item>
-                          <item id="1440" translatable="yes">1440</item>
-                          <item id="1536" translatable="yes">1536</item>
-                          <item id="1600" translatable="yes">1600</item>
-                          <item id="1680" translatable="yes">1680</item>
-                          <item id="1920" translatable="yes">1920</item>
-                          <item id="2560" translatable="yes">2560</item>
-                          <item id="3440" translatable="yes">3440</item>
-                          <item id="3840" translatable="yes">3840</item>
-                        </items>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">3</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkComboBoxText" id="subtitle-selection-combo-box-text">
-                        <property name="name">subtitle-selection-combo-box-text</property>
-                        <property name="can_focus">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="tooltip_text" translatable="yes">Select the Subtitle Language</property>
-                        <property name="active_id">-1</property>
-                        <items>
-                          <item id="-1" translatable="yes">None</item>
-                        </items>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">4</property>
-                      </packing>
-                    </child>
-                    <child>
                       <object class="GtkButton" id="fullscreen-button">
                         <property name="name">fullscreen-button</property>
                         <property name="can_focus">True</property>
@@ -360,40 +365,95 @@ audio-volume-medium-symbolic</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkSpinner" id="buffering-spinner">
-                        <property name="sensitive">False</property>
-                        <property name="can_focus">False</property>
-                      </object>
-                      <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="position">6</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkButton" id="about-button">
-                        <property name="name">about-button</property>
+                      <object class="GtkBox" id="combo-box-selections-box">
+                        <property name="name">combo-box-selections-box</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="focus_on_click">False</property>
-                        <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">About Movie Monad</property>
-                        <property name="image">about-image</property>
-                        <property name="relief">none</property>
-                        <property name="always_show_image">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="spacing">2</property>
+                        <child>
+                          <object class="GtkComboBoxText" id="window-width-selection-combo-box-text">
+                            <property name="name">window-width-selection-combo-box-text</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="focus_on_click">False</property>
+                            <property name="tooltip_text" translatable="yes">Set the Window Width</property>
+                            <property name="active">1</property>
+                            <property name="has_frame">False</property>
+                            <property name="active_id">800</property>
+                            <items>
+                              <item id="480" translatable="yes">480</item>
+                              <item id="800" translatable="yes">800</item>
+                              <item id="1024" translatable="yes">1024</item>
+                              <item id="1152" translatable="yes">1152</item>
+                              <item id="1280" translatable="yes">1280</item>
+                              <item id="1360" translatable="yes">1360</item>
+                              <item id="1366" translatable="yes">1366</item>
+                              <item id="1440" translatable="yes">1440</item>
+                              <item id="1536" translatable="yes">1536</item>
+                              <item id="1600" translatable="yes">1600</item>
+                              <item id="1680" translatable="yes">1680</item>
+                              <item id="1920" translatable="yes">1920</item>
+                              <item id="2560" translatable="yes">2560</item>
+                              <item id="3440" translatable="yes">3440</item>
+                              <item id="3840" translatable="yes">3840</item>
+                            </items>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">False</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="video-speed-selection-combo-box-text">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="focus_on_click">False</property>
+                            <property name="tooltip_text" translatable="yes">Select the Playback Rate</property>
+                            <property name="active">1</property>
+                            <property name="active_id">1</property>
+                            <items>
+                              <item id="0" translatable="yes">Slow</item>
+                              <item id="1" translatable="yes">Normal</item>
+                              <item id="2" translatable="yes">Fast</item>
+                            </items>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkComboBoxText" id="subtitle-selection-combo-box-text">
+                            <property name="name">subtitle-selection-combo-box-text</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="focus_on_click">False</property>
+                            <property name="tooltip_text" translatable="yes">Select the Subtitle Language</property>
+                            <property name="active_id">-1</property>
+                            <items>
+                              <item id="-1" translatable="yes">None</item>
+                            </items>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">2</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
-                        <property name="fill">False</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">7</property>
+                        <property name="fill">True</property>
+                        <property name="position">8</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">False</property>
-                    <property name="position">1</property>
+                    <property name="position">2</property>
                   </packing>
                 </child>
               </object>
@@ -417,16 +477,16 @@ audio-volume-medium-symbolic</property>
   </object>
   <object class="GtkAboutDialog" id="about-dialog">
     <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Movie Monad - About</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
+    <property name="destroy_with_parent">True</property>
     <property name="icon_name">dialog-information</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
     <property name="transient_for">window</property>
     <property name="attached_to">window</property>
     <property name="program_name">Movie Monad</property>
-    <property name="version">0.0.5.0</property>
+    <property name="version">0.0.6.0</property>
     <property name="copyright" translatable="yes">(C) 2017 David Lettier
 lettier.com</property>
     <property name="website">https://github.com/lettier/movie-monad</property>
@@ -529,7 +589,10 @@ Thank you.</property>
   <object class="GtkDialog" id="file-chooser-dialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Movie Monad - Open a Video File</property>
+    <property name="window_position">center</property>
+    <property name="destroy_with_parent">True</property>
     <property name="type_hint">dialog</property>
+    <property name="gravity">center</property>
     <property name="transient_for">window</property>
     <child internal-child="vbox">
       <object class="GtkBox" id="box-6">
@@ -566,7 +629,7 @@ Thank you.</property>
             <property name="secondary_icon_stock">gtk-clear</property>
             <property name="primary_icon_activatable">False</property>
             <property name="primary_icon_sensitive">False</property>
-            <property name="secondary_icon_tooltip_text" translatable="yes">Clear the video location</property>
+            <property name="secondary_icon_tooltip_text" translatable="yes">Clear the Video Location</property>
             <property name="placeholder_text" translatable="yes">Video Location</property>
           </object>
           <packing>

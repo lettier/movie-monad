@@ -3,7 +3,6 @@
   (C) 2017 David Lettier
   lettier.com
 -}
-{-# LANGUAGE OverloadedStrings #-}
 
 module Mouse where
 
@@ -16,20 +15,23 @@ import qualified GI.Gdk
 import qualified GI.Gtk
 
 import qualified Records as R
+import BottomControlsBoxVisibility
 
 addMouseMoveHandlers :: R.Application -> [R.Application -> IO ()] -> IO ()
 addMouseMoveHandlers
   application@R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.videoWidget = videoWidget
-          , R.seekScale = seekScale
+          { R.fileChooserButton = fileChooserButton
+          , R.videoWidget       = videoWidget
+          , R.seekScale         = seekScale
           }
     }
   onMouseMoveCallbacks
   = do
-  void $ GI.Gtk.onWidgetMotionNotifyEvent videoWidget mouseMoveHandler'
-  void $ GI.Gtk.onWidgetMotionNotifyEvent seekScale   mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent fileChooserButton mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent videoWidget       mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent seekScale         mouseMoveHandler'
   where
     mouseMoveHandler' :: GI.Gdk.EventMotion -> IO Bool
     mouseMoveHandler' = mouseMoveHandler application onMouseMoveCallbacks
@@ -43,9 +45,8 @@ mouseMoveHandler
   application@R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.window               = window
-          , R.fileChooserButton    = fileChooserButton
-          , R.bottomControlsGtkBox = bottomControlsGtkBox
+          { R.window         = window
+          , R.topControlsBox = topControlsBox
           }
       , R.ioRefs =
           R.IORefs
@@ -59,11 +60,11 @@ mouseMoveHandler
   = do
   isWindowFullScreen <- readIORef isWindowFullScreenRef
   videoInfo          <- readIORef videoInfoRef
-  unless isWindowFullScreen $ GI.Gtk.widgetShow fileChooserButton
-  when (R.isVideo videoInfo) $ do
-    GI.Gtk.widgetShow bottomControlsGtkBox
-    styleContext <- GI.Gtk.widgetGetStyleContext bottomControlsGtkBox
-    GI.Gtk.styleContextAddClass styleContext "movie-monad-fade-in"
+  unless isWindowFullScreen $
+    GI.Gtk.widgetShow topControlsBox
+  when (R.isVideo videoInfo) $
+    void $
+      fadeInBottomControlsBox application 0
   setCursor window Nothing
   timeNow <- getPOSIXTime
   atomicWriteIORef mouseMovedLastRef (round timeNow)

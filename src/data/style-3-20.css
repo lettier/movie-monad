@@ -22,3 +22,7 @@ slider {
 #fullscreen-button image:hover {
   -gtk-icon-shadow: none;
 }
+
+spinner {
+  -gtk-icon-effect: none;
+}

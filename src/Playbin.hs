@@ -4,7 +4,10 @@
   lettier.com
 -}
 
-{-# LANGUAGE OverloadedStrings, ForeignFunctionInterface #-}
+{-# LANGUAGE
+      OverloadedStrings
+    , ForeignFunctionInterface
+#-}
 
 module Playbin where
 
@@ -12,9 +15,9 @@ import Control.Monad
 import Foreign.C
 import Foreign.Ptr
 import Data.Bits
+import Data.IORef
 import Data.Text
 import Data.Maybe
-import Data.Int
 import Data.GI.Base.Properties
 import Data.GI.Base.ManagedPtr
 import qualified GI.GLib
@@ -24,8 +27,10 @@ import qualified GI.Gst
 import qualified Records as R
 import Reset
 import PlayPause
+import Seek
 import ErrorMessage
 import Uri
+import Utils
 
 foreign import ccall "gst-ffi.h get_text_tag_list"
     c_getTextTagList :: Ptr a -> CInt -> IO (Ptr b)
@@ -35,8 +40,7 @@ addPlaybinHandlers
   application@R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.volumeButton      = volumeButton
-          , R.repeatCheckButton = repeatCheckButton
+          { R.volumeButton = volumeButton
           }
     , R.playbin    = playbin
     , R.playbinBus = playbinBus
@@ -47,13 +51,11 @@ addPlaybinHandlers
       pipelineBusMessageHandler application
   void $
     GI.Gtk.onScaleButtonValueChanged
-      volumeButton
-      (setPlaybinVolume playbin)
+      volumeButton $
+        setPlaybinVolume playbin
   void $
     GI.GLib.timeoutAddSeconds GI.GLib.PRIORITY_DEFAULT 1 $ do
-      rewindPlaybackIfVideoEndedAndRepeat
-        playbin
-        repeatCheckButton
+      rewindPlaybackIfVideoEndedAndRepeat application
       return True
 
 pipelineBusMessageHandler
@@ -71,8 +73,11 @@ pipelineBusMessageHandler
           , R.errorMessageDialog            = errorMessageDialog
           , R.bufferingSpinner              = bufferingSpinner
           , R.playPauseButton               = playPauseButton
-          , R.repeatCheckButton             = repeatCheckButton
           , R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
+          }
+    , R.ioRefs =
+        R.IORefs
+          { R.videoInfoRef = videoInfoRef
           }
     , R.playbin = playbin
     }
@@ -91,7 +96,7 @@ pipelineBusMessageHandler
     && ((not . Data.Text.null) entryText || labelText /= "Open")
     ) $ do
       (gError, text) <- GI.Gst.messageParseError message
-      gErrorText <- GI.Gst.gerrorMessage gError
+      gErrorText     <- GI.Gst.gerrorMessage gError
       putStr ((Data.Text.unpack . Data.Text.unlines) [text, gErrorText])
       resetApplication application
       runErrorMessageDialog
@@ -99,13 +104,16 @@ pipelineBusMessageHandler
           Data.Text.concat
             ["There was a problem trying to play the video \"", entryText, "\"."]
   when (messageType == GI.Gst.MessageTypeBuffering) $ do
-    percent <- GI.Gst.messageParseBuffering message
+    percent   <- GI.Gst.messageParseBuffering message
     isPlaying <- isPlayPauseButtonPlaying playPauseButton
     if percent >= 100
       then do
         GI.Gtk.widgetHide bufferingSpinner
         GI.Gtk.setSpinnerActive bufferingSpinner False
         GI.Gtk.widgetSetSensitive seekScale True
+        isSeekable <- R.isSeekable <$> readIORef videoInfoRef
+        when isSeekable $
+          GI.Gtk.widgetShow seekScale
         when isPlaying $
           void $
             GI.Gst.elementSetState playbin GI.Gst.StatePlaying
@@ -113,6 +121,7 @@ pipelineBusMessageHandler
         GI.Gtk.widgetShow bufferingSpinner
         GI.Gtk.setSpinnerActive bufferingSpinner True
         GI.Gtk.widgetSetSensitive seekScale False
+        GI.Gtk.widgetHide seekScale
         void $ GI.Gst.elementSetState playbin GI.Gst.StatePaused
     return ()
   when (messageType == GI.Gst.MessageTypeStreamStart) $ do
@@ -138,26 +147,36 @@ pipelineBusMessageHandler
               code
         ) [0..(nText-1)]
   when (messageType == GI.Gst.MessageTypeEos) $
-    rewindPlaybackIfRepeat playbin repeatCheckButton
+    rewindPlaybackIfRepeat application
   return True
 
-rewindPlaybackIfVideoEndedAndRepeat :: GI.Gst.Element -> GI.Gtk.CheckButton -> IO ()
-rewindPlaybackIfVideoEndedAndRepeat playbin repeatCheckButton = do
+rewindPlaybackIfVideoEndedAndRepeat :: R.Application -> IO ()
+rewindPlaybackIfVideoEndedAndRepeat
+  application@R.Application
+    { R.playbin = playbin
+    }
+  = do
   maybeDurationAndPosition <- queryPlaybinForDurationAndPosition playbin
   case maybeDurationAndPosition of
     (Just (duration, position)) ->
       -- Position may never be >= duration even though an EOS event has occurred.
       -- Allow for a half second tolerance.
       when (position >= duration || ((duration - position) < 50000000)) $
-        rewindPlaybackIfRepeat playbin repeatCheckButton
+        rewindPlaybackIfRepeat application
     _ -> return ()
 
-rewindPlaybackIfRepeat :: GI.Gst.Element -> GI.Gtk.CheckButton -> IO ()
-rewindPlaybackIfRepeat playbin repeatCheckButton = do
+rewindPlaybackIfRepeat :: R.Application -> IO ()
+rewindPlaybackIfRepeat
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.repeatCheckButton = repeatCheckButton
+          }
+    }
+  = do
   repeatVideo <- GI.Gtk.toggleButtonGetActive repeatCheckButton
   when repeatVideo $
-    void $
-      GI.Gst.elementSeekSimple playbin GI.Gst.FormatTime [ GI.Gst.SeekFlagsFlush ] 0
+    seekTo application (Just 0) Nothing
 
 setPlaybinVolume :: GI.Gst.Element -> Double -> IO ()
 setPlaybinVolume playbin volume =
@@ -175,14 +194,6 @@ setPlaybinUriAndVolume playbin fileName volumeButton = do
   volume <- GI.Gtk.scaleButtonGetValue volumeButton
   setPlaybinVolume playbin volume
   setPlaybinUri playbin (Just uri)
-
-queryPlaybinForDurationAndPosition :: GI.Gst.Element -> IO (Maybe (Int64, Int64))
-queryPlaybinForDurationAndPosition playbin = do
-  (couldQueryDuration, duration) <- GI.Gst.elementQueryDuration playbin GI.Gst.FormatTime
-  (couldQueryPosition, position) <- GI.Gst.elementQueryPosition playbin GI.Gst.FormatTime
-  if couldQueryDuration && couldQueryPosition && duration > 0 && position >= 0
-    then return (Just (duration, position))
-    else return Nothing
 
 getTextTagLanguageNameAndCode :: GI.Gst.Element -> Int -> IO (Maybe Text, Maybe Text)
 getTextTagLanguageNameAndCode playbin streamId = do

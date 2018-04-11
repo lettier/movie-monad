@@ -20,8 +20,7 @@ So put down your copy of mpv, VLC, or Elmedia and try out Movie Monad—it's FRE
 
 ## What does Movie Monad look like?
 
-![Movie Monad](https://i.imgur.com/0zjy4xz.gif)
-![Movie Monad](https://i.imgur.com/0SvqTpp.gif)
+![Movie Monad](https://i.imgur.com/asASjzn.gif)
 
 ## What can I do with Movie Monad?
 
@@ -31,6 +30,7 @@ So put down your copy of mpv, VLC, or Elmedia and try out Movie Monad—it's FRE
 * You can play and pause.
 * You can seek/scrub through the video.
 * You can put the video on repeat.
+* You can slow down or speed up the video (great for lectures).
 * You can turn subtitles off or on and pick your language.
 * You can turn up, turn down, or mute the volume.
 * You can expand the video to fullscreen.
@@ -76,15 +76,15 @@ To find the latest version of Movie Monad, head over to the
 ### I use Linux.
 
 If you use Linux then the easiest way to grab a copy of Movie Monad is by downloading the
-[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.5.0/movie-monad-0.0.5.0-x86_64.AppImage).
+[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-0.0.6.0-x86_64.AppImage).
 After you download the
-[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.5.0/movie-monad-0.0.5.0-x86_64.AppImage),
+[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-0.0.6.0-x86_64.AppImage),
 right click on it, select permissions, and check the box near execute.
 With that out of the way—you're all set—just double click on the AppImage
 and Movie Monad will pop up.
 
 You can also download and install the
-[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.5.0/movie-monad-0.0.5.0-x86_64.AppImage)
+[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-0.0.6.0-x86_64.AppImage)
 using the handy
 [AppImage install script](https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/app-image/movie-monad-install-app-image-script.sh)
 (right click the link and select "Save link as...").

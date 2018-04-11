@@ -15,34 +15,36 @@ import Playbin
 
 addSubtitleSelectorHandler :: R.Application -> IO ()
 addSubtitleSelectorHandler
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
           }
     }
-  = void (
-        GI.Gtk.onComboBoxChanged
-          subtitleSelectionComboBoxText
-          (subtitleSelectorHandler application)
-      )
+  =
+  void $
+    GI.Gtk.onComboBoxChanged
+      subtitleSelectionComboBoxText $
+        subtitleSelectorHandler application
 
 subtitleSelectorHandler :: R.Application -> IO ()
 subtitleSelectorHandler
-  R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
+  R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.subtitleSelectionComboBoxText = subtitleSelectionComboBoxText
           }
-      , R.playbin = playbin
+    , R.playbin = playbin
     }
   = do
-    maybeActiveId <- GI.Gtk.getComboBoxActiveId subtitleSelectionComboBoxText
-    nText <- getTextStreamCount playbin
-    case maybeActiveId of
-      Nothing -> return ()
-      Just activeId -> do
-        let activeId' = read (Data.Text.unpack activeId) :: Int
-        if activeId' == (-1)
-          then turnOffSubtitles playbin
-          else when (activeId' >= 0 && activeId' < nText) $ do
-            setCurrentTextStreamId playbin activeId'
-            turnOnSubtitles playbin
+  maybeActiveId <- GI.Gtk.getComboBoxActiveId subtitleSelectionComboBoxText
+  nText         <- getTextStreamCount playbin
+  case maybeActiveId of
+    Nothing       -> return ()
+    Just activeId -> do
+      let activeId' = read (Data.Text.unpack activeId) :: Int
+      if activeId' == (-1)
+        then turnOffSubtitles playbin
+        else when (activeId' >= 0 && activeId' < nText) $ do
+          setCurrentTextStreamId playbin activeId'
+          turnOnSubtitles playbin

@@ -15,7 +15,12 @@
   to { opacity: 1; }
 }
 
-#bottom-controls-gtk-box {
+@keyframes movie_monad_fade_out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+#bottom-controls-box {
   background-color: @_movie_monad_black;
   border-color: @_movie_monad_black;
   border-width: 1px;
@@ -27,15 +32,13 @@
 }
 
 #play-pause-button,
-#about-button,
 #volume-button,
 #volume-plus-button,
 #volume-minus-button,
 #repeat-check-button,
 #fullscreen-button,
-#window-width-selection-combo-box-text button.combo,
-#subtitle-selection-combo-box-text button.combo,
-#bottom-controls-gtk-box .button {
+#combo-box-selections-box button.combo,
+#bottom-controls-box .button {
   background-color: transparent;
   border-color: transparent;
   border-width: 0px;
@@ -48,22 +51,22 @@
   border-image-source: none;
 }
 
-GtkBox#bottom-controls-gtk-box .button {
+GtkBox#bottom-controls-box .button {
   padding-left: 7.5px;
   padding-right: 7.5px;
 }
 
 #play-pause-button image,
-#about-button image,
 #volume-button image,
+#volume-button GtkImage,
 #repeat-check-button image,
 #repeat-check-button check,
 #fullscreen-button image,
 #play-pause-button image:hover,
-#about-button image:hover,
 #volume-button image:hover,
 #repeat-check-button image:hover,
 #fullscreen-button image:hover {
+  color: white;
   text-shadow: none;
   border-color: transparent;
   border-top-color: transparent;
@@ -74,22 +77,18 @@ GtkBox#bottom-controls-gtk-box .button {
 }
 
 #play-pause-button:focus,
-#about-button:focus,
 #volume-button:focus,
 #volume-plus-button:focus,
 #volume-minus-button:focus,
 #repeat-check-button:focus,
 #fullscreen-button:focus,
-#window-width-selection-combo-box-text button.combo:focus,
-#subtitle-selection-combo-box-text button.combo:focus,
+#combo-box-selections-box button.combo:focus,
 #play-pause-button image:focus,
-#about-button image:focus,
 #volume-button image:focus,
 #repeat-check-button image:focus,
 #repeat-check-button check:focus,
 #fullscreen-button image:focus,
 #play-pause-button image:focus,
-#about-button image:focus,
 #volume-button image:focus,
 #repeat-check-button image:focus,
 #fullscreen-button image:focus {
@@ -101,16 +100,14 @@ GtkBox#bottom-controls-gtk-box .button {
 }
 
 #play-pause-button:hover,
-#about-button:hover,
 #volume-button:hover,
 #volume-plus-button:hover,
 #volume-minus-button:hover,
 #repeat-check-button:hover,
 #repeat-check-button:active,
 #fullscreen-button:hover,
-#window-width-selection-combo-box-text button.combo:hover,
-#subtitle-selection-combo-box-text button.combo:hover,
-#window-width-selection-combo-box-text .button:hover {
+#combo-box-selections-box button.combo:hover,
+#combo-box-selections-box .button:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -145,7 +142,7 @@ GtkPopover .slider {
   margin: -3px;
 }
 
-GtkBox#bottom-controls-gtk-box .trough {
+GtkBox#bottom-controls-box .trough {
   margin-right: 10px;
   margin-left: 10px;
 }
@@ -198,6 +195,11 @@ GtkScale#seek-scale .highlight {
   background-image: linear-gradient(to right, @_movie_monad_blue 0%, @_movie_monad_pink 100%);
 }
 
+popover image,
+GtkPopover GtkImage {
+  color: white;
+}
+
 popover highlight,
 GtkPopover .highlight {
   background-image: linear-gradient(to top, @_movie_monad_blue 0%, @_movie_monad_pink 100%);
@@ -218,6 +220,8 @@ GtkComboBox .menu {
   border-image-source: none;
   border: none;
   box-shadow: none;
+  outline: none;
+  padding: 0px;
 }
 
 combobox window,
@@ -231,8 +235,8 @@ GtkComboBox .arrow {
   box-shadow: none;
 }
 
-menuitem,
-GtkMenuItem {
+#bottom-controls-box menuitem,
+#bottom-controls-box GtkMenuItem {
   background-color: transparent;
   color: white;
   background-image: none;
@@ -244,8 +248,16 @@ GtkMenuItem {
   box-shadow: none;
 }
 
-menuitem:hover,
-GtkMenuItem:hover {
+#combo-box-selections-box button box cellview,
+#combo-box-selections-box GtkButton GtkBox GtkCellView,
+#combo-box-selections-box button box image,
+#combo-box-selections-box GtkButton GtkBox GtkImage,
+#combo-box-selections-box arrow {
+  color: white;
+}
+
+#bottom-controls-box menuitem:hover,
+#bottom-controls-box GtkMenuItem:hover {
   background-color: @_movie_monad_white_nine;
   color: black;
   background-image: none;
@@ -257,8 +269,8 @@ GtkMenuItem:hover {
   box-shadow: none;
 }
 
-menuitem:focus,
-GtkMenuItem:focus {
+#bottom-controls-box menuitem:focus,
+#bottom-controls-box GtkMenuItem:focus {
   outline-color: transparent;
   outline-offset: 0px;
   outline-width: 0px;
@@ -277,6 +289,12 @@ GtkMenu .arrow {
   color: white;
 }
 
+spinner,
+GtkSpinner {
+  color: white;
+  background-color: transparent;
+}
+
 tooltip,
 .tooltip {
   color: white;
@@ -293,6 +311,13 @@ tooltip,
 
 .movie-monad-fade-in {
   animation-name: movie_monad_fade_in;
+  animation-duration: 1s;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+}
+
+.movie-monad-fade-out {
+  animation-name: movie_monad_fade_out;
   animation-duration: 1s;
   animation-timing-function: linear;
   animation-iteration-count: 1;

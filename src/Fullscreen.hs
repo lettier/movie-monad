@@ -15,28 +15,31 @@ import qualified Records as R
 
 addFullscreenButtonReleaseHandler :: R.Application -> IO ()
 addFullscreenButtonReleaseHandler
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.fullscreenButton = fullscreenButton
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.fullscreenButton = fullscreenButton
           }
     }
   =
-  void $ GI.Gtk.onWidgetButtonReleaseEvent fullscreenButton (fullscreenButtonReleaseHandler application)
+  void $
+    GI.Gtk.onWidgetButtonReleaseEvent
+      fullscreenButton $
+        fullscreenButtonReleaseHandler application
 
-fullscreenButtonReleaseHandler ::
-  R.Application ->
-  GI.Gdk.EventButton ->
-  IO Bool
+fullscreenButtonReleaseHandler :: R.Application -> GI.Gdk.EventButton -> IO Bool
 fullscreenButtonReleaseHandler
-  R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.window = window
-            , R.fileChooserButton                = fileChooserButton
-            , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
+  R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.window = window
+          , R.fileChooserButton                = fileChooserButton
+          , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
           }
-      , R.ioRefs = R.IORefs {
-            R.isWindowFullScreenRef = isWindowFullScreenRef
-        }
+    , R.ioRefs =
+        R.IORefs
+          { R.isWindowFullScreenRef = isWindowFullScreenRef
+          }
     }
   _
   = do

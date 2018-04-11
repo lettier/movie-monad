@@ -13,6 +13,7 @@ _STACK_GHC_BIN=`$(_STACK) path --compiler-bin`
 _STACK_PATHS=$(_STACK_PATH_LOCAL_BIN):$(_STACK_GHC_BIN):$(_STACK_SNAPSHOT_INSTALL_ROOT):$(_STACK_SNAPSHOT_INSTALL_ROOT_BIN)
 _CABAL=env PATH=$(PATH):$(_STACK_PATHS) "$(_STACK_SNAPSHOT_INSTALL_ROOT_BIN)/cabal"
 _CABAL_SANDBOX_DIR=".cabal-sandbox"
+_APPDATA_DIR="$(_CABAL_SANDBOX_DIR)/share/metainfo"
 _APPLICATIONS_DESKTOP_DIR="$(_CABAL_SANDBOX_DIR)/share/applications"
 _ICONS_HICOLOR_SCALABLE_APPS_DIR="$(_CABAL_SANDBOX_DIR)/share/icons/hicolor/scalable/apps"
 _PACKAGING_LINUX_COMMON_DIR="./packaging/linux/common"
@@ -59,7 +60,11 @@ icons_hicolor_scalable_apps:
   mkdir -p $(_ICONS_HICOLOR_SCALABLE_APPS_DIR) && \
   cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME)-icon.svg $(_ICONS_HICOLOR_SCALABLE_APPS_DIR)/
 
-install: cabal_install applications_desktop icons_hicolor_scalable_apps
+appdata:
+  mkdir -p $(_APPDATA_DIR) && \
+  cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME).appdata.xml $(_APPDATA_DIR)/
+
+install: cabal_install appdata applications_desktop icons_hicolor_scalable_apps
 
 build_sdist:
   $(_STACK) sdist
