@@ -3,6 +3,9 @@
   "runtime": "org.gnome.Platform",
   "runtime-version": "3.26",
   "sdk": "org.gnome.Sdk",
+  "platform-extensions": [
+    "org.freedesktop.Platform.ffmpeg"
+  ],
   "command": "movie-monad",
   "rename-desktop-file": "movie-monad.desktop",
   "rename-icon": "movie-monad-icon",
@@ -20,8 +23,8 @@
     "--talk-name=org.gnome.SettingsDaemon.MediaKeys",
     "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
     "--filesystem=host",
-    "--talk-name=ca.desrt.dconf",
-    "--env=SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt"
+    "--filesystem=xdg-run/dconf",
+    "--talk-name=ca.desrt.dconf"
   ],
   "modules": [
     {
@@ -37,27 +40,6 @@
           "type": "archive",
           "url": "https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-linux-0.0.6.0.tar.gz",
           "sha256": "315316abb68364e91e28e1cc17a111c12f23d762cf79465aa110f7ca983ce082"
-        }
-      ]
-    },
-    {
-      "name": "ffmpeg",
-      "cleanup": [ "/include", "/lib/pkgconfig", "/share/ffmpeg/examples" ],
-      "config-opts": [
-        "--enable-shared",
-        "--disable-static",
-        "--enable-gnutls",
-        "--disable-doc",
-        "--disable-programs",
-        "--disable-encoders",
-        "--disable-muxers",
-        "--disable-devices"
-      ],
-      "sources": [
-        {
-          "type": "git",
-          "url": "https://github.com/FFmpeg/FFmpeg.git",
-          "commit": "dd8351b1184b8054925c28ecc5fcb6dbbc177fad"
         }
       ]
     }
