@@ -18,9 +18,10 @@ while read _dependency; do
       ],
       \"buildsystem\": \"simple\",
       \"build-commands\": [
-        \"/usr/bin/runhaskell Setup configure --prefix=/usr\",
-        \"/usr/bin/runhaskell Setup build\",
-        \"/usr/bin/runhaskell Setup install\"
+        \"ghc -threaded --make Setup\",
+        \"./Setup configure --prefix=/app\",
+        \"./Setup build\",
+        \"./Setup install\"
       ],
       \"sources\": [
         {

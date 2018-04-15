@@ -32,6 +32,7 @@ hashable-1.2.7.0
 blaze-builder-0.4.1.0
 haskell-gi-base-0.21.0
 parsec-3.1.13.0
+happy-1.19.6
 pretty-show-1.7
 xml-types-0.3.6
 system-filepath-0.4.14
