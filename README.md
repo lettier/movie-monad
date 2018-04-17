@@ -33,7 +33,7 @@ So put down your copy of mpv, VLC, or Elmedia and try out Movie Monad—it's FRE
 * You can slow down or speed up the video (great for lectures).
 * You can turn subtitles off or on and pick your language.
 * You can turn up, turn down, or mute the volume.
-* You can expand the video to fullscreen.
+* You can expand the video to full screen.
 * You can quickly resize the video to standard sizes.
 * You can resize the video to a custom size by resizing the window.
     * Movie Monad will responsively adjust the video size to fill the window.
@@ -46,7 +46,7 @@ So put down your copy of mpv, VLC, or Elmedia and try out Movie Monad—it's FRE
 * Mute/Unmute
     * `m`
     * `AudioMute`
-* Fullscreen/Windowed
+* Full Screen/Windowed
     * `f`
 * Show Controls
     * `c`

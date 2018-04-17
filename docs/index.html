@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<!--Copyright 2018 David Lettier -->
+<!--lettier.com-->
+<html>
+  <head>
+    <title>Movie Monad - lettier.com</title>
+    <meta charset="utf-8">
+
+    <meta property="og:url"          content="https://lettier.github.io/movie-monad">
+    <meta property="og:type"         content="website">
+    <meta property="og:title"        content="Movie Monad - lettier.com">
+    <meta property="og:description"  content="Movie Monad is a free and simple to use video player made with Haskell.">
+
+    <meta property="og:image"        content="https://lettier.github.io/movie-monad/screenshot.jpg">
+    <meta property="og:image:type"   content="image/jpeg">
+    <meta property="og:image:width"  content="1920">
+    <meta property="og:image:height" content="1200">
+
+    <meta itemprop="name"            content="Movie Monad - lettier.com">
+    <meta itemprop="description"     content="Movie Monad is a free and simple to use video player made with Haskell.">
+    <meta itemprop="image"           content="https://lettier.github.io/movie-monad/screenshot.jpg">
+
+    <meta name="description"         content="Movie Monad is a free and simple to use video player made with Haskell.">
+    <meta name="image"               content="https://lettier.github.io/movie-monad/screenshot.jpg">
+    <meta name="viewport"            content="width=device-width, initial-scale=1">
+    <meta name="keywords"            content="video, haskell, gtk, gstreamer, desktop, linux, mac">
+    <meta name="author"              content="David Lettier">
+    <meta name="copyright"           content="Copyright 2018 David Lettier">
+
+    <meta name="og:title"            content="Movie Monad - lettier.com">
+    <meta name="og:description"      content="Movie Monad is a free and simple to use video player made with Haskell.">
+    <meta name="og:image"            content="https://lettier.github.io/movie-monad/screenshot.jpg">
+    <meta name="og:url"              content="https://lettier.github.io/movie-monad">
+    <meta name="og:site_name"        content="Movie Monad - lettier.com">
+    <meta name="og:locale"           content="en_us">
+    <meta name="og:type"             content="website">
+
+    <link rel="stylesheet" type="text/css"  href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.min.css">
+    <link rel="stylesheet" type="text/css"  href="style.css">
+    <link rel="stylesheet"                  href="https://fonts.googleapis.com/css?family=Roboto" >
+    <link rel="stylesheet"                  href="https://cdn.jsdelivr.net/npm/fontisto@v2.0.1/css/fontisto/fontisto.min.css">
+    <link rel="icon"                        href="favicon.ico?v=1.0">
+  </head>
+  <body>
+    <section class="section">
+      <div class="container">
+        <img class="image header-icon is-hidden-mobile" src="movie-monad-icon.svg">
+        <img class="image header-image is-hidden-mobile" src="movie-monad.png">
+        <img class="image is-hidden-tablet" src="movie-monad-logo.svg">
+      </div>
+    </section>
+    <section>
+      <div class="container has-text-centered">
+        <h1 class="title has-text-white">
+          A free and simple to use video player made with Haskell.
+        </h1>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-narrow is-hidden-mobile">
+            <img class="image circle-preview float-right" src="file-selection-circ.png">
+          </div>
+          <div class="column center-vertical is-5">
+            <div class="box is-hidden-mobile">
+              <article class="media">
+                <div class="media-content">
+                  <div class="content">
+                    <h2 class="title">Near or Far</h2>
+                    <p>
+                      You can stream files directly from the web or load them right from your hard drive.
+                      To stream from the 'net, paste the URL right into the video location box.
+                      Videos can run but they can't hide from Movie Monad.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="card is-hidden-tablet">
+              <div class="card-image">
+                <figure class="image">
+                  <img class="image" src="file-selection-rect.jpg">
+                </figure>
+              </div>
+              <div class="card-content">
+                <article class="media">
+                  <div class="media-content">
+                    <div class="content">
+                      <h2 class="title">Near or Far</h2>
+                      <p>
+                        You can stream files directly from the web or load them right from your hard drive.
+                        To stream from the 'net, paste the URL right into the video location box.
+                        Videos can run but they can't hide from Movie Monad.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-hidden-mobile">
+          </div>
+          <div class="column center-vertical is-5">
+            <div class="box is-hidden-mobile">
+              <article class="media">
+                <div class="media-content">
+                  <div class="content">
+                    <h2 class="title">Power at Your Fingertips</h2>
+                    <p>
+                      Movie Monad comes with all the standard controls you've come to expect.
+                      You can play/pause, repeat, mute/lower/raise the volume, go full screen, seek, and change the window size.
+                      Everything you need to watch what you love with Movie Monad.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="card is-hidden-tablet">
+              <div class="card-image">
+                <figure class="image">
+                  <img class="image" src="bottom-controls-rect.jpg">
+                </figure>
+              </div>
+              <div class="card-content">
+                <article class="media">
+                  <div class="media-content">
+                    <div class="content">
+                      <h2 class="title">Power at Your Fingertips</h2>
+                      <p>
+                        Movie Monad comes with all the standard controls you've come to expect.
+                        You can play/pause, repeat, mute/lower/raise the volume, go full screen, seek, and change the window size.
+                        Everything you need to watch what you love with Movie Monad.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div class="column is-narrow is-hidden-mobile">
+            <img class="image circle-preview" src="bottom-controls-circ.png">
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-narrow is-hidden-mobile">
+            <img class="image circle-preview float-right" src="video-playback-speed-selection-circ.png">
+          </div>
+          <div class="column center-vertical is-5">
+            <div class="box is-hidden-mobile">
+              <article class="media">
+                <div class="media-content">
+                  <div class="content">
+                    <h2 class="title">Play Fast and Loose</h2>
+                    <p>
+                      Is the lecture dragging on? Did the speaker talk too fast?
+                      No problem! Movie Monad gives you control over the playback speed.
+                      Options include slow, normal, and fast.
+                      Step on the gas or put on the brakes with Movie Monad.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="card is-hidden-tablet">
+              <div class="card-image">
+                <figure class="image">
+                  <img class="image" src="video-playback-speed-selection-rect.jpg">
+                </figure>
+              </div>
+              <div class="card-content">
+                <article class="media">
+                  <div class="media-content">
+                    <div class="content">
+                      <h2 class="title">Play Fast and Loose</h2>
+                      <p>
+                        Is the lecture dragging on? Did the speaker talk too fast?
+                        No problem! Movie Monad gives you control over the playback speed.
+                        Options include slow, normal, and fast.
+                        Step on the gas or put on the brakes with Movie Monad.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-hidden-mobile">
+          </div>
+          <div class="column center-vertical is-5">
+            <div class="box is-hidden-mobile">
+              <article class="media">
+                <div class="media-content">
+                  <div class="content">
+                    <h2 class="title">¿Qué? Was? ਕੀ?</h2>
+                    <p>
+                      Subtitles are no problem for Movie Monad.
+                      Don't need 'em? Turn 'em off.
+                      Have no idea what's being said? Turn 'em on and select your preferred language.
+                      Movie Monad aims to please.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="card is-hidden-tablet">
+              <div class="card-image">
+                <figure class="image">
+                  <img class="image" src="subtitle-selection-rect.jpg">
+                </figure>
+              </div>
+              <div class="card-content">
+                <article class="media">
+                  <div class="media-content">
+                    <div class="content">
+                      <h2 class="title">¿Qué? Was? ਕੀ?</h2>
+                      <p>
+                        Subtitles are no problem for Movie Monad.
+                        Don't need 'em? Turn 'em off.
+                        Have no idea what's being said? Turn 'em on and select your preferred language.
+                        Movie Monad aims to please.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+          <div class="column is-narrow is-hidden-mobile">
+            <img class="image circle-preview" src="subtitle-selection-circ.png">
+          </div>
+        </div>
+        <div class="columns">
+          <div class="column is-narrow is-hidden-mobile">
+            <img class="image circle-preview float-right" src="download-circ.png">
+          </div>
+          <div class="column center-vertical is-5">
+            <div class="box is-hidden-mobile">
+              <article class="media">
+                <div class="media-content">
+                  <div class="content">
+                    <h2 class="title">Grab Your Free Copy</h2>
+                    <p>
+                      Combining Haskell, GTK, and GStreamer, Movie Monad works across platforms.
+                      Linux, Mac, and most likely Windows can run Movie Monad.
+                      To grab your own copy, make your way to the
+                      <a href="https://github.com/lettier/movie-monad#how-do-i-get-a-copy-of-movie-monad">installation instructions</a>.
+                      If you run into trouble, don't hesitate to open an issue on the
+                      <a href="https://github.com/lettier/movie-monad/issues">issues page</a>.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="card is-hidden-tablet">
+              <div class="card-image">
+                <figure class="image">
+                  <img class="image" src="download-rect.jpg">
+                </figure>
+              </div>
+              <div class="card-content">
+                <article class="media">
+                  <div class="media-content">
+                    <div class="content">
+                      <h2 class="title">Grab Your Free Copy</h2>
+                      <p>
+                        Combining Haskell, GTK, and GStreamer, Movie Monad works across platforms.
+                        Linux, Mac, and most likely Windows can run Movie Monad.
+                        To grab your own copy, make your way to the
+                        <a href="https://github.com/lettier/movie-monad#how-do-i-get-a-copy-of-movie-monad">installation instructions</a>.
+                        If you run into trouble, don't hesitate to open an issue on the
+                        <a href="https://github.com/lettier/movie-monad/issues">issues page</a>.
+                      </p>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section class="section">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-1 is-hidden-mobile"></div>
+          <div class="column has-text-white is-5 is-size-5">
+            <p>
+              Copyright 2018 David Lettier
+              <br>
+              <a href="https://www.lettier.com/">lettier.com</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </body>
+</html>

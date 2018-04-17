@@ -1,0 +1,70 @@
+/*
+  Copyright 2018 David Lettier
+  lettier.com
+*/
+
+html {
+  width: 100%;
+  height: 100%;
+}
+
+html, body {
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background: rgb(224,67,127);
+  background: linear-gradient(35deg, rgba(224,67,127,1) 0%, rgba(87,172,227,1) 100%) fixed;
+}
+
+a, a:hover, a:visited {
+  color: white;
+  text-decoration: underline;
+}
+
+article a, article a:hover, article a:visited {
+  color: grey;
+  text-decoration: underline;
+}
+
+.header-icon {
+  position: absolute;
+  top: 0%;
+  width: 100%;
+  height: auto;
+}
+
+.header-image {
+  width: 75%;
+  margin-left: 12.5%;
+  margin-right: auto;
+  box-shadow: 0px 100px 200px -20px rgba(10, 10, 10, 0.5);
+}
+
+.circle-preview {
+  width: 75%;
+  max-width: 500px;
+  height: auto;
+  box-shadow: 0px 10px 100px 0px rgba(10, 10, 10, 0.2);
+  border-radius: 100%;
+}
+
+.center-vertical {
+  display: flex;
+  align-items: center;
+}
+
+.float-right {
+  float: right;
+}
+
+.card-image {
+  border-bottom: 1px solid #e4e4e4;
+}
+
+@media (max-width: 320px) {
+  div h1 {
+    padding-left: 5px;
+    padding-right 5px;
+  }
+}
