@@ -4,9 +4,6 @@
   "runtime-version": "3.26",
   "sdk": "org.gnome.Sdk",
   "command": "movie-monad",
-  "rename-desktop-file": "movie-monad.desktop",
-  "rename-icon": "movie-monad-icon",
-  "rename-appdata-file": "movie-monad.appdata.xml",
   "finish-args": [
     "--share=ipc",
     "--socket=x11",
@@ -1417,10 +1414,14 @@
         "./Setup configure --prefix=/app",
         "./Setup build",
         "./Setup install",
-        "mkdir -p /app/share/metainfo /app/share/applications /app/share/icons/hicolor/scalable/apps",
-        "cp packaging/linux/common/movie-monad.appdata.xml /app/share/metainfo/",
-        "cp packaging/linux/common/movie-monad.desktop /app/share/applications/",
-        "cp packaging/linux/common/movie-monad-icon.svg /app/share/icons/hicolor/scalable/apps"
+        "mkdir -p /app/share/metainfo /app/share/appdata /app/share/applications /app/share/icons/hicolor/scalable/apps",
+        "sed -i 's/<id>com\\.lettier\\.movie-monad<\\/id>/<id>com\\.lettier\\.movie-monad\\.desktop<\\/id>/' packaging/linux/common/movie-monad.appdata.xml",
+        "sed -i 's/<launchable type=\"desktop-id\">movie-monad\\.desktop<\\/launchable>/<launchable type=\"desktop-id\">com\\.lettier\\.movie-monad\\.desktop<\\/launchable>/' packaging/linux/common/movie-monad.appdata.xml",
+        "cp packaging/linux/common/movie-monad.appdata.xml /app/share/metainfo/com.lettier.movie-monad.appdata.xml",
+        "cp packaging/linux/common/movie-monad.appdata.xml /app/share/appdata/com.lettier.movie-monad.appdata.xml",
+        "sed -i 's/movie-monad-icon/com\\.lettier\\.movie-monad/' packaging/linux/common/movie-monad.desktop",
+        "cp packaging/linux/common/movie-monad.desktop /app/share/applications/com.lettier.movie-monad.desktop",
+        "cp packaging/linux/common/movie-monad-icon.svg /app/share/icons/hicolor/scalable/apps/com.lettier.movie-monad.svg"
       ],
       "post-install": [
         "rm -rf /app/bin/g*",
