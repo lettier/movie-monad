@@ -36,7 +36,7 @@
 #volume-plus-button,
 #volume-minus-button,
 #repeat-check-button,
-#fullscreen-button,
+#full-screen-button,
 #combo-box-selections-box button.combo,
 #bottom-controls-box .button {
   background-color: transparent;
@@ -61,11 +61,11 @@ GtkBox#bottom-controls-box .button {
 #volume-button GtkImage,
 #repeat-check-button image,
 #repeat-check-button check,
-#fullscreen-button image,
+#full-screen-button image,
 #play-pause-button image:hover,
 #volume-button image:hover,
 #repeat-check-button image:hover,
-#fullscreen-button image:hover {
+#full-screen-button image:hover {
   color: white;
   text-shadow: none;
   border-color: transparent;
@@ -81,17 +81,17 @@ GtkBox#bottom-controls-box .button {
 #volume-plus-button:focus,
 #volume-minus-button:focus,
 #repeat-check-button:focus,
-#fullscreen-button:focus,
+#full-screen-button:focus,
 #combo-box-selections-box button.combo:focus,
 #play-pause-button image:focus,
 #volume-button image:focus,
 #repeat-check-button image:focus,
 #repeat-check-button check:focus,
-#fullscreen-button image:focus,
+#full-screen-button image:focus,
 #play-pause-button image:focus,
 #volume-button image:focus,
 #repeat-check-button image:focus,
-#fullscreen-button image:focus {
+#full-screen-button image:focus {
   outline-color: transparent;
   outline-offset: 0px;
   outline-width: 0px;
@@ -105,7 +105,7 @@ GtkBox#bottom-controls-box .button {
 #volume-minus-button:hover,
 #repeat-check-button:hover,
 #repeat-check-button:active,
-#fullscreen-button:hover,
+#full-screen-button:hover,
 #combo-box-selections-box button.combo:hover,
 #combo-box-selections-box .button:hover {
   background-color: rgba(255, 255, 255, 0.1);
@@ -321,4 +321,67 @@ tooltip,
   animation-duration: 1s;
   animation-timing-function: linear;
   animation-iteration-count: 1;
+}
+
+dialog#info-dialog,
+GtkDialog#info-dialog {
+  background: linear-gradient(35deg, @_movie_monad_pink 0%, @_movie_monad_blue 100%);
+  border: none;
+  padding: 0px;
+  margin: 0px;
+  color: white;
+}
+
+dialog#info-dialog textview,
+dialog#info-dialog text,
+dialog#info-dialog scrolledwindow,
+dialog#info-dialog viewport,
+GtkDialog#info-dialog GtkTextView,
+GtkDialog#info-dialog GtkText,
+GtkDialog#info-dialog GtkScrolledWindow,
+GtkDialog#info-dialog GtkViewport {
+  border: none;
+  background-color: rgba(0, 0, 0, 0.0);
+  color: white;
+}
+
+dialog#info-dialog label,
+dialog#info-dialog label link,
+GtkDialog#info-dialog GtkLabel,
+GtkDialog#info-dialog GtkLabel GtkLink {
+  color: white;
+}
+
+dialog#info-dialog scrollbar,
+dialog#info-dialog trough,
+GtkDialog#info-dialog GtkScrollbar,
+GtkDialog#info-dialog GtkTrough {
+  background: none;
+  border: none;
+}
+
+dialog#info-dialog scrollbar slider,
+GtkDialog#info-dialog GtkScrollbar GtkSlider {
+  background-color: white;
+  border: none;
+}
+
+dialog#info-dialog button,
+GtkDialog#info-dialog GtkButton {
+  background-color: whitesmoke;
+  background-image: none;
+  border: none;
+  border-radius: 2px;
+  text-shadow: none;
+  color: #333
+}
+
+dialog#info-dialog button:hover,
+GtkDialog#info-dialog GtkButton:hover {
+  background-color: white;
+}
+
+dialog#info-dialog button label,
+GtkDialog#info-dialog GtkButton GtkLabel {
+  color: #333;
 }

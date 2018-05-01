@@ -14,38 +14,40 @@ import qualified GI.Gst
 data Application =
   Application
     { guiObjects :: GuiObjects
-    , ioRefs :: IORefs
-    , playbin :: GI.Gst.Element
+    , ioRefs     :: IORefs
+    , playbin    :: GI.Gst.Element
     , playbinBus :: GI.Gst.Bus
     }
 
 data GuiObjects =
   GuiObjects
     { window                           :: GI.Gtk.Window
-    , fileChooserButtonLabel           :: GI.Gtk.Label
+    , fileChooserDialogButtonLabel     :: GI.Gtk.Label
+    , fileChooserDialogLabel           :: GI.Gtk.Label
     , fileChooserDialog                :: GI.Gtk.Dialog
-    , fileChooserEntry                 :: GI.Gtk.Entry
+    , videoLocationEntry               :: GI.Gtk.Entry
     , fileChooserWidget                :: GI.Gtk.FileChooserWidget
     , videoWidget                      :: GI.Gtk.Widget
     , topControlsBox                   :: GI.Gtk.Box
     , bottomControlsBox                :: GI.Gtk.Box
     , seekScale                        :: GI.Gtk.Scale
-    , fileChooserButton                :: GI.Gtk.Button
+    , fileChooserDialogButton          :: GI.Gtk.Button
     , playPauseButton                  :: GI.Gtk.Button
-    , fullscreenButton                 :: GI.Gtk.Button
-    , fileChooserCancelButton          :: GI.Gtk.Button
-    , fileChooserOpenButton            :: GI.Gtk.Button
-    , aboutButton                      :: GI.Gtk.Button
+    , fullScreenButton                 :: GI.Gtk.Button
+    , fileChooserDialogCancelButton    :: GI.Gtk.Button
+    , fileChooserDialogOpenButton      :: GI.Gtk.Button
+    , infoDialogButton                 :: GI.Gtk.Button
     , repeatCheckButton                :: GI.Gtk.CheckButton
     , volumeButton                     :: GI.Gtk.VolumeButton
     , playImage                        :: GI.Gtk.Image
     , pauseImage                       :: GI.Gtk.Image
+    , fileChooserDialogButtonImage     :: GI.Gtk.Image
     , windowWidthSelectionComboBoxText :: GI.Gtk.ComboBoxText
     , videoSpeedSelectionComboboxText  :: GI.Gtk.ComboBoxText
     , subtitleSelectionComboBoxText    :: GI.Gtk.ComboBoxText
     , bufferingSpinner                 :: GI.Gtk.Spinner
     , errorMessageDialog               :: GI.Gtk.MessageDialog
-    , aboutDialog                      :: GI.Gtk.AboutDialog
+    , infoDialog                       :: GI.Gtk.AboutDialog
     }
 
 data IORefs =

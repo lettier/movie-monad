@@ -68,8 +68,8 @@ pipelineBusMessageHandler
     { R.guiObjects =
         R.GuiObjects
           { R.seekScale                     = seekScale
-          , R.fileChooserEntry              = fileChooserEntry
-          , R.fileChooserButtonLabel        = fileChooserButtonLabel
+          , R.videoLocationEntry            = videoLocationEntry
+          , R.fileChooserDialogButtonLabel  = fileChooserDialogButtonLabel
           , R.errorMessageDialog            = errorMessageDialog
           , R.bufferingSpinner              = bufferingSpinner
           , R.playPauseButton               = playPauseButton
@@ -89,8 +89,8 @@ pipelineBusMessageHandler
         case messageTypes of
           []      -> GI.Gst.MessageTypeUnknown
           (msg:_) -> msg
-  entryText <- GI.Gtk.entryGetText fileChooserEntry
-  labelText <- GI.Gtk.labelGetText fileChooserButtonLabel
+  entryText <- GI.Gtk.entryGetText videoLocationEntry
+  labelText <- GI.Gtk.labelGetText fileChooserDialogButtonLabel
   when
     (  messageType == GI.Gst.MessageTypeError
     && ((not . Data.Text.null) entryText || labelText /= "Open")

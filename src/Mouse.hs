@@ -22,16 +22,16 @@ addMouseMoveHandlers
   application@R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.fileChooserButton = fileChooserButton
-          , R.videoWidget       = videoWidget
-          , R.seekScale         = seekScale
+          { R.fileChooserDialogButton = fileChooserDialogButton
+          , R.videoWidget             = videoWidget
+          , R.seekScale               = seekScale
           }
     }
   onMouseMoveCallbacks
   = do
-  void $ GI.Gtk.onWidgetMotionNotifyEvent fileChooserButton mouseMoveHandler'
-  void $ GI.Gtk.onWidgetMotionNotifyEvent videoWidget       mouseMoveHandler'
-  void $ GI.Gtk.onWidgetMotionNotifyEvent seekScale         mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent fileChooserDialogButton mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent videoWidget             mouseMoveHandler'
+  void $ GI.Gtk.onWidgetMotionNotifyEvent seekScale               mouseMoveHandler'
   where
     mouseMoveHandler' :: GI.Gdk.EventMotion -> IO Bool
     mouseMoveHandler' = mouseMoveHandler application onMouseMoveCallbacks

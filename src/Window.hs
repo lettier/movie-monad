@@ -71,17 +71,17 @@ windowRealizedHandler
   application@R.Application
     { R.guiObjects =
         guiObjects@R.GuiObjects
-          { R.fileChooserButton = fileChooserButton
-          , R.videoWidget       = videoWidget
-          , R.seekScale         = seekScale
+          { R.fileChooserDialogButton = fileChooserDialogButton
+          , R.videoWidget             = videoWidget
+          , R.seekScale               = seekScale
           }
     }
   onWidgetRealizeCallbacks
   = do
   let eventMask = [GI.Gdk.EventMaskAllEventsMask]
-  GI.Gtk.widgetAddEvents fileChooserButton eventMask
-  GI.Gtk.widgetAddEvents videoWidget       eventMask
-  GI.Gtk.widgetAddEvents seekScale         eventMask
+  GI.Gtk.widgetAddEvents fileChooserDialogButton eventMask
+  GI.Gtk.widgetAddEvents videoWidget             eventMask
+  GI.Gtk.widgetAddEvents seekScale               eventMask
   resetGuiObjects guiObjects
   mapM_ (\ f -> f application) onWidgetRealizeCallbacks
 
@@ -207,7 +207,7 @@ setupWindowForPlayback
           , R.seekScale                       = seekScale
           , R.playPauseButton                 = playPauseButton
           , R.repeatCheckButton               = repeatCheckButton
-          , R.fullscreenButton                = fullscreenButton
+          , R.fullScreenButton                = fullScreenButton
           , R.videoSpeedSelectionComboboxText = videoSpeedSelectionComboboxText
           , R.subtitleSelectionComboBoxText   = subtitleSelectionComboBoxText
           , R.playImage                       = playImage
@@ -222,7 +222,7 @@ setupWindowForPlayback
   GI.Gtk.widgetShow videoWidget
   GI.Gtk.widgetShow playPauseButton
   GI.Gtk.widgetShow repeatCheckButton
-  GI.Gtk.widgetShow fullscreenButton
+  GI.Gtk.widgetShow fullScreenButton
   GI.Gtk.setToggleButtonActive repeatCheckButton False
   windowMinimumHeight <- getWindowMinimumHeight
   GI.Gtk.widgetSetSizeRequest window windowMinimumWidth windowMinimumHeight

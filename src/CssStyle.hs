@@ -119,3 +119,14 @@ isGtkVersionGte major minor = do
   major' <- GI.Gtk.getMajorVersion
   minor' <- GI.Gtk.getMinorVersion
   return (major' >= major && minor' >= minor)
+
+styleWidget :: GI.Gtk.IsWidget a => a -> Data.ByteString.ByteString -> IO()
+styleWidget widget style = do
+  provider <- GI.Gtk.cssProviderGetDefault
+  GI.Gtk.cssProviderLoadFromData provider style
+  styleContext <- GI.Gtk.widgetGetStyleContext widget
+  void $
+    GI.Gtk.styleContextAddProvider
+      styleContext
+      provider
+      cssPriority

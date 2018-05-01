@@ -54,15 +54,15 @@ cabal_install: cabal_build
 
 applications_desktop:
   mkdir -p $(_APPLICATIONS_DESKTOP_DIR) && \
-  cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME).desktop $(_APPLICATIONS_DESKTOP_DIR)/
+  cp "$(_PACKAGING_LINUX_COMMON_DIR)/com.lettier.$(_NAME).desktop" $(_APPLICATIONS_DESKTOP_DIR)/
 
 icons_hicolor_scalable_apps:
   mkdir -p $(_ICONS_HICOLOR_SCALABLE_APPS_DIR) && \
-  cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME)-icon.svg $(_ICONS_HICOLOR_SCALABLE_APPS_DIR)/
+  cp "$(_PACKAGING_LINUX_COMMON_DIR)/com.lettier.$(_NAME).svg" $(_ICONS_HICOLOR_SCALABLE_APPS_DIR)/
 
 appdata:
   mkdir -p $(_APPDATA_DIR) && \
-  cp $(_PACKAGING_LINUX_COMMON_DIR)/$(_NAME).appdata.xml $(_APPDATA_DIR)/
+  cp "$(_PACKAGING_LINUX_COMMON_DIR)/com.lettier.$(_NAME).appdata.xml" $(_APPDATA_DIR)/
 
 install: cabal_install appdata applications_desktop icons_hicolor_scalable_apps
 

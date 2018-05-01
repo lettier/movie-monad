@@ -62,9 +62,9 @@ resetGuiObjects :: R.GuiObjects -> IO ()
 resetGuiObjects
   R.GuiObjects
     { R.window                           = window
-    , R.fileChooserButton                = fileChooserButton
-    , R.fileChooserEntry                 = fileChooserEntry
-    , R.fileChooserButtonLabel           = fileChooserButtonLabel
+    , R.fileChooserDialogButton          = fileChooserDialogButton
+    , R.videoLocationEntry               = videoLocationEntry
+    , R.fileChooserDialogButtonLabel     = fileChooserDialogButtonLabel
     , R.videoWidget                      = videoWidget
     , R.seekScale                        = seekScale
     , R.playPauseButton                  = playPauseButton
@@ -72,10 +72,11 @@ resetGuiObjects
     , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
     , R.videoSpeedSelectionComboboxText  = videoSpeedSelectionComboboxText
     , R.subtitleSelectionComboBoxText    = subtitleSelectionComboBoxText
-    , R.fullscreenButton                 = fullscreenButton
+    , R.fullScreenButton                 = fullScreenButton
     , R.playImage                        = playImage
     , R.pauseImage                       = pauseImage
     , R.bottomControlsBox                = bottomControlsBox
+    , R.topControlsBox                   = topControlsBox
     , R.bufferingSpinner                 = bufferingSpinner
     }
   = do
@@ -88,16 +89,17 @@ resetGuiObjects
   GI.Gtk.widgetHide seekScale
   GI.Gtk.widgetHide playPauseButton
   GI.Gtk.widgetHide repeatCheckButton
-  GI.Gtk.widgetHide fullscreenButton
+  GI.Gtk.widgetHide fullScreenButton
   GI.Gtk.widgetHide subtitleSelectionComboBoxText
   GI.Gtk.widgetHide bufferingSpinner
   GI.Gtk.widgetShow windowWidthSelectionComboBoxText
-  GI.Gtk.widgetShow fileChooserButton
+  GI.Gtk.widgetShow fileChooserDialogButton
+  GI.Gtk.widgetShow topControlsBox
   GI.Gtk.comboBoxSetActive subtitleSelectionComboBoxText 0
   GI.Gtk.comboBoxSetActive videoSpeedSelectionComboboxText 1
   GI.Gtk.setToggleButtonActive repeatCheckButton False
-  GI.Gtk.entrySetText fileChooserEntry ""
-  GI.Gtk.labelSetText fileChooserButtonLabel "Open"
+  GI.Gtk.entrySetText videoLocationEntry ""
+  GI.Gtk.labelSetText fileChooserDialogButtonLabel "Open"
   GI.Gtk.windowResize window (fromIntegral desiredWindowWidth :: Int32) 1
   GI.Gtk.styleContextRemoveClass styleContext fadeInClassName
   GI.Gtk.styleContextRemoveClass styleContext fadeOutClassName

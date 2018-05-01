@@ -1,8 +1,8 @@
 ![Movie Monad](https://i.imgur.com/gdsyIMv.png)
 
-# Movie Monad? Another video player? Really?
+## Is Movie Monad the free video player I've been looking for?
 
-Yes really.  
+Yes.  
 
 Movie Monad is a free and simple to use video player made with Haskell.
 Originally it was a proof of concept to add video playback to
@@ -11,8 +11,8 @@ Nowadays it's a lightweight yet mighty media player used all over the
 [world](https://snapcraft.io/movie-monad#js-snap-map)
 everyday.
 
-Movie Monad is cross platform so you'll never have to compute without it.
-You can play files on your computer or stream videos from the web.
+Movie Monad is cross platform so you'll never have to watch without it.
+Stream videos from the web or play the files stored on your computer.
 Play, pause, seek, repeat, resize, expand, and turn it up—Movie Monad gets out of
 the way so you can watch the videos you love.
 
@@ -20,7 +20,7 @@ So put down your copy of mpv, VLC, or Elmedia and try out Movie Monad—it's FRE
 
 ## What does Movie Monad look like?
 
-![Movie Monad](https://i.imgur.com/asASjzn.gif)
+![Movie Monad](https://i.imgur.com/1qEidnX.gif)
 
 ## What can I do with Movie Monad?
 
@@ -38,8 +38,8 @@ So put down your copy of mpv, VLC, or Elmedia and try out Movie Monad—it's FRE
 * You can resize the video to a custom size by resizing the window.
     * Movie Monad will responsively adjust the video size to fill the window.
 * You can play videos from the command line.
-    * `movie-monad ./path/to/video/file.mp4`
-    * `movie-monad http://www.domain.tld/path/to/video/file.mp4`
+    * `movie-monad ./path/to/video/file.webm`
+    * `movie-monad http://www.domain.tld/path/to/video/file.webm`
 
 ## What are the keyboard controls?
 
@@ -76,15 +76,15 @@ To find the latest version of Movie Monad, head over to the
 ### I use Linux.
 
 If you use Linux then the easiest way to grab a copy of Movie Monad is by downloading the
-[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-0.0.6.0-x86_64.AppImage).
+[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.1/movie-monad-0.0.6.1-x86_64.AppImage).
 After you download the
-[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-0.0.6.0-x86_64.AppImage),
+[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.1/movie-monad-0.0.6.1-x86_64.AppImage),
 right click on it, select permissions, and check the box near execute.
 With that out of the way—you're all set—just double click on the AppImage
 and Movie Monad will pop up.
 
 You can also download and install the
-[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.0/movie-monad-0.0.6.0-x86_64.AppImage)
+[AppImage](https://github.com/lettier/movie-monad/releases/download/0.0.6.1/movie-monad-0.0.6.1-x86_64.AppImage)
 using the handy
 [AppImage install script](https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/app-image/movie-monad-install-app-image-script.sh)
 (right click the link and select "Save link as...").
@@ -97,14 +97,12 @@ If you'd rather install Movie Monad via `pacman` then copy the following into yo
 
 ```bash
 cd "$HOME/Downloads"
-sudo pacman -S git
-mkdir -p build-movie-monad
-cd build-movie-monad
+sudo pacman -S git gstreamer gst-plugins-base-libs gst-plugins-base gst-plugins-good gst-plugins-bad gst-libav
 git clone https://aur.archlinux.org/movie-monad.git
 cd movie-monad
 makepkg -sic
 cd "$HOME/Downloads"
-rm -rf build-movie-monad
+rm -rf movie-monad
 cd
 movie-monad
 ```
@@ -158,6 +156,7 @@ stack exec -- movie-monad
 
 * [GTK+ >= 3.10](https://www.gtk.org/download/index.php)
 * [GStreamer >= 1.0](https://gstreamer.freedesktop.org/download/)
+    * [GStreamer Base Plug-ins](https://gstreamer.freedesktop.org/modules/gst-plugins-base.html)
     * [GStreamer Good Plug-ins](https://gstreamer.freedesktop.org/modules/gst-plugins-good.html)
     * [GStreamer Bad Plug-ins >= 1.8](https://gstreamer.freedesktop.org/modules/gst-plugins-bad.html)
 

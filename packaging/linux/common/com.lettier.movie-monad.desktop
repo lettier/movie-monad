@@ -4,6 +4,6 @@ Name=Movie Monad
 GenericName=Video Player
 Categories=AudioVideo;Audio;Video;Player;
 Comment=Play Videos
-Icon=movie-monad-icon
+Icon=com.lettier.movie-monad
 Terminal=false
 Exec=movie-monad

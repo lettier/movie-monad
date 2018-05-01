@@ -4,8 +4,10 @@
   lettier.com
 -}
 
-{-# LANGUAGE OverloadedStrings #-}
-{-# LANGUAGE ScopedTypeVariables #-}
+{-# LANGUAGE
+    OverloadedStrings
+  , ScopedTypeVariables
+#-}
 
 module ScreensaverAndPowerManagement where
 
@@ -18,32 +20,34 @@ import Utils (safeRunProcessGetOutput, linuxProcessIsRunning, spawnLinuxProcessA
 
 disable :: String -> IO R.ScreensaverAndPowerManagementActions
 disable "linux" = do
-  disabledPowerManagement <- disablePowerManagement
-  disabledXScreensaver <- disableXScreensaver
+  disabledPowerManagement     <- disablePowerManagement
+  disabledXScreensaver        <- disableXScreensaver
   disabledCinnamonScreensaver <- disableCinnamonScreensaver
-  disabledGnomeScreensaver <- disableGnomeScreensaver
-  return R.ScreensaverAndPowerManagementActions {
-        R.disabledPowerManagement = disabledPowerManagement
-      , R.disabledXScreensaver = disabledXScreensaver
+  disabledGnomeScreensaver    <- disableGnomeScreensaver
+  return
+    R.ScreensaverAndPowerManagementActions
+      { R.disabledPowerManagement     = disabledPowerManagement
+      , R.disabledXScreensaver        = disabledXScreensaver
       , R.disabledCinnamonScreensaver = disabledCinnamonScreensaver
-      , R.disabledGnomeScreensaver = disabledGnomeScreensaver
-    }
+      , R.disabledGnomeScreensaver    = disabledGnomeScreensaver
+      }
 disable _ =
-  return R.ScreensaverAndPowerManagementActions {
-        R.disabledPowerManagement = False
-      , R.disabledXScreensaver = False
+  return
+    R.ScreensaverAndPowerManagementActions
+      { R.disabledPowerManagement     = False
+      , R.disabledXScreensaver        = False
       , R.disabledCinnamonScreensaver = False
-      , R.disabledGnomeScreensaver = False
-    }
+      , R.disabledGnomeScreensaver    = False
+      }
 
 enable :: String -> R.ScreensaverAndPowerManagementActions -> IO ()
 enable
   "linux"
-  R.ScreensaverAndPowerManagementActions {
-        R.disabledPowerManagement = disabledPowerManagement
-      , R.disabledXScreensaver = disabledXScreensaver
-      , R.disabledCinnamonScreensaver = disabledCinnamonScreensaver
-      , R.disabledGnomeScreensaver = disabledGnomeScreensaver
+  R.ScreensaverAndPowerManagementActions
+    { R.disabledPowerManagement = disabledPowerManagement
+    , R.disabledXScreensaver = disabledXScreensaver
+    , R.disabledCinnamonScreensaver = disabledCinnamonScreensaver
+    , R.disabledGnomeScreensaver = disabledGnomeScreensaver
     }
   = do
   when disabledPowerManagement enablePowerManagement

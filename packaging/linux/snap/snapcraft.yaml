@@ -1,0 +1,202 @@
+name: movie-monad
+version: '0.0.6.1'
+summary: A free and simple to use video player made with Haskell.
+type: app
+description: |
+  Movie Monad is a free and simple to use video player.
+  You can play files on your computer or stream videos from the web.
+  Movie Monad gets out of the way so you can watch the videos you love.
+  Try it out.
+icon: snap/gui/movie-monad.svg
+grade: stable
+confinement: strict
+
+apps:
+  movie-monad:
+    command: desktop-launch $SNAP/usr/bin/movie-monad
+    desktop: ../snap/gui/movie-monad.desktop
+    plugs:
+      - network
+      - opengl
+      - desktop
+      - desktop-legacy
+      - unity7
+      - wayland
+      - x11
+      - alsa
+      - pulseaudio
+      - gsettings
+      - screen-inhibit-control
+      - optical-drive
+      - removable-media
+      - raw-usb
+      - mount-observe
+      - home
+
+parts:
+  gstreamer:
+    plugin: autotools
+    source: https://gstreamer.freedesktop.org/src/gstreamer/gstreamer-1.8.3.tar.xz
+    configflags:
+      - --prefix=/usr
+      - --libdir=/usr/lib/x86_64-linux-gnu
+      - --libexecdir=/usr/lib/x86_64-linux-gnu/gstreamer1.0
+      - --disable-static
+      - --disable-rpath
+      - --disable-debug
+      - --disable-examples
+    build-packages:
+      - bison
+      - flex
+      - libasound2-dev
+      - libgl1-mesa-dev
+      - liborc-0.4-dev
+      - libpulse-dev
+    stage-packages:
+      - liborc-0.4-0
+      - libpulse0
+    build-attributes:
+      - no-system-libraries
+    prime:
+      - -usr/share/man/*
+      - -usr/share/gtk-doc/html/*
+      - -usr/include/gst*
+    install: |
+      make install DESTDIR=$SNAPCRAFT_PART_INSTALL
+      chmod 777 $SNAPCRAFT_PART_INSTALL/usr/lib/x86_64-linux-gnu/gstreamer1.0/gstreamer-1.0/gst-ptp-helper
+    after:
+      - desktop-gtk3
+  gst-plugins-base:
+    plugin: autotools
+    source: https://gstreamer.freedesktop.org/src/gst-plugins-base/gst-plugins-base-1.8.3.tar.xz
+    configflags:
+      - --prefix=/usr
+      - --libdir=/usr/lib/x86_64-linux-gnu
+      - --disable-static
+      - --disable-rpath
+      - --disable-debug
+      - --disable-examples
+    build-packages:
+      - bison
+      - flex
+      - libasound2-dev
+      - libgl1-mesa-dev
+      - liborc-0.4-dev
+      - libpulse-dev
+      - libvorbis-dev
+      - libtheora-dev
+      - libopus-dev
+      - libogg-dev
+    stage-packages:
+      - liborc-0.4-0
+      - libpulse0
+      - libvorbis0a
+      - libvorbisenc2
+      - libvorbisfile3
+      - libtheora-bin
+      - libtheora0
+      - libopus0
+      - libogg0
+    build-attributes:
+      - no-system-libraries
+    prime:
+      - -usr/share/man/*
+      - -usr/share/gtk-doc/html/*
+      - -usr/include/gst*
+    after:
+      - gstreamer
+  gst-plugins-good:
+    plugin: autotools
+    source: https://gstreamer.freedesktop.org/src/gst-plugins-good/gst-plugins-good-1.8.3.tar.xz
+    configflags:
+      - --prefix=/usr
+      - --libdir=/usr/lib/x86_64-linux-gnu
+      - --enable-experimental
+      - --disable-static
+      - --disable-rpath
+      - --disable-debug
+      - --disable-examples
+    build-packages:
+      - bison
+      - flex
+      - libasound2-dev
+      - libgl1-mesa-dev
+      - liborc-0.4-dev
+      - libsoup2.4-dev
+      - libpulse-dev
+      - libvpx-dev
+    stage-packages:
+      - liborc-0.4-0
+      - libsoup2.4-1
+      - libpulse0
+      - libvpx3
+    build-attributes:
+      - no-system-libraries
+    prime:
+      - -usr/share/man/*
+      - -usr/share/gtk-doc/html/*
+      - -usr/include/gst*
+    after:
+      - gst-plugins-base
+  gst-plugins-bad:
+    plugin: autotools
+    source: https://gstreamer.freedesktop.org/src/gst-plugins-bad/gst-plugins-bad-1.8.3.tar.xz
+    configflags:
+      - --prefix=/usr
+      - --libdir=/usr/lib/x86_64-linux-gnu
+      - --enable-experimental
+      - --with-gtk=3.0
+      - --disable-static
+      - --disable-rpath
+      - --disable-debug
+      - --disable-examples
+      - --disable-faac
+      - --disable-faad
+    build-packages:
+      - bison
+      - flex
+      - libasound2-dev
+      - libgl1-mesa-dev
+      - liborc-0.4-dev
+      - libpulse-dev
+      - libopus-dev
+    stage-packages:
+      - libcurl3-gnutls
+      - libssl1.0.0
+      - liborc-0.4-0
+      - libpulse0
+      - libgl1-mesa-glx
+      - libasound2
+      - libopus0
+    build-attributes:
+      - no-system-libraries
+    prime:
+      - -usr/share/man/*
+      - -usr/share/gtk-doc/html/*
+      - -usr/include/gst*
+    after:
+      - gst-plugins-base
+  movie-monad:
+    source: .
+    source-tag: nil
+    plugin: nil
+    build-packages: []
+    stage-packages:
+      - libgirepository-1.0-1
+    build-attributes:
+      - no-system-libraries
+    prepare: |
+    build: |
+    install: |
+      export LD_LIBRARY_PATH=''
+      export _MOVIE_MONAD_DOWNLOAD_DIR=$SNAPCRAFT_PROJECT_NAME-linux-$SNAPCRAFT_PROJECT_VERSION
+      export _MOVIE_MONAD_DOWNLOAD_FILE=$_MOVIE_MONAD_DOWNLOAD_DIR.tar.gz
+      wget https://github.com/lettier/$SNAPCRAFT_PROJECT_NAME/releases/download/$SNAPCRAFT_PROJECT_VERSION/$_MOVIE_MONAD_DOWNLOAD_FILE
+      tar -zxvf $_MOVIE_MONAD_DOWNLOAD_FILE
+      mkdir -p $SNAPCRAFT_PART_INSTALL/usr/
+      cd $_MOVIE_MONAD_DOWNLOAD_DIR/
+      cp -RP . $SNAPCRAFT_PART_INSTALL/usr/
+    prime:
+      - -home/*
+    after:
+      - gst-plugins-bad

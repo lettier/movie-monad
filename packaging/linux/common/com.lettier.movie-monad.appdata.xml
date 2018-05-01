@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2017 David Lettier -->
+<component type="desktop-application">
+  <id>com.lettier.movie-monad.desktop</id>
+  <metadata_license>CC-BY-SA-3.0</metadata_license>
+  <project_license>BSD-3-Clause</project_license>
+  <name>Movie Monad</name>
+  <summary>A Free and Simple to use Video Player made with Haskell</summary>
+  <description>
+    <p>
+      Movie Monad is a free and simple to use video player made with Haskell.
+      You can play files on your computer or stream videos from the web.
+      Movie Monad gets out of the way so you can watch the videos you love.
+      Try it out.
+    </p>
+  </description>
+  <launchable type="desktop-id">com.lettier.movie-monad.desktop</launchable>
+  <screenshots>
+    <screenshot type="default">
+      <caption>The main Movie Monad window</caption>
+      <image type="source" width="1024" height="780">https://i.imgur.com/vaXFxS0.png</image>
+    </screenshot>
+  </screenshots>
+  <url type="homepage">https://github.com/lettier/movie-monad</url>
+  <provides>
+    <binary>movie-monad</binary>
+  </provides>
+  <developer_name>David Lettier</developer_name>
+  <categories>
+    <category>AudioVideo</category>
+    <category>Audio</category>
+    <category>Video</category>
+  </categories>
+  <keywords>
+    <keyword>Audio</keyword>
+    <keyword>Video</keyword>
+    <keyword>Player</keyword>
+    <keyword>Multimedia</keyword>
+    <keyword>Haskell</keyword>
+  </keywords>
+  <releases>
+    <release version="0.0.6.1" date="2018-04-30">
+      <description>
+        <p>
+          Additions, changes, and removals:
+          <ul>
+            <li>Styles the info dialog</li>
+            <li>Shows the top controls box when resetting the application</li>
+            <li>Alerts the user about missing capabilities</li>
+          </ul>
+        </p>
+      </description>
+    </release>
+  </releases>
+</component>

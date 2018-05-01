@@ -1,5 +1,5 @@
 name:                 movie-monad
-version:              0.0.6.0
+version:              0.0.6.1
 synopsis:             Plays videos using GStreamer and GTK+.
 description:          A free and simple to use video player made with Haskell.
 homepage:             https://github.com/lettier/movie-monad
@@ -26,13 +26,14 @@ extra-source-files:     README.md
                       , ./src/data/style-3-20.css
                       , ./src/data/movie-monad-logo.svg
                       , ./src/data/movie-monad-icon.svg
-                      , ./src/data/about-icon.svg
+                      , ./src/data/info-dialog-button-icon.svg
                       , ./src/data/play-icon.svg
                       , ./src/data/pause-icon.svg
                       , ./src/data/repeat-icon.svg
-                      , ./src/data/fullscreen-icon.svg
+                      , ./src/data/full-screen-icon.svg
                       , ./src/Records.hs
                       , ./src/Constants.hs
+                      , ./src/Capabilities.hs
                       , ./src/Reset.hs
                       , ./src/Window.hs
                       , ./src/CommandLine.hs
@@ -44,9 +45,9 @@ extra-source-files:     README.md
                       , ./src/WindowWidthSelector.hs
                       , ./src/VideoSpeedSelector.hs
                       , ./src/SubtitleSelector.hs
-                      , ./src/Fullscreen.hs
+                      , ./src/FullScreen.hs
                       , ./src/ErrorMessage.hs
-                      , ./src/About.hs
+                      , ./src/InfoDialog.hs
                       , ./src/VideoInfo.hs
                       , ./src/Playbin.hs
                       , ./src/Uri.hs
@@ -62,11 +63,11 @@ data-files:             data/gui.glade
                       , data/style-3-20.css
                       , data/movie-monad-logo.svg
                       , data/movie-monad-icon.svg
-                      , data/about-icon.svg
+                      , data/info-dialog-button-icon.svg
                       , data/play-icon.svg
                       , data/pause-icon.svg
                       , data/repeat-icon.svg
-                      , data/fullscreen-icon.svg
+                      , data/full-screen-icon.svg
 data-dir:             ./src/
 
 source-repository     head
@@ -99,6 +100,7 @@ executable            movie-monad
   other-modules:        Paths_movie_monad
                       , Records
                       , Constants
+                      , Capabilities
                       , Reset
                       , Window
                       , CommandLine
@@ -110,9 +112,9 @@ executable            movie-monad
                       , WindowWidthSelector
                       , VideoSpeedSelector
                       , SubtitleSelector
-                      , Fullscreen
+                      , FullScreen
                       , ErrorMessage
-                      , About
+                      , InfoDialog
                       , VideoInfo
                       , Uri
                       , Playbin

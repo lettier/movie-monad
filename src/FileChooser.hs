@@ -33,17 +33,17 @@ addFileChooserHandlers
   application@R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.fileChooserButton = fileChooserButton
-          , R.fileChooserDialog = fileChooserDialog
-          , R.fileChooserWidget = fileChooserWidget
-          , R.fileChooserEntry  = fileChooserEntry
+          { R.fileChooserDialogButton = fileChooserDialogButton
+          , R.fileChooserDialog       = fileChooserDialog
+          , R.fileChooserWidget       = fileChooserWidget
+          , R.videoLocationEntry      = videoLocationEntry
           }
     }
   = do
   void $
     GI.Gtk.onWidgetButtonReleaseEvent
-      fileChooserButton $
-        fileChooserButtonClickHandler application
+      fileChooserDialogButton $
+        fileChooserDialogButtonClickHandler application
   void $
     GI.Gtk.onDialogResponse
       fileChooserDialog $
@@ -54,8 +54,8 @@ addFileChooserHandlers
         fileChooserSelectionChangedHandler application
   void $
     GI.Gtk.onEntryIconRelease
-      fileChooserEntry $ \ _ _ ->
-        GI.Gtk.entrySetText fileChooserEntry ""
+      videoLocationEntry $ \ _ _ ->
+        GI.Gtk.entrySetText videoLocationEntry ""
 
 fileChooserDialogResponseHandler :: R.Application -> Int32 -> IO ()
 fileChooserDialogResponseHandler
@@ -65,8 +65,8 @@ fileChooserDialogResponseHandler
           { R.window                           = window
           , R.videoWidget                      = videoWidget
           , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
-          , R.fileChooserEntry                 = fileChooserEntry
-          , R.fileChooserButtonLabel           = fileChooserButtonLabel
+          , R.videoLocationEntry               = videoLocationEntry
+          , R.fileChooserDialogButtonLabel     = fileChooserDialogButtonLabel
           , R.volumeButton                     = volumeButton
           , R.errorMessageDialog               = errorMessageDialog
           , R.fileChooserDialog                = fileChooserDialog
@@ -84,8 +84,8 @@ fileChooserDialogResponseHandler
   GI.Gtk.widgetHide fileChooserDialog
   if enumToInt32 GI.Gtk.ResponseTypeOk == responseId
     then do
-      filePathName  <- GI.Gtk.entryGetText fileChooserEntry
-      maybeFileName <- setFileChooserButtonLabel fileChooserButtonLabel filePathName
+      filePathName  <- GI.Gtk.entryGetText videoLocationEntry
+      maybeFileName <- setFileChooserDialogButtonLabel fileChooserDialogButtonLabel filePathName
       case maybeFileName of
         (Just _) -> do
           let filePathNameStr = Data.Text.unpack filePathName
@@ -100,7 +100,7 @@ fileChooserDialogResponseHandler
                   resetApplication application
                   runErrorMessageDialog
                     errorMessageDialog
-                    "Cannot play the video. Please install the bad plugins, version 1.8 or higher, for GStreamer version 1."
+                    "Cannot play the video. Please install the GStreamer 1.0 bad plugins version 1.8 or higher."
                 else do
                   isWindowFullScreen <- readIORef isWindowFullScreenRef
                   setupWindowForPlayback
@@ -125,16 +125,16 @@ fileChooserDialogResponseHandler
       fromMaybe R.defaultVideoInfo <$>
         getVideoInfo videoInfoRef (Data.Text.unpack filePathName) >>=
           saveVideoInfo videoInfoRef
-      _ <- setFileChooserButtonLabel fileChooserButtonLabel filePathName
-      GI.Gtk.entrySetText fileChooserEntry filePathName
+      _ <- setFileChooserDialogButtonLabel fileChooserDialogButtonLabel filePathName
+      GI.Gtk.entrySetText videoLocationEntry filePathName
 
-fileChooserButtonClickHandler :: R.Application -> GI.Gdk.EventButton -> IO Bool
-fileChooserButtonClickHandler
+fileChooserDialogButtonClickHandler :: R.Application -> GI.Gdk.EventButton -> IO Bool
+fileChooserDialogButtonClickHandler
   R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.fileChooserEntry = fileChooserEntry
-          , R.fileChooserDialog = fileChooserDialog
+          { R.videoLocationEntry = videoLocationEntry
+          , R.fileChooserDialog  = fileChooserDialog
           }
     , R.ioRefs =
         R.IORefs
@@ -143,7 +143,7 @@ fileChooserButtonClickHandler
     }
   _
   = do
-  text <- GI.Gtk.entryGetText fileChooserEntry
+  text <- GI.Gtk.entryGetText videoLocationEntry
   atomicWriteIORef previousFileNamePathRef text
   _ <- GI.Gtk.dialogRun fileChooserDialog
   return True
@@ -153,8 +153,8 @@ fileChooserSelectionChangedHandler
   R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.fileChooserWidget = fileChooserWidget
-          , R.fileChooserEntry  = fileChooserEntry
+          { R.fileChooserWidget  = fileChooserWidget
+          , R.videoLocationEntry = videoLocationEntry
           }
     , R.ioRefs =
         R.IORefs
@@ -170,19 +170,19 @@ fileChooserSelectionChangedHandler
       local <- isLocalFile uri
       video <- R.isVideo . fromMaybe R.defaultVideoInfo <$> getVideoInfo videoInfoRef uri
       GI.Gtk.entrySetText
-        fileChooserEntry $
+        videoLocationEntry $
           if local && video
             then Data.Text.pack uri
             else ""
 
-setFileChooserButtonLabel :: GI.Gtk.Label -> Data.Text.Text -> IO (Maybe Data.Text.Text)
-setFileChooserButtonLabel fileChooserButtonLabel filePathName = do
+setFileChooserDialogButtonLabel :: GI.Gtk.Label -> Data.Text.Text -> IO (Maybe Data.Text.Text)
+setFileChooserDialogButtonLabel fileChooserDialogButtonLabel filePathName = do
   let fileName = fileNameFromFilePathName filePathName
   let fileNameEmpty = isTextEmpty fileName
   if fileNameEmpty
     then do
-      GI.Gtk.labelSetText fileChooserButtonLabel "Open"
+      GI.Gtk.labelSetText fileChooserDialogButtonLabel "Open"
       return Nothing
     else do
-      GI.Gtk.labelSetText fileChooserButtonLabel fileName
+      GI.Gtk.labelSetText fileChooserDialogButtonLabel fileName
       return $ Just fileName

@@ -15,7 +15,7 @@ import qualified Records as R
 import Window
 import Mouse
 import PlayPause
-import Fullscreen
+import FullScreen
 import Constants
 import Utils
 
@@ -62,7 +62,7 @@ keyboardEventHandler
   -- Play/Pause Toggle
   when ((keyValue == GI.Gdk.KEY_space || keyValue == GI.Gdk.KEY_AudioPlay) && isVideo) $
     void $ playPauseButtonClickHandler application eventButton
-  -- Fullscreen Toggle
+  -- Full Screen Toggle
   when (keyValue == GI.Gdk.KEY_r && isVideo) $ do
     repeatVideo <- GI.Gtk.toggleButtonGetActive repeatCheckButton
     void $ GI.Gtk.toggleButtonSetActive repeatCheckButton (not repeatVideo)
@@ -88,9 +88,9 @@ keyboardEventHandler
   when (keyValue == GI.Gdk.KEY_c) $ do
     eventMotion <- GI.Gdk.newZeroEventMotion
     void $ mouseMoveHandler application [fillWindowWithVideo] eventMotion
-  -- Fullscreen Toggle
+  -- Full Screen Toggle
   when (keyValue == GI.Gdk.KEY_f && isVideo) $ do
     eventMotion <- GI.Gdk.newZeroEventMotion
     void $ mouseMoveHandler application [fillWindowWithVideo] eventMotion
-    void $ fullscreenButtonReleaseHandler application eventButton
+    void $ fullScreenButtonReleaseHandler application eventButton
   return True

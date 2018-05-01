@@ -81,7 +81,7 @@ safeRunProcessGetOutput processName args =
         ""
     catchError :: Control.Exception.IOException -> IO (System.Exit.ExitCode, String, String)
     catchError e = do
-      putStr $ show e
+      putStrLn $ "[ERROR] " ++ show e
       return (ExitFailure 1, "", "")
 
 clamp :: Ord a => a -> a -> a -> a

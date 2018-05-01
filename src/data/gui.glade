@@ -37,12 +37,7 @@ Author: David Lettier
   <!-- interface-description A free and simple to use video player made with Haskell. -->
   <!-- interface-copyright 2017 David Lettier -->
   <!-- interface-authors David Lettier -->
-  <object class="GtkImage" id="about-image">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="pixbuf">about-icon.svg</property>
-  </object>
-  <object class="GtkButton" id="file-chooser-cancel-button">
+  <object class="GtkButton" id="file-chooser-dialog-cancel-button">
     <property name="label">gtk-cancel</property>
     <property name="visible">True</property>
     <property name="can_focus">True</property>
@@ -50,7 +45,7 @@ Author: David Lettier
     <property name="use_stock">True</property>
     <property name="always_show_image">True</property>
   </object>
-  <object class="GtkButton" id="file-chooser-open-button">
+  <object class="GtkButton" id="file-chooser-dialog-open-button">
     <property name="label">gtk-open</property>
     <property name="visible">True</property>
     <property name="can_focus">True</property>
@@ -58,10 +53,15 @@ Author: David Lettier
     <property name="use_stock">True</property>
     <property name="always_show_image">True</property>
   </object>
-  <object class="GtkImage" id="fullscreen-image">
+  <object class="GtkImage" id="full-screen-image">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="pixbuf">fullscreen-icon.svg</property>
+    <property name="pixbuf">full-screen-icon.svg</property>
+  </object>
+  <object class="GtkImage" id="info-dialog-button-image">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="pixbuf">info-dialog-button-icon.svg</property>
   </object>
   <object class="GtkImage" id="pause-image">
     <property name="name">pause-image</property>
@@ -106,7 +106,7 @@ Author: David Lettier
             <property name="can_focus">False</property>
             <property name="valign">start</property>
             <child>
-              <object class="GtkButton" id="file-chooser-button">
+              <object class="GtkButton" id="file-chooser-dialog-button">
                 <property name="visible">True</property>
                 <property name="app_paintable">True</property>
                 <property name="can_focus">True</property>
@@ -116,35 +116,41 @@ Author: David Lettier
                 <property name="image_position">right</property>
                 <property name="always_show_image">True</property>
                 <child>
-                  <object class="GtkBox" id="box-2">
+                  <object class="GtkBox" id="file-chooser-dialog-button-bo">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
                     <child>
-                      <object class="GtkLabel" id="file-chooser-button-label">
+                      <object class="GtkImage" id="file-chooser-dialog-button-image">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
+                        <property name="margin_right">5</property>
+                        <property name="stock">gtk-open</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">False</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="file-chooser-dialog-button-label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">center</property>
+                        <property name="valign">center</property>
                         <property name="label" translatable="yes">Open</property>
                         <property name="justify">fill</property>
                         <property name="ellipsize">end</property>
                         <property name="single_line_mode">True</property>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkImage" id="open-image">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="stock">gtk-open</property>
-                      </object>
-                      <packing>
                         <property name="expand">False</property>
                         <property name="fill">False</property>
-                        <property name="pack_type">end</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                   </object>
@@ -157,15 +163,15 @@ Author: David Lettier
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="about-button">
-                <property name="name">about-button</property>
+              <object class="GtkButton" id="info-dialog-button">
+                <property name="name">info-dialog-button</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="focus_on_click">False</property>
                 <property name="receives_default">False</property>
-                <property name="tooltip_text" translatable="yes">About Movie Monad</property>
+                <property name="tooltip_text" translatable="yes">Movie Monad Info</property>
                 <property name="double_buffered">False</property>
-                <property name="image">about-image</property>
+                <property name="image">info-dialog-button-image</property>
                 <property name="always_show_image">True</property>
               </object>
               <packing>
@@ -349,12 +355,12 @@ audio-volume-medium-symbolic</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButton" id="fullscreen-button">
-                        <property name="name">fullscreen-button</property>
+                      <object class="GtkButton" id="full-screen-button">
+                        <property name="name">full-screen-button</property>
                         <property name="can_focus">True</property>
                         <property name="receives_default">False</property>
-                        <property name="tooltip_text" translatable="yes">Toggle On or Off Fullscreen</property>
-                        <property name="image">fullscreen-image</property>
+                        <property name="tooltip_text" translatable="yes">Toggle On or Off Full Screen</property>
+                        <property name="image">full-screen-image</property>
                         <property name="relief">none</property>
                         <property name="always_show_image">True</property>
                       </object>
@@ -475,7 +481,52 @@ audio-volume-medium-symbolic</property>
       <placeholder/>
     </child>
   </object>
-  <object class="GtkAboutDialog" id="about-dialog">
+  <object class="GtkMessageDialog" id="error-message-dialog">
+    <property name="can_focus">False</property>
+    <property name="title" translatable="yes">Movie Monad - Error</property>
+    <property name="window_position">center</property>
+    <property name="destroy_with_parent">True</property>
+    <property name="icon_name">dialog-error</property>
+    <property name="type_hint">dialog</property>
+    <property name="urgency_hint">True</property>
+    <property name="gravity">center</property>
+    <property name="transient_for">window</property>
+    <property name="attached_to">window</property>
+    <property name="message_type">error</property>
+    <property name="buttons">close</property>
+    <property name="text" translatable="yes">There was an error.</property>
+    <property name="secondary_text">If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report.
+
+Thank you.</property>
+    <property name="secondary_use_markup">True</property>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="error-message-dialog-box">
+        <property name="can_focus">False</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="error-message-dialog-action-area">
+            <property name="can_focus">False</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
+            <property name="homogeneous">True</property>
+            <property name="layout_style">end</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+      </object>
+    </child>
+    <child>
+      <placeholder/>
+    </child>
+  </object>
+  <object class="GtkAboutDialog" id="info-dialog">
+    <property name="name">info-dialog</property>
     <property name="can_focus">False</property>
     <property name="resizable">False</property>
     <property name="window_position">center</property>
@@ -486,11 +537,11 @@ audio-volume-medium-symbolic</property>
     <property name="transient_for">window</property>
     <property name="attached_to">window</property>
     <property name="program_name">Movie Monad</property>
-    <property name="version">0.0.6.0</property>
+    <property name="version">0.0.6.1</property>
     <property name="copyright" translatable="yes">(C) 2017 David Lettier
 lettier.com</property>
     <property name="website">https://github.com/lettier/movie-monad</property>
-    <property name="website_label" translatable="yes">Update</property>
+    <property name="website_label" translatable="yes">WEBSITE</property>
     <property name="license">BSD 3-Clause License
 
 Copyright (c) 2017, David Lettier
@@ -524,12 +575,12 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="logo">movie-monad-logo.svg</property>
     <property name="license_type">custom</property>
     <child internal-child="vbox">
-      <object class="GtkBox" id="box-4">
+      <object class="GtkBox" id="info-dialog-box">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="about-dialog-button-box">
+          <object class="GtkButtonBox" id="info-dialog-button-box">
             <property name="can_focus">False</property>
             <property name="layout_style">end</property>
           </object>
@@ -545,46 +596,11 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
       <placeholder/>
     </child>
   </object>
-  <object class="GtkMessageDialog" id="error-message-dialog">
-    <property name="can_focus">False</property>
-    <property name="title" translatable="yes">Movie Monad - Error</property>
-    <property name="window_position">center</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="icon_name">dialog-error</property>
-    <property name="type_hint">dialog</property>
-    <property name="urgency_hint">True</property>
-    <property name="gravity">center</property>
-    <property name="transient_for">window</property>
-    <property name="attached_to">window</property>
-    <property name="message_type">error</property>
-    <property name="buttons">close</property>
-    <property name="text" translatable="yes">There was an error.</property>
-    <property name="secondary_text">If you feel like this is a bug, please visit &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;the issue page&lt;/a&gt; to file a report.
-
-Thank you.</property>
-    <property name="secondary_use_markup">True</property>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="box-5">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="error-message-dialog-action-area">
-            <property name="can_focus">False</property>
-            <property name="homogeneous">True</property>
-            <property name="layout_style">expand</property>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-      </object>
-    </child>
-    <child>
-      <placeholder/>
-    </child>
+  <object class="GtkFileFilter" id="video-audio-file-filter">
+    <mime-types>
+      <mime-type>video/*</mime-type>
+      <mime-type>audio/*</mime-type>
+    </mime-types>
   </object>
   <object class="GtkDialog" id="file-chooser-dialog">
     <property name="can_focus">False</property>
@@ -595,13 +611,13 @@ Thank you.</property>
     <property name="gravity">center</property>
     <property name="transient_for">window</property>
     <child internal-child="vbox">
-      <object class="GtkBox" id="box-6">
+      <object class="GtkBox" id="file-chooser-dialog-box">
         <property name="can_focus">False</property>
         <property name="orientation">vertical</property>
         <property name="spacing">2</property>
         <property name="baseline_position">top</property>
         <child internal-child="action_area">
-          <object class="GtkButtonBox" id="file-chooser-dialog-action-area">
+          <object class="GtkButtonBox" id="file-chooser-dialog-button-box">
             <property name="can_focus">False</property>
             <property name="baseline_position">bottom</property>
             <property name="layout_style">end</property>
@@ -615,11 +631,26 @@ Thank you.</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
+            <property name="position">1</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkLabel" id="file-chooser-dialog-label">
+            <property name="name">file-chooser-dialog-label</property>
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="wrap">True</property>
+            <property name="ellipsize">end</property>
+            <property name="track_visited_links">False</property>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">True</property>
             <property name="position">0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkEntry" id="file-chooser-entry">
+          <object class="GtkEntry" id="video-location-entry">
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="tooltip_text" translatable="yes">Type in a File Path or a URL</property>
@@ -635,7 +666,7 @@ Thank you.</property>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">0</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -643,11 +674,14 @@ Thank you.</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="create_folders">False</property>
+            <property name="filter">video-audio-file-filter</property>
+            <property name="preview_widget_active">False</property>
+            <property name="use_preview_label">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
             <property name="fill">True</property>
-            <property name="position">1</property>
+            <property name="position">2</property>
           </packing>
         </child>
       </object>

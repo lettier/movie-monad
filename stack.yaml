@@ -8,11 +8,11 @@ explicit-setup-deps:
 extra-deps:
 - haskell-gi-base-0.21.0
 - haskell-gi-overloading-1.0
-- haskell-gi-0.21.0
+- haskell-gi-0.21.1
 - gi-gobject-2.0.16
 - gi-glib-2.0.16
 - gi-gdk-3.0.15
-- gi-gdkpixbuf-2.0.15
+- gi-gdkpixbuf-2.0.16
 - gi-gst-1.0.15
 - gi-gstbase-1.0.15
 - gi-gstvideo-1.0.15

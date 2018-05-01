@@ -14,12 +14,12 @@ slider {
 #volume-button image,
 #repeat-check-button image,
 #repeat-check-button check,
-#fullscreen-button image,
+#full-screen-button image,
 #play-pause-button image:hover,
 #about-button image:hover,
 #volume-button image:hover,
 #repeat-check-button image:hover,
-#fullscreen-button image:hover {
+#full-screen-button image:hover {
   -gtk-icon-shadow: none;
 }
 

@@ -17,16 +17,17 @@ import Utils
 
 playVideoFromCommandLineIfNeeded :: R.Application -> IO ()
 playVideoFromCommandLineIfNeeded
-  application@R.Application {
-        R.guiObjects = R.GuiObjects {
-              R.fileChooserEntry = fileChooserEntry
+  application@R.Application
+    { R.guiObjects =
+        R.GuiObjects
+          { R.videoLocationEntry = videoLocationEntry
           }
     }
   = do
   args <- getArgs
   case args of
-    [] -> return ()
+    []            -> return ()
     (filePath':_) -> do
       filePath <- toAbsoluteUri filePath'
-      GI.Gtk.entrySetText fileChooserEntry (Data.Text.pack filePath)
+      GI.Gtk.entrySetText videoLocationEntry (Data.Text.pack filePath)
       fileChooserDialogResponseHandler application (enumToInt32 GI.Gtk.ResponseTypeOk)

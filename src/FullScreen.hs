@@ -4,7 +4,7 @@
   lettier.com
 -}
 
-module Fullscreen where
+module FullScreen where
 
 import Control.Monad
 import Data.IORef
@@ -13,28 +13,29 @@ import qualified GI.Gtk
 
 import qualified Records as R
 
-addFullscreenButtonReleaseHandler :: R.Application -> IO ()
-addFullscreenButtonReleaseHandler
+addFullScreenButtonReleaseHandler :: R.Application -> IO ()
+addFullScreenButtonReleaseHandler
   application@R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.fullscreenButton = fullscreenButton
+          { R.fullScreenButton = fullScreenButton
           }
     }
   =
   void $
     GI.Gtk.onWidgetButtonReleaseEvent
-      fullscreenButton $
-        fullscreenButtonReleaseHandler application
+      fullScreenButton $
+        fullScreenButtonReleaseHandler application
 
-fullscreenButtonReleaseHandler :: R.Application -> GI.Gdk.EventButton -> IO Bool
-fullscreenButtonReleaseHandler
+fullScreenButtonReleaseHandler :: R.Application -> GI.Gdk.EventButton -> IO Bool
+fullScreenButtonReleaseHandler
   R.Application
     { R.guiObjects =
         R.GuiObjects
-          { R.window = window
-          , R.fileChooserButton                = fileChooserButton
+          { R.window                           = window
+          , R.fileChooserDialogButton          = fileChooserDialogButton
           , R.windowWidthSelectionComboBoxText = windowWidthSelectionComboBoxText
+          , R.topControlsBox                   = topControlsBox
           }
     , R.ioRefs =
         R.IORefs
@@ -47,10 +48,12 @@ fullscreenButtonReleaseHandler
   if isWindowFullScreen
     then do
       GI.Gtk.widgetShow windowWidthSelectionComboBoxText
-      GI.Gtk.widgetShow fileChooserButton
+      GI.Gtk.widgetShow fileChooserDialogButton
+      GI.Gtk.widgetShow topControlsBox
       void $ GI.Gtk.windowUnfullscreen window
     else do
       GI.Gtk.widgetHide windowWidthSelectionComboBoxText
-      GI.Gtk.widgetHide fileChooserButton
+      GI.Gtk.widgetHide fileChooserDialogButton
+      GI.Gtk.widgetHide topControlsBox
       void $ GI.Gtk.windowFullscreen window
   return True

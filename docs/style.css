@@ -35,8 +35,8 @@ article a, article a:hover, article a:visited {
 }
 
 .header-image {
-  width: 75%;
-  margin-left: 12.5%;
+  width: 65%;
+  margin-left: 17.5%;
   margin-right: auto;
   box-shadow: 0px 100px 200px -20px rgba(10, 10, 10, 0.5);
 }

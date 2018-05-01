@@ -4,6 +4,27 @@
 
 -------------------------------------------------------------------------------
 
+### 0.0.6.1
+
+#### Added
+
+- Styling to the about/info dialog
+- System capabilities check
+- UI feedback based on system capabilities
+
+#### Changed
+
+- Info dialog logo
+- File chooser dialog button styling
+- Glade file ID names
+- Shows top controls box on application reset
+
+#### Removed
+
+-
+
+-------------------------------------------------------------------------------
+
 ### 0.0.6.0
 
 #### Added
@@ -147,7 +168,7 @@
 
 #### Added
 
-- Fullscreen mode
+- Full Screen mode
 
 #### Changed
 
