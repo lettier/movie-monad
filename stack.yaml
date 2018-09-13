@@ -15,7 +15,7 @@ extra-deps:
 - gi-gdkpixbuf-2.0.16
 - gi-gst-1.0.15
 - gi-gstbase-1.0.15
-- gi-gstvideo-1.0.15
+- gi-gstvideo-1.0.16
 - gi-gtk-3.0.21
 flags:
   gi-gobject:
