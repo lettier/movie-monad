@@ -133,7 +133,7 @@ main = do
 
   turnOffSubtitles playbin
 
-  playbinBus <- GI.Gst.elementGetBus playbin
+  playbinBus <- fromJust <$> GI.Gst.elementGetBus playbin
 
   let guiObjects =
         R.GuiObjects
