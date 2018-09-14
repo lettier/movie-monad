@@ -4,6 +4,10 @@
   lettier.com
 -}
 
+{-# LANGUAGE
+    OverloadedStrings
+#-}
+
 module Utils where
 
 import System.Exit
@@ -104,3 +108,57 @@ queryPlaybinForDurationAndPosition playbin = do
   if couldQueryDuration && couldQueryPosition && duration > 0 && position >= 0
     then return (Just (duration, position))
     else return Nothing
+
+openUriWithDefaultProgram
+  ::  String
+  ->  IO ()
+openUriWithDefaultProgram uri = do
+  maybeFileOpenCommand <- determineFileOpenCommand
+  case maybeFileOpenCommand of
+    Just fileOpenCommand ->
+      void $
+        spawnCommand $
+          fileOpenCommand ++ " \"" ++ uri ++ "\""
+    _ -> return ()
+  where
+    determineFileOpenCommand
+      ::  IO (Maybe String)
+    determineFileOpenCommand = do
+      uname  <- tryReadProcess "uname"   ["-a"]
+      swVers <- tryReadProcess "sw_vers" []
+      ver    <- tryReadProcess "ver"     []
+      let linuxCommand   = "xdg-open"
+      let macCommand     = "open"
+      let windowsCommand = "explorer"
+      case (uname, swVers, ver) of
+        (Right s, _, _) ->
+          case (containsText "darwin" s, containsText "linux" s) of
+            (True, _)   -> return $ Just macCommand
+            (_, True)   -> return $ Just linuxCommand
+            _           -> return Nothing
+        (_, Right s, _) -> returnIf "mac"     s macCommand
+        (_, _, Right s) -> returnIf "windows" s windowsCommand
+        _               -> return Nothing
+      where
+        tryReadProcess
+          ::  String
+          ->  [String]
+          ->  IO (Either IOError String)
+        tryReadProcess process params = try $ readProcess process params []
+        returnIf
+          ::  Text
+          ->  String
+          ->  String
+          ->  IO (Maybe String)
+        returnIf needle haystack command =
+          if containsText needle haystack
+            then return $ Just command
+            else return Nothing
+        containsText
+          ::  Text
+          ->  String
+          ->  Bool
+        containsText needle haystack =
+          Data.Text.isInfixOf
+            needle
+            (Data.Text.toLower $ Data.Text.pack haystack)

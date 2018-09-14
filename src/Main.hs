@@ -13,6 +13,7 @@ module Main where
 
 import Prelude
 import System.Info
+import Control.Monad
 import Data.IORef
 import Data.Maybe
 import Data.Text
@@ -22,7 +23,6 @@ import GI.GObject
 import qualified GI.Gtk
 import GI.Gst
 import GI.GstVideo
-import GI.GdkPixbuf
 
 import qualified Records as R
 import Constants
@@ -41,6 +41,7 @@ import WindowWidthSelector
 import SubtitleSelector
 import VideoSpeedSelector
 import Playbin
+import Label
 import ScreensaverAndPowerManagement (disable, enable)
 import CssStyle
 import Utils
@@ -64,6 +65,7 @@ main = do
   window                           <- builderGetObject GI.Gtk.Window            builder "window"
   fileChooserDialogButtonLabel     <- builderGetObject GI.Gtk.Label             builder "file-chooser-dialog-button-label"
   fileChooserDialogLabel           <- builderGetObject GI.Gtk.Label             builder "file-chooser-dialog-label"
+  infoDialogLabel                  <- builderGetObject GI.Gtk.Label             builder "info-dialog-label"
   videoLocationEntry               <- builderGetObject GI.Gtk.Entry             builder "video-location-entry"
   fileChooserWidget                <- builderGetObject GI.Gtk.FileChooserWidget builder "file-chooser-widget"
   videoWidgetBox                   <- builderGetObject GI.Gtk.Box               builder "video-widget-box"
@@ -76,6 +78,7 @@ main = do
   playPauseButton                  <- builderGetObject GI.Gtk.Button            builder "play-pause-button"
   fullScreenButton                 <- builderGetObject GI.Gtk.Button            builder "full-screen-button"
   infoDialogButton                 <- builderGetObject GI.Gtk.Button            builder "info-dialog-button"
+  infoDialogCloseButton            <- builderGetObject GI.Gtk.Button            builder "info-dialog-close-button"
   repeatCheckButton                <- builderGetObject GI.Gtk.CheckButton       builder "repeat-check-button"
   volumeButton                     <- builderGetObject GI.Gtk.VolumeButton      builder "volume-button"
   playImage                        <- builderGetObject GI.Gtk.Image             builder "play-image"
@@ -87,15 +90,12 @@ main = do
   bufferingSpinner                 <- builderGetObject GI.Gtk.Spinner           builder "buffering-spinner"
   fileChooserDialog                <- builderGetObject GI.Gtk.Dialog            builder "file-chooser-dialog"
   errorMessageDialog               <- builderGetObject GI.Gtk.MessageDialog     builder "error-message-dialog"
-  infoDialog                       <- builderGetObject GI.Gtk.AboutDialog       builder "info-dialog"
-
-  logoFile <- getDataFileName "data/movie-monad-logo.svg"
-  logo <- GI.GdkPixbuf.pixbufNewFromFile logoFile
-  GI.Gtk.aboutDialogSetLogo infoDialog (Just logo)
+  infoDialog                       <- builderGetObject GI.Gtk.Dialog            builder "info-dialog"
 
   -- Glade does not allow us to use the response ID nicknames so we programmatically set them here.
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserDialogCancelButton (enumToInt32 GI.Gtk.ResponseTypeCancel)
   GI.Gtk.dialogAddActionWidget fileChooserDialog fileChooserDialogOpenButton   (enumToInt32 GI.Gtk.ResponseTypeOk)
+  GI.Gtk.dialogAddActionWidget infoDialog        infoDialogCloseButton         (enumToInt32 GI.Gtk.ResponseTypeOk)
 
   isWindowFullScreenRef                  <- newIORef False
   mouseMovedLastRef                      <- newIORef 0
@@ -112,11 +112,12 @@ main = do
           , R.alteringBottomControlsBoxVisibilityRef = alteringBottomControlsBoxVisibilityRef
           }
 
-  playbin <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayerPlaybin")
+  playbin      <- fromJust <$> GI.Gst.elementFactoryMake "playbin" (Just "MultimediaPlayerPlaybin")
+  playbinBus   <- fromJust <$> GI.Gst.elementGetBus playbin
   maybeGtkSink <- GI.Gst.elementFactoryMake "gtksink" (Just "MultimediaPlayerGtkSink")
-  videoWidget <-
+  videoWidget  <-
     case maybeGtkSink of
-      Nothing -> do
+      Nothing      -> do
         putStrLn "[ERROR] Could not create a \"gtksink\". Please install the GStreamer 1.0 bad plugins version 1.8 or higher."
         drawingArea <- GI.Gtk.drawingAreaNew
         GI.Gtk.widgetSetName drawingArea invalidVideoWidgetName
@@ -133,26 +134,27 @@ main = do
 
   turnOffSubtitles playbin
 
-  playbinBus <- GI.Gst.elementGetBus playbin
-
   let guiObjects =
         R.GuiObjects
           { R.window                           = window
           , R.fileChooserDialogButtonLabel     = fileChooserDialogButtonLabel
           , R.fileChooserDialogLabel           = fileChooserDialogLabel
+          , R.infoDialogLabel                  = infoDialogLabel
           , R.videoLocationEntry               = videoLocationEntry
           , R.fileChooserWidget                = fileChooserWidget
           , R.fileChooserDialogCancelButton    = fileChooserDialogCancelButton
           , R.fileChooserDialogOpenButton      = fileChooserDialogOpenButton
-          , R.videoWidget                      = videoWidget
-          , R.topControlsBox                   = topControlsBox
-          , R.bottomControlsBox                = bottomControlsBox
-          , R.seekScale                        = seekScale
+          , R.infoDialogCloseButton            = infoDialogCloseButton
           , R.fileChooserDialogButton          = fileChooserDialogButton
           , R.playPauseButton                  = playPauseButton
           , R.fullScreenButton                 = fullScreenButton
           , R.volumeButton                     = volumeButton
           , R.repeatCheckButton                = repeatCheckButton
+          , R.infoDialogButton                 = infoDialogButton
+          , R.videoWidget                      = videoWidget
+          , R.topControlsBox                   = topControlsBox
+          , R.bottomControlsBox                = bottomControlsBox
+          , R.seekScale                        = seekScale
           , R.playImage                        = playImage
           , R.pauseImage                       = pauseImage
           , R.fileChooserDialogButtonImage     = fileChooserDialogButtonImage
@@ -162,7 +164,6 @@ main = do
           , R.bufferingSpinner                 = bufferingSpinner
           , R.errorMessageDialog               = errorMessageDialog
           , R.fileChooserDialog                = fileChooserDialog
-          , R.infoDialogButton                 = infoDialogButton
           , R.infoDialog                       = infoDialog
           }
 
@@ -187,6 +188,7 @@ main = do
   addInfoDialogHandler              application
   addKeyboardEventHandler           application
   addErrorMessageDialogHandler      application
+  addLabelHandlers                  application
 
   let operatingSystem = System.Info.os
   screenAndPowerManagementActions <- ScreensaverAndPowerManagement.disable operatingSystem
@@ -205,8 +207,10 @@ builderGetObject
   ::  (GI.GObject.GObject b, GI.Gtk.IsBuilder a)
   =>  (Data.GI.Base.ManagedPtr b -> b)
   ->  a
-  ->  Prelude.String
+  ->  String
   ->  IO b
-builderGetObject objectTypeClass builder objectId =
-  fromJust <$> GI.Gtk.builderGetObject builder (pack objectId) >>=
-    GI.Gtk.unsafeCastTo objectTypeClass
+builderGetObject objectTypeClass builder objectId = do
+  maybeObject <- GI.Gtk.builderGetObject builder $ pack objectId
+  when (isNothing maybeObject) $
+    putStrLn $ "[ERROR] could not build " ++ objectId ++ "."
+  GI.Gtk.unsafeCastTo objectTypeClass $ fromJust maybeObject

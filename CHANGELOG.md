@@ -4,6 +4,26 @@
 
 -------------------------------------------------------------------------------
 
+### 0.0.7.0
+
+#### Added
+
+-
+
+#### Changed
+
+- Info dialog
+- Fixed URL links
+- Fixed scrollbar slider styling
+- Fixed popover background
+- Updated dependencies to handle the fixed GST GIR
+
+#### Removed
+
+-
+
+-------------------------------------------------------------------------------
+
 ### 0.0.6.1
 
 #### Added

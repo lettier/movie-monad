@@ -27,7 +27,7 @@ addInfoDialogHandler
       infoDialogButton $
         infoDialogButtonReleaseHandler infoDialog
 
-infoDialogButtonReleaseHandler :: GI.Gtk.AboutDialog -> GI.Gdk.EventButton -> IO Bool
+infoDialogButtonReleaseHandler :: GI.Gtk.Dialog -> GI.Gdk.EventButton -> IO Bool
 infoDialogButtonReleaseHandler infoDialog _ = do
   _ <- GI.Gtk.onDialogResponse infoDialog (\ _ -> GI.Gtk.widgetHide infoDialog)
   _ <- GI.Gtk.dialogRun infoDialog

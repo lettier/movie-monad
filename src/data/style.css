@@ -195,6 +195,12 @@ GtkScale#seek-scale .highlight {
   background-image: linear-gradient(to right, @_movie_monad_blue 0%, @_movie_monad_pink 100%);
 }
 
+popover,
+GtkPopover {
+  background: transparent;
+  background-color: @_movie_monad_black;
+}
+
 popover image,
 GtkPopover GtkImage {
   color: white;
@@ -361,9 +367,15 @@ GtkDialog#info-dialog GtkTrough {
 }
 
 dialog#info-dialog scrollbar slider,
-GtkDialog#info-dialog GtkScrollbar GtkSlider {
-  background-color: white;
+GtkDialog#info-dialog GtkScrollbar GtkSlider,
+GtkDialog#info-dialog GtkScrollbar .slider {
+  background-color: rgba(255, 255, 255, 0.8);
+  background-image: none;
   border: none;
+  border-radius: 2px;
+  padding: 2.5px;
+  box-shadow: none;
+  margin: 0px;
 }
 
 dialog#info-dialog button,

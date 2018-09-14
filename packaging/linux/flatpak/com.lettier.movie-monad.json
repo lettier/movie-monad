@@ -1,7 +1,7 @@
 {
   "app-id": "com.lettier.movie-monad",
   "runtime": "org.gnome.Platform",
-  "runtime-version": "3.26",
+  "runtime-version": "3.28",
   "sdk": "org.gnome.Sdk",
   "command": "movie-monad",
   "finish-args": [
@@ -13,7 +13,6 @@
     "--socket=pulseaudio",
     "--talk-name=org.gtk.vfs",
     "--talk-name=org.gtk.vfs.*",
-    "--talk-name=org.gnome.SettingsDaemon",
     "--talk-name=org.gnome.SettingsDaemon.MediaKeys",
     "--env=DCONF_USER_CONFIG_DIR=.config/dconf",
     "--filesystem=host",
@@ -1243,7 +1242,7 @@
       ]
     },
     {
-      "name": "gi-gst-1.0.15",
+      "name": "gi-gst-1.0.16",
       "only-arches": [
         "x86_64"
       ],
@@ -1257,8 +1256,8 @@
       "sources": [
         {
           "type": "archive",
-          "sha256": "04b314f4c1cc208e97001ac5643165ac6ffccd75c661c88058a915f43c8d0426",
-          "url": "https://hackage.haskell.org/package/gi-gst-1.0.15/gi-gst-1.0.15.tar.gz"
+          "sha256": "74e49760e8dea88dc317969f457688a48430d0a2d821a94958cb9f682153cf7b",
+          "url": "https://hackage.haskell.org/package/gi-gst-1.0.16/gi-gst-1.0.16.tar.gz"
         }
       ]
     },
@@ -1323,7 +1322,7 @@
       ]
     },
     {
-      "name": "gi-gstvideo-1.0.15",
+      "name": "gi-gstvideo-1.0.16",
       "only-arches": [
         "x86_64"
       ],
@@ -1337,8 +1336,8 @@
       "sources": [
         {
           "type": "archive",
-          "sha256": "0d84198c012aa4a2a0c6ae3fc1c73cdf69b1e264b4a19330873ecec098e965cc",
-          "url": "https://hackage.haskell.org/package/gi-gstvideo-1.0.15/gi-gstvideo-1.0.15.tar.gz"
+          "sha256": "9c2ac605b16dd66da022bac329f2507e0ec19dc3ded0dba1a16352125b09df3c",
+          "url": "https://hackage.haskell.org/package/gi-gstvideo-1.0.16/gi-gstvideo-1.0.16.tar.gz"
         }
       ]
     },
@@ -1434,7 +1433,7 @@
       "sources": [
         {
           "type": "git",
-          "tag": "0.0.6.1",
+          "tag": "0.0.7.0",
           "url": "https://github.com/lettier/movie-monad.git"
         }
       ]

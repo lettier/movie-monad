@@ -24,6 +24,7 @@ data GuiObjects =
     { window                           :: GI.Gtk.Window
     , fileChooserDialogButtonLabel     :: GI.Gtk.Label
     , fileChooserDialogLabel           :: GI.Gtk.Label
+    , infoDialogLabel                  :: GI.Gtk.Label
     , fileChooserDialog                :: GI.Gtk.Dialog
     , videoLocationEntry               :: GI.Gtk.Entry
     , fileChooserWidget                :: GI.Gtk.FileChooserWidget
@@ -37,6 +38,7 @@ data GuiObjects =
     , fileChooserDialogCancelButton    :: GI.Gtk.Button
     , fileChooserDialogOpenButton      :: GI.Gtk.Button
     , infoDialogButton                 :: GI.Gtk.Button
+    , infoDialogCloseButton            :: GI.Gtk.Button
     , repeatCheckButton                :: GI.Gtk.CheckButton
     , volumeButton                     :: GI.Gtk.VolumeButton
     , playImage                        :: GI.Gtk.Image
@@ -47,7 +49,7 @@ data GuiObjects =
     , subtitleSelectionComboBoxText    :: GI.Gtk.ComboBoxText
     , bufferingSpinner                 :: GI.Gtk.Spinner
     , errorMessageDialog               :: GI.Gtk.MessageDialog
-    , infoDialog                       :: GI.Gtk.AboutDialog
+    , infoDialog                       :: GI.Gtk.Dialog
     }
 
 data IORefs =

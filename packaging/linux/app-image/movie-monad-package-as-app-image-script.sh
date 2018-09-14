@@ -4,7 +4,7 @@
 # lettier.com
 
 _NAME="movie-monad"
-_VER="0.0.6.1"
+_VER="0.0.7.0"
 _SCRIPT_DIR=`dirname "${BASH_SOURCE[0]}"`
 _APP_IMAGE_NAME="$_NAME-$_VER-x86_64.AppImage"
 _APP_IMAGE_PATH="$_SCRIPT_DIR/$_APP_IMAGE_NAME"

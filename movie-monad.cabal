@@ -1,5 +1,5 @@
 name:                 movie-monad
-version:              0.0.6.1
+version:              0.0.7.0
 synopsis:             Plays videos using GStreamer and GTK+.
 description:          A free and simple to use video player made with Haskell.
 homepage:             https://github.com/lettier/movie-monad
@@ -14,8 +14,7 @@ category:               Application
                       , Video
 build-type:           Simple
 cabal-version:        >= 1.10
-extra-source-files:     README.md
-                      , LICENSE
+extra-source-files:     LICENSE
                       , CHANGELOG.md
                       , makefile
                       , stack.yaml
@@ -50,6 +49,7 @@ extra-source-files:     README.md
                       , ./src/InfoDialog.hs
                       , ./src/VideoInfo.hs
                       , ./src/Playbin.hs
+                      , ./src/Label.hs
                       , ./src/Uri.hs
                       , ./src/CssStyle.hs
                       , ./src/BottomControlsBoxVisibility.hs
@@ -94,8 +94,8 @@ executable            movie-monad
                       , gi-glib == 2.0.*
                       , gi-gdk == 3.0.*
                       , gi-gdkpixbuf == 2.0.*
-                      , gi-gst == 1.0.*
-                      , gi-gstvideo == 1.0.*
+                      , gi-gst == 1.0.16
+                      , gi-gstvideo == 1.0.16
                       , gi-gtk == 3.0.*
   other-modules:        Paths_movie_monad
                       , Records
@@ -118,6 +118,7 @@ executable            movie-monad
                       , VideoInfo
                       , Uri
                       , Playbin
+                      , Label
                       , CssStyle
                       , BottomControlsBoxVisibility
                       , Utils

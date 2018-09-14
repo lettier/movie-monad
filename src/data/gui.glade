@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.4 
+<!-- Generated with glade 3.22.1 
 
 Copyright (c) 2017 David Lettier
 All rights reserved.
@@ -94,6 +94,9 @@ Author: David Lettier
     <property name="default_height">600</property>
     <property name="icon">movie-monad-icon.svg</property>
     <property name="gravity">center</property>
+    <child type="titlebar">
+      <placeholder/>
+    </child>
     <child>
       <object class="GtkBox" id="box-1">
         <property name="visible">True</property>
@@ -477,9 +480,6 @@ audio-volume-medium-symbolic</property>
         </child>
       </object>
     </child>
-    <child type="titlebar">
-      <placeholder/>
-    </child>
   </object>
   <object class="GtkMessageDialog" id="error-message-dialog">
     <property name="can_focus">False</property>
@@ -499,6 +499,9 @@ audio-volume-medium-symbolic</property>
 
 Thank you.</property>
     <property name="secondary_use_markup">True</property>
+    <child>
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="error-message-dialog-box">
         <property name="can_focus">False</property>
@@ -521,28 +524,112 @@ Thank you.</property>
         </child>
       </object>
     </child>
-    <child>
-      <placeholder/>
-    </child>
   </object>
-  <object class="GtkAboutDialog" id="info-dialog">
+  <object class="GtkDialog" id="info-dialog">
     <property name="name">info-dialog</property>
     <property name="can_focus">False</property>
-    <property name="resizable">False</property>
-    <property name="window_position">center</property>
-    <property name="destroy_with_parent">True</property>
-    <property name="icon_name">dialog-information</property>
+    <property name="title" translatable="yes">Movie Monad</property>
+    <property name="window_position">center-on-parent</property>
+    <property name="icon">movie-monad-icon.svg</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
     <property name="transient_for">window</property>
     <property name="attached_to">window</property>
-    <property name="program_name">Movie Monad</property>
-    <property name="version">0.0.6.1</property>
-    <property name="copyright" translatable="yes">(C) 2017 David Lettier
-lettier.com</property>
-    <property name="website">https://github.com/lettier/movie-monad</property>
-    <property name="website_label" translatable="yes">WEBSITE</property>
-    <property name="license">BSD 3-Clause License
+    <child type="titlebar">
+      <placeholder/>
+    </child>
+    <child internal-child="vbox">
+      <object class="GtkBox" id="info-dialog-box">
+        <property name="can_focus">False</property>
+        <property name="hexpand">True</property>
+        <property name="vexpand">True</property>
+        <property name="orientation">vertical</property>
+        <property name="spacing">2</property>
+        <child internal-child="action_area">
+          <object class="GtkButtonBox" id="info-dialog-button-box">
+            <property name="can_focus">False</property>
+            <property name="margin_right">5</property>
+            <property name="margin_top">5</property>
+            <property name="margin_bottom">5</property>
+            <property name="layout_style">end</property>
+            <child>
+              <object class="GtkButton" id="info-dialog-close-button">
+                <property name="label">gtk-close</property>
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="use_stock">True</property>
+                <property name="always_show_image">True</property>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+          </object>
+          <packing>
+            <property name="expand">False</property>
+            <property name="fill">False</property>
+            <property name="position">0</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkGrid" id="info-dialog-grid">
+            <property name="visible">True</property>
+            <property name="can_focus">False</property>
+            <property name="margin_left">5</property>
+            <property name="margin_right">5</property>
+            <property name="hexpand">True</property>
+            <property name="vexpand">True</property>
+            <child>
+              <object class="GtkScrolledWindow" id="info-dialog-scrolled-window">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="halign">center</property>
+                <property name="margin_left">5</property>
+                <property name="margin_right">5</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">True</property>
+                <property name="hscrollbar_policy">never</property>
+                <property name="min_content_width">800</property>
+                <property name="min_content_height">220</property>
+                <child>
+                  <object class="GtkViewport" id="info-dialog-viewport">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="valign">start</property>
+                    <property name="hexpand">True</property>
+                    <property name="vexpand">True</property>
+                    <property name="shadow_type">none</property>
+                    <child>
+                      <object class="GtkLabel" id="info-dialog-label">
+                        <property name="name">info-dialog-label</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="valign">start</property>
+                        <property name="margin_left">10</property>
+                        <property name="margin_right">10</property>
+                        <property name="hexpand">True</property>
+                        <property name="vexpand">True</property>
+                        <property name="label">&lt;big&gt;&lt;big&gt;&lt;big&gt;&lt;b&gt;MOVIE MONAD&lt;/b&gt;&lt;/big&gt;&lt;/big&gt;&lt;/big&gt;
+&lt;span font-size="large"&gt;
+Wanna help out Movie Monad? Star it on &lt;a href="https://github.com/lettier/movie-monad/stargazers"&gt;GitHub&lt;/a&gt;! &amp;#9786; Thanks for helping out&amp;#8212;you rock!
+
+For bugs, feature requests, or other issues head to the &lt;a href="https://github.com/lettier/movie-monad/issues"&gt;issues page&lt;/a&gt;.
+Check out the &lt;a href="https://github.com/lettier/movie-monad/releases"&gt;releases page&lt;/a&gt; for updates.
+
+Need to make a GIF or video clip? Take a look at &lt;a href="https://lettier.github.io/gifcurry"&gt;Gifcurry&lt;/a&gt;.
+
+Movie Monad was created by me, David Lettier. For more information visit &lt;a href="https://lettier.com"&gt;lettier.com&lt;/a&gt;.
+&lt;/span&gt;
+&lt;big&gt;&lt;big&gt;&lt;b&gt;VERSION&lt;/b&gt;&lt;/big&gt;&lt;/big&gt;
+&lt;span font-size="large"&gt;
+0.0.7.0
+&lt;/span&gt;
+&lt;big&gt;&lt;big&gt;&lt;b&gt;LICENSE&lt;/b&gt;&lt;/big&gt;&lt;/big&gt;
+&lt;span font-size="large"&gt;
+BSD 3-Clause License
 
 Copyright (c) 2017, David Lettier
 All rights reserved.
@@ -570,30 +657,42 @@ DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
 SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
 CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
-OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
-    <property name="authors">David Lettier</property>
-    <property name="logo">movie-monad-logo.svg</property>
-    <property name="license_type">custom</property>
-    <child internal-child="vbox">
-      <object class="GtkBox" id="info-dialog-box">
-        <property name="can_focus">False</property>
-        <property name="orientation">vertical</property>
-        <property name="spacing">2</property>
-        <child internal-child="action_area">
-          <object class="GtkButtonBox" id="info-dialog-button-box">
-            <property name="can_focus">False</property>
-            <property name="layout_style">end</property>
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+&lt;/span&gt;</property>
+                        <property name="use_markup">True</property>
+                        <property name="track_visited_links">False</property>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkImage" id="info-dialog-logo-image">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="valign">start</property>
+                <property name="hexpand">True</property>
+                <property name="vexpand">False</property>
+                <property name="pixbuf">movie-monad-logo.svg</property>
+              </object>
+              <packing>
+                <property name="left_attach">0</property>
+                <property name="top_attach">0</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">False</property>
-            <property name="fill">False</property>
-            <property name="position">0</property>
+            <property name="fill">True</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
-    </child>
-    <child>
-      <placeholder/>
     </child>
   </object>
   <object class="GtkFileFilter" id="video-audio-file-filter">
@@ -610,6 +709,9 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
     <property name="type_hint">dialog</property>
     <property name="gravity">center</property>
     <property name="transient_for">window</property>
+    <child>
+      <placeholder/>
+    </child>
     <child internal-child="vbox">
       <object class="GtkBox" id="file-chooser-dialog-box">
         <property name="can_focus">False</property>
@@ -685,9 +787,6 @@ OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</property>
           </packing>
         </child>
       </object>
-    </child>
-    <child>
-      <placeholder/>
     </child>
   </object>
 </interface>

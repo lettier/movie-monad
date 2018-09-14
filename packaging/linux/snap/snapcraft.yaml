@@ -1,5 +1,5 @@
 name: movie-monad
-version: '0.0.6.1'
+version: '0.0.7.0'
 summary: A free and simple to use video player made with Haskell.
 type: app
 description: |
@@ -29,8 +29,6 @@ apps:
       - screen-inhibit-control
       - optical-drive
       - removable-media
-      - raw-usb
-      - mount-observe
       - home
 
 parts:

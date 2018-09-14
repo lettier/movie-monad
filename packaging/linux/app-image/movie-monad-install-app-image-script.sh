@@ -3,7 +3,7 @@
 # (C) 2017 David Lettier
 # lettier.com
 
-_MOVIE_MONAD_VERSION="0.0.6.1"
+_MOVIE_MONAD_VERSION="0.0.7.0"
 _MOVIE_MONAD_RELEASES_DOWNLOAD="https://github.com/lettier/movie-monad/releases/download/$_MOVIE_MONAD_VERSION"
 _MOVIE_MONAD_PACKAGING_LINUX_COMMON="https://raw.githubusercontent.com/lettier/movie-monad/master/packaging/linux/common"
 _MOVIE_MONAD_APP_IMAGE="movie-monad-$_MOVIE_MONAD_VERSION-x86_64.AppImage"

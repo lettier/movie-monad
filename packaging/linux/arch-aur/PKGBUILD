@@ -1,5 +1,5 @@
 _name="movie-monad"
-_ver="0.0.6.1"
+_ver="0.0.7.0"
 _xrev="0"
 
 pkgname="${_name}"
