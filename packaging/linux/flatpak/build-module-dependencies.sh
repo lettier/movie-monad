@@ -13,8 +13,8 @@ while read _dependency; do
   echo \
     "    {
       \"name\": \"$_dependency\",
-      "only-arches": [
-        "x86_64"
+      \"only-arches\": [
+        \"x86_64\"
       ],
       \"buildsystem\": \"simple\",
       \"build-commands\": [
